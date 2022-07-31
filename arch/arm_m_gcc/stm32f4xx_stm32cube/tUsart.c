@@ -104,6 +104,7 @@ usart_putchar(CELLCB *p_cellcb, char c)
 void
 eSIOPort_open(CELLIDX idx)
 {
+#if 0
 	uint32_t tmp, usartdiv, fraction;
 	uint32_t src_clock;
 	CELLCB	*p_cellcb = GET_CELLCB(idx);
@@ -141,6 +142,7 @@ eSIOPort_open(CELLIDX idx)
 
 	/* USARTの有効化 */
 	sil_orw((void*)USART_CR1(ATTR_baseAddress), USART_CR1_UE);
+#endif
 }
 
 /*

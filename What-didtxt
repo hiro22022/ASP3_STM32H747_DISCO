@@ -1,0 +1,42 @@
+
+
+STM32CubeMX 生成のコンパイラコマンド
+$ make STM32H747_CM7.bin
+arm-none-eabi-gcc "C:/cygwin64/home/hiro2/STM32Cube/STM32H747_mx/STM32H747/Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.c" 
+                -mcpu=cortex-m7 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32H747xx -DCORE_CM7 -DDEBUG 
+                -c -I../Core/Inc
+                 -I../../Drivers/STM32H7xx_HAL_Driver/Inc -I../../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../../Drivers/CMSIS/Include 
+                 -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP 
+                 -MF"Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.d" 
+                 -MT"Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.o" 
+                 --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb 
+                 -o "Common/Src/system_stm32h7xx_dualcore_boot_cm4_cm7.o"
+
+nucleo_f401 をベースにしたコマンド
+arm-none-eabi-gcc -c -o objs/time_event.o -MD -MP -MF objs/time_event.d -O2 -Wall -g    
+                -ffunction-sections -fdata-sections -mlittle-endian -nostartfiles 
+                -mthumb -mcpu=cortex-m7 -mfloat-abi=softfp -mfpu=fpv5-sp-d16  
+                -DSTM32H747xx -DCORE_CM7 -DUSE_TIM_AS_HRT 
+                -DTOPPERS_CORTEX_M7 -D__TARGET_ARCH_THUMB=4 -D__TARGET_FPU_FPV4_SP 
+                -DTOPPERS_FPU_ENABLE -DTOPPERS_FPU_LAZYSTACKING -DTOPPERS_FPU_CONTEXT  
+                -I. -I../include  -I../target/stm32h747_discovery_m7 -I../target/stm32h747_discovery_m7/stm32hcube -I../target/stm32h747_discovery_m7/stm32hcube/Drivers/STM32H7xx_HAL_Driver/Inc -I../target/stm32h747_discovery_m7/stm32hcube/Drivers/CMSIS/Include -I../target/stm32h747_discovery_m7/stm32hcube/Drivers/CMSIS/Device/ST/STM32H7xx/Include -I../arch/arm_m_gcc/stm32h7xx_stm32cube -I../arch/arm_m_gcc/common -I../arch/gcc -I.. -I../sample -I./gen -I../tecs_kernel -DALLFUNC  -I../kernel 
+                ../kernel/time_event.c
+
+
+C:\cygwin64\home\hiro2\TECS\asp3\asp3_nucleo_f401re_gcc-20211228\target\stm32h747_discovery_m7\stm32hcube\CM7\Debug
+C:\cygwin64\home\hiro2\STM32Cube\STM32H747_mx\STM32H747\CM7\Debug
+
+STM32F401RE のターゲット依存部、arch をベースに移植する
+最低限必要なものは、以下のものである。
+ ・CPU、タイマー、シリアルのクロックの初期化
+ ・タイマー
+ ・シリアル
+
+アセンブラ記述されている部分は、Cortex-M4 と M7 で共通のようなので、そのまま使用する方針。
+stm32cube の生成コードをベースに、タイマー、シリアルを実装するコードを生成する。
+
+いきなり target を完成させるのではなく、stm32cube の main.c で、クロック、タイマー、シリアルを動作させて、
+そこから sta_ker を呼出す方法で起動させる。
+
+
+

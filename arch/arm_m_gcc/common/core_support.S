@@ -1,3 +1,9 @@
+/* stm32cube の生成したベクターテーブルに合わせる */
+/* stm32cube の生成するベクターテーブルは .weak 指定されているので、容易に置き換えることができる */
+
+#define _kernel_pendsv_handler  PendSV_Handler
+
+/*----------------------------------------------------------------*/
 /*
  *  TOPPERS/ASP Kernel
  *      Toyohashi Open Platform for Embedded Real-Time Systems/

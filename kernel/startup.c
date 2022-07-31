@@ -48,6 +48,12 @@
 #include "time_event.h"
 #include <sil.h>
 
+/********************************************/
+#if 0
+extern const FP _kernel_vector_table[];
+FP	*vect_tab;
+#endif
+
 /*
  *  トレースログマクロのデフォルト定義
  */
@@ -85,17 +91,24 @@ sta_ker(void)
 {
 	uint_t	i;
 
+	/********************************************/
+#if 0
+	vect_tab = _kernel_vector_table;
+#endif 
+led_set(1);
 	/*
 	 *  TECSの初期化
 	 */
 #ifndef TOPPERS_OMIT_TECS
 	initialize_tecs();
 #endif /* TOPPERS_OMIT_TECS */
+led_set(2);
 
 	/*
 	 *  ターゲット依存の初期化
 	 */
 	target_initialize();
+led_set(3);
 
 	/*
 	 *  各モジュールの初期化
@@ -104,7 +117,9 @@ sta_ker(void)
 	 *  する必要がある．
 	 */
 	initialize_tmevt();								/*［ASPD1061］*/
+led_set(4);
 	initialize_object();
+led_set(5);
 
 	/*
 	 *  初期化ルーチンの実行
@@ -112,12 +127,15 @@ sta_ker(void)
 	for (i = 0; i < tnum_inirtn; i++) {
 		(*(inirtnb_table[i].inirtn))(inirtnb_table[i].exinf);
 	}
+led_set(6);
 
 	/*
 	 *  高分解能タイマの設定
 	 */
 	current_hrtcnt = target_hrt_get_current();		/*［ASPD1063］*/
+led_set(7);
 	set_hrt_event();								/*［ASPD1064］*/
+led_set(8);
 
 	/*
 	 *  カーネル動作の開始
@@ -125,6 +143,8 @@ sta_ker(void)
 	kerflg = true;
 	LOG_KER_ENTER();
 	start_dispatch();
+
+led_set(9);
 	assert(0);
 }
 

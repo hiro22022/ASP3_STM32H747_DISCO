@@ -62,6 +62,7 @@
 	ATHUMB(_kernel_start)
 	AGLOBAL(_kernel_start)
 ALABEL(_kernel_start)
+
 #if __TARGET_ARCH_THUMB >= 4
 	cpsid f                 /* 割込みロック状態へ */
 #else
@@ -133,6 +134,14 @@ ALABEL(start_4)
 	cmp  r1, r2
 	blo  start_4
 #endif /* OMIT_DATA_INIT */
+
+//*************************************************************************
+/* Call static constructors */
+    bl __libc_init_array
+
+	bl  main   //**************** oyama                ***
+//*************************************************************************
+
 
 	/*
 	 *  software_init_hook を呼出し（0 でない場合）

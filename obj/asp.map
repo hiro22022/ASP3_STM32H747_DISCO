@@ -1,0 +1,2405 @@
+Archive member included to satisfy reference by file (symbol)
+
+.\libkernel.a(start.o)        objs/kernel_cfg.o (_kernel_start)
+.\libkernel.a(core_support.o)
+                              objs/kernel_cfg.o (_kernel_core_exc_entry)
+.\libkernel.a(target_kernel_impl.o)
+                              .\libkernel.a(start.o) (hardware_init_hook)
+.\libkernel.a(system_stm32f4xx.o)
+                              .\libkernel.a(target_kernel_impl.o) (SystemInit)
+.\libkernel.a(stm32f4xx_nucleo.o)
+                              .\libkernel.a(target_kernel_impl.o) (BSP_LED_Init)
+.\libkernel.a(systemclock_config.o)
+                              .\libkernel.a(target_kernel_impl.o) (SystemClock_Config)
+.\libkernel.a(stm32f4xx_hal_gpio.o)
+                              .\libkernel.a(target_kernel_impl.o) (HAL_GPIO_Init)
+.\libkernel.a(stm32f4xx_hal_uart.o)
+                              .\libkernel.a(target_kernel_impl.o) (HAL_UART_Init)
+.\libkernel.a(stm32f4xx_hal_rcc.o)
+                              .\libkernel.a(systemclock_config.o) (HAL_RCC_OscConfig)
+.\libkernel.a(stm32f4xx_hal_dma.o)
+                              .\libkernel.a(stm32f4xx_hal_uart.o) (HAL_DMA_Start_IT)
+.\libkernel.a(target_timer.o)
+                              objs/kernel_cfg.o (target_hrt_initialize)
+.\libkernel.a(core_kernel_impl.o)
+                              .\libkernel.a(target_kernel_impl.o) (_kernel_core_initialize)
+.\libkernel.a(startup.o)      .\libkernel.a(start.o) (sta_ker)
+.\libkernel.a(task.o)         .\libkernel.a(core_support.o) (_kernel_p_schedtsk)
+.\libkernel.a(taskhook.o)     .\libkernel.a(task.o) (_kernel_mtxhook_release_all)
+.\libkernel.a(time_event.o)   .\libkernel.a(startup.o) (_kernel_initialize_tmevt)
+.\libkernel.a(task_manage.o)  objs/sample1.o (act_tsk)
+.\libkernel.a(task_sync.o)    objs/sample1.o (slp_tsk)
+.\libkernel.a(task_term.o)    objs/sample1.o (ext_tsk)
+.\libkernel.a(semaphore.o)    objs/kernel_cfg.o (_kernel_initialize_semaphore)
+.\libkernel.a(time_manage.o)  objs/sample1.o (get_tim)
+.\libkernel.a(cyclic.o)       objs/kernel_cfg.o (_kernel_initialize_cyclic)
+.\libkernel.a(alarm.o)        objs/kernel_cfg.o (_kernel_initialize_alarm)
+.\libkernel.a(sys_manage.o)   objs/sample1.o (rot_rdq)
+.\libkernel.a(interrupt.o)    objs/kernel_cfg.o (_kernel_initialize_interrupt)
+.\libkernel.a(exception.o)    objs/kernel_cfg.o (_kernel_initialize_exception)
+.\libkernel.a(stm32f4xx_hal_tim.o)
+                              .\libkernel.a(target_timer.o) (HAL_TIM_Base_Start)
+.\libkernel.a(wait.o)         .\libkernel.a(task_sync.o) (_kernel_make_wait_tmout)
+
+Allocating common symbols
+Common symbol       size              file
+
+_kernel_cyccb_table
+                    0x18              objs/kernel_cfg.o
+_kernel_p_schedtsk  0x4               .\libkernel.a(task.o)
+Tim5Handle          0x3c              .\libkernel.a(target_timer.o)
+_kernel_monotonic_evttim
+                    0x4               .\libkernel.a(time_event.o)
+_kernel_in_signal_time
+                    0x4               .\libkernel.a(time_event.o)
+_kernel_boundary_evttim
+                    0x4               .\libkernel.a(time_event.o)
+_kernel_current_evttim
+                    0x4               .\libkernel.a(time_event.o)
+_kernel_ready_queue
+                    0x80              .\libkernel.a(task.o)
+_kernel_semcb_table
+                    0x20              objs/kernel_cfg.o
+message             0x3               objs/sample1.o
+task_loop           0x4               objs/sample1.o
+_kernel_tmevt_heap  0x24              objs/kernel_cfg.o
+_kernel_dspflg      0x4               .\libkernel.a(task.o)
+tSerialPortMain_SerialPort1_SerialPortMain_CB_receiveBuffer_INIT
+                    0x100             objs/tSerialPortMain_tecsgen.o
+_kernel_ready_primap
+                    0x2               .\libkernel.a(task.o)
+_kernel_almcb_table
+                    0x18              objs/kernel_cfg.o
+_kernel_current_hrtcnt
+                    0x4               .\libkernel.a(time_event.o)
+_kernel_p_runtsk    0x4               .\libkernel.a(task.o)
+_kernel_tcb_table   0xf0              objs/kernel_cfg.o
+_kernel_saved_iipm  0x4               .\libkernel.a(core_kernel_impl.o)
+_kernel_enadsp      0x4               .\libkernel.a(task.o)
+tSysLog_SINGLE_CELL_CB
+                    0x1c              objs/tSysLog_tecsgen.o
+_kernel_lock_flag   0x4               .\libkernel.a(core_kernel_impl.o)
+tSerialPortMain_SerialPort1_SerialPortMain_CB_sendBuffer_INIT
+                    0x100             objs/tSerialPortMain_tecsgen.o
+cpuexc_tskid        0x4               objs/sample1.o
+_kernel_systim_offset
+                    0x8               .\libkernel.a(time_event.o)
+tSysLog_SINGLE_CELL_CB_logBuffer_INIT
+                    0x400             objs/tSysLog_tecsgen.o
+Tim2Handle          0x3c              .\libkernel.a(target_timer.o)
+tSerialPortMain_CB_tab
+                    0x34              objs/tSerialPortMain_tecsgen.o
+
+Discarded input sections
+
+ .text          0x00000000        0x0 objs/sample1.o
+ .data          0x00000000        0x0 objs/sample1.o
+ .bss           0x00000000        0x0 objs/sample1.o
+ .text          0x00000000        0x0 objs/log_output.o
+ .data          0x00000000        0x0 objs/log_output.o
+ .bss           0x00000000        0x0 objs/log_output.o
+ .text          0x00000000        0x0 objs/vasyslog.o
+ .data          0x00000000        0x0 objs/vasyslog.o
+ .bss           0x00000000        0x0 objs/vasyslog.o
+ .text          0x00000000        0x0 objs/t_perror.o
+ .data          0x00000000        0x0 objs/t_perror.o
+ .bss           0x00000000        0x0 objs/t_perror.o
+ .text          0x00000000        0x0 objs/strerror.o
+ .data          0x00000000        0x0 objs/strerror.o
+ .bss           0x00000000        0x0 objs/strerror.o
+ .text          0x00000000        0x0 objs/tTask_tecsgen.o
+ .data          0x00000000        0x0 objs/tTask_tecsgen.o
+ .bss           0x00000000        0x0 objs/tTask_tecsgen.o
+ .text          0x00000000        0x0 objs/tSemaphore_tecsgen.o
+ .data          0x00000000        0x0 objs/tSemaphore_tecsgen.o
+ .bss           0x00000000        0x0 objs/tSemaphore_tecsgen.o
+ .text          0x00000000        0x0 objs/tInterruptRequest_tecsgen.o
+ .data          0x00000000        0x0 objs/tInterruptRequest_tecsgen.o
+ .bss           0x00000000        0x0 objs/tInterruptRequest_tecsgen.o
+ .text          0x00000000        0x0 objs/tISR_tecsgen.o
+ .data          0x00000000        0x0 objs/tISR_tecsgen.o
+ .bss           0x00000000        0x0 objs/tISR_tecsgen.o
+ .text          0x00000000        0x0 objs/tInitializeRoutine_tecsgen.o
+ .data          0x00000000        0x0 objs/tInitializeRoutine_tecsgen.o
+ .bss           0x00000000        0x0 objs/tInitializeRoutine_tecsgen.o
+ .text          0x00000000        0x0 objs/tTerminateRoutine_tecsgen.o
+ .data          0x00000000        0x0 objs/tTerminateRoutine_tecsgen.o
+ .bss           0x00000000        0x0 objs/tTerminateRoutine_tecsgen.o
+ .text          0x00000000        0x0 objs/tSerialPortMain_tecsgen.o
+ .data          0x00000000        0x0 objs/tSerialPortMain_tecsgen.o
+ .bss           0x00000000        0x0 objs/tSerialPortMain_tecsgen.o
+ .text          0x00000000        0x0 objs/tSerialAdapter_tecsgen.o
+ .data          0x00000000        0x0 objs/tSerialAdapter_tecsgen.o
+ .bss           0x00000000        0x0 objs/tSerialAdapter_tecsgen.o
+ .text          0x00000000        0x0 objs/tSysLog_tecsgen.o
+ .data          0x00000000        0x0 objs/tSysLog_tecsgen.o
+ .bss           0x00000000        0x0 objs/tSysLog_tecsgen.o
+ .text          0x00000000        0x0 objs/tSysLogAdapter_tecsgen.o
+ .data          0x00000000        0x0 objs/tSysLogAdapter_tecsgen.o
+ .bss           0x00000000        0x0 objs/tSysLogAdapter_tecsgen.o
+ .text          0x00000000        0x0 objs/tLogTaskMain_tecsgen.o
+ .data          0x00000000        0x0 objs/tLogTaskMain_tecsgen.o
+ .bss           0x00000000        0x0 objs/tLogTaskMain_tecsgen.o
+ .text          0x00000000        0x0 objs/tBannerMain_tecsgen.o
+ .data          0x00000000        0x0 objs/tBannerMain_tecsgen.o
+ .bss           0x00000000        0x0 objs/tBannerMain_tecsgen.o
+ .text          0x00000000        0x0 objs/tPutLogTarget_tecsgen.o
+ .data          0x00000000        0x0 objs/tPutLogTarget_tecsgen.o
+ .bss           0x00000000        0x0 objs/tPutLogTarget_tecsgen.o
+ .text          0x00000000        0x0 objs/tUsart_tecsgen.o
+ .data          0x00000000        0x0 objs/tUsart_tecsgen.o
+ .bss           0x00000000        0x0 objs/tUsart_tecsgen.o
+ .text          0x00000000        0x0 objs/tSIOPortTargetMain_tecsgen.o
+ .data          0x00000000        0x0 objs/tSIOPortTargetMain_tecsgen.o
+ .bss           0x00000000        0x0 objs/tSIOPortTargetMain_tecsgen.o
+ .text          0x00000000        0x0 objs/tTask.o
+ .data          0x00000000        0x0 objs/tTask.o
+ .bss           0x00000000        0x0 objs/tTask.o
+ .text          0x00000000        0x0 objs/tISR.o
+ .data          0x00000000        0x0 objs/tISR.o
+ .bss           0x00000000        0x0 objs/tISR.o
+ .text          0x00000000        0x0 objs/tInitializeRoutine.o
+ .data          0x00000000        0x0 objs/tInitializeRoutine.o
+ .bss           0x00000000        0x0 objs/tInitializeRoutine.o
+ .text          0x00000000        0x0 objs/tTerminateRoutine.o
+ .data          0x00000000        0x0 objs/tTerminateRoutine.o
+ .bss           0x00000000        0x0 objs/tTerminateRoutine.o
+ .text          0x00000000        0x0 objs/tSerialPortMain.o
+ .data          0x00000000        0x0 objs/tSerialPortMain.o
+ .bss           0x00000000        0x0 objs/tSerialPortMain.o
+ .text          0x00000000        0x0 objs/tSerialAdapter.o
+ .data          0x00000000        0x0 objs/tSerialAdapter.o
+ .bss           0x00000000        0x0 objs/tSerialAdapter.o
+ .text.serial_cls_por
+                0x00000000       0x3c objs/tSerialAdapter.o
+ .text.serial_wri_dat
+                0x00000000       0x44 objs/tSerialAdapter.o
+ .text.serial_ref_por
+                0x00000000       0x40 objs/tSerialAdapter.o
+ .text          0x00000000        0x0 objs/tSysLog.o
+ .data          0x00000000        0x0 objs/tSysLog.o
+ .bss           0x00000000        0x0 objs/tSysLog.o
+ .text.tSysLog_eSysLog_refer
+                0x00000000       0x2c objs/tSysLog.o
+ .text.tSysLog_eSysLog_flush
+                0x00000000       0x3c objs/tSysLog.o
+ .text          0x00000000        0x0 objs/tSysLogAdapter.o
+ .data          0x00000000        0x0 objs/tSysLogAdapter.o
+ .bss           0x00000000        0x0 objs/tSysLogAdapter.o
+ .text.syslog_rea_log
+                0x00000000        0x4 objs/tSysLogAdapter.o
+ .text.syslog_ref_log
+                0x00000000        0x4 objs/tSysLogAdapter.o
+ .text.syslog_fls_log
+                0x00000000        0x4 objs/tSysLogAdapter.o
+ .text          0x00000000        0x0 objs/tLogTaskMain.o
+ .data          0x00000000        0x0 objs/tLogTaskMain.o
+ .bss           0x00000000        0x0 objs/tLogTaskMain.o
+ .text.tLogTaskMain_eLogTask_flush
+                0x00000000       0x64 objs/tLogTaskMain.o
+ .text          0x00000000        0x0 objs/tBannerMain.o
+ .data          0x00000000        0x0 objs/tBannerMain.o
+ .bss           0x00000000        0x0 objs/tBannerMain.o
+ .text          0x00000000        0x0 objs/tPutLogTarget.o
+ .data          0x00000000        0x0 objs/tPutLogTarget.o
+ .bss           0x00000000        0x0 objs/tPutLogTarget.o
+ .text.tPutLogTarget_initialize
+                0x00000000       0x1c objs/tPutLogTarget.o
+ .text          0x00000000        0x0 objs/tUsart.o
+ .data          0x00000000        0x0 objs/tUsart.o
+ .bss           0x00000000        0x0 objs/tUsart.o
+ .text          0x00000000        0x0 objs/init_tecs.o
+ .data          0x00000000        0x0 objs/init_tecs.o
+ .bss           0x00000000        0x0 objs/init_tecs.o
+ .text          0x00000000        0x0 objs/kernel_cfg.o
+ .data          0x00000000        0x0 objs/kernel_cfg.o
+ .bss           0x00000000        0x0 objs/kernel_cfg.o
+ .rodata._kernel_inhinib_table
+                0x00000000       0x18 objs/kernel_cfg.o
+ .rodata._kernel_istksz
+                0x00000000        0x4 objs/kernel_cfg.o
+ .rodata._kernel_tmax_dtqid
+                0x00000000        0x4 objs/kernel_cfg.o
+ .rodata._kernel_tmax_flgid
+                0x00000000        0x4 objs/kernel_cfg.o
+ .rodata._kernel_tmax_mpfid
+                0x00000000        0x4 objs/kernel_cfg.o
+ .rodata._kernel_tmax_mtxid
+                0x00000000        0x4 objs/kernel_cfg.o
+ .rodata._kernel_tmax_pdqid
+                0x00000000        0x4 objs/kernel_cfg.o
+ .rodata._kernel_tnum_def_inhno
+                0x00000000        0x4 objs/kernel_cfg.o
+ .data          0x00000000        0x0 .\libkernel.a(start.o)
+ .bss           0x00000000        0x0 .\libkernel.a(start.o)
+ .data          0x00000000        0x0 .\libkernel.a(core_support.o)
+ .bss           0x00000000        0x0 .\libkernel.a(core_support.o)
+ .text          0x00000000        0x0 .\libkernel.a(target_kernel_impl.o)
+ .data          0x00000000        0x0 .\libkernel.a(target_kernel_impl.o)
+ .bss           0x00000000        0x0 .\libkernel.a(target_kernel_impl.o)
+ .text          0x00000000        0x0 .\libkernel.a(system_stm32f4xx.o)
+ .data          0x00000000        0x0 .\libkernel.a(system_stm32f4xx.o)
+ .bss           0x00000000        0x0 .\libkernel.a(system_stm32f4xx.o)
+ .text.SystemCoreClockUpdate
+                0x00000000       0x70 .\libkernel.a(system_stm32f4xx.o)
+ .data.AHBPrescTable
+                0x00000000       0x10 .\libkernel.a(system_stm32f4xx.o)
+ .text          0x00000000        0x0 .\libkernel.a(stm32f4xx_nucleo.o)
+ .data          0x00000000        0x0 .\libkernel.a(stm32f4xx_nucleo.o)
+ .bss           0x00000000        0x0 .\libkernel.a(stm32f4xx_nucleo.o)
+ .text.BSP_GetVersion
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_nucleo.o)
+ .text.BSP_LED_On
+                0x00000000       0x14 .\libkernel.a(stm32f4xx_nucleo.o)
+ .text.BSP_LED_Off
+                0x00000000       0x14 .\libkernel.a(stm32f4xx_nucleo.o)
+ .text.BSP_PB_Init
+                0x00000000       0x74 .\libkernel.a(stm32f4xx_nucleo.o)
+ .text.BSP_PB_GetState
+                0x00000000       0x18 .\libkernel.a(stm32f4xx_nucleo.o)
+ .data.BUTTON_PORT
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_nucleo.o)
+ .rodata.BUTTON_IRQn
+                0x00000000        0x1 .\libkernel.a(stm32f4xx_nucleo.o)
+ .rodata.BUTTON_PIN
+                0x00000000        0x2 .\libkernel.a(stm32f4xx_nucleo.o)
+ .rodata.GPIO_PIN
+                0x00000000        0x2 .\libkernel.a(stm32f4xx_nucleo.o)
+ .text          0x00000000        0x0 .\libkernel.a(systemclock_config.o)
+ .data          0x00000000        0x0 .\libkernel.a(systemclock_config.o)
+ .bss           0x00000000        0x0 .\libkernel.a(systemclock_config.o)
+ .text          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .data          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .bss           0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .text.HAL_GPIO_DeInit
+                0x00000000      0x124 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .text.HAL_GPIO_ReadPin
+                0x00000000        0xc .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .text.HAL_GPIO_LockPin
+                0x00000000       0x2c .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .text.HAL_GPIO_EXTI_Callback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .text.HAL_GPIO_EXTI_IRQHandler
+                0x00000000       0x18 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .text          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .data          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .bss           0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.UART_WaitOnFlagUntilTimeout.constprop.0
+                0x00000000       0x60 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_HalfDuplex_Init
+                0x00000000       0x64 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_LIN_Init
+                0x00000000       0x78 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_MultiProcessor_Init
+                0x00000000       0x80 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_MspDeInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_DeInit
+                0x00000000       0x24 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_Transmit
+                0x00000000       0xc8 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_Receive
+                0x00000000       0xdc .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_Transmit_IT
+                0x00000000       0x78 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_Receive_IT
+                0x00000000       0x78 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_Transmit_DMA
+                0x00000000       0x8c .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_Receive_DMA
+                0x00000000       0x84 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_DMAPause
+                0x00000000       0x70 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_DMAResume
+                0x00000000       0x80 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_DMAStop
+                0x00000000       0x30 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_TxCpltCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.UART_DMATransmitCplt
+                0x00000000       0x2c .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_TxHalfCpltCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.UART_DMATxHalfCplt
+                0x00000000        0xc .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_RxCpltCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.UART_DMAReceiveCplt
+                0x00000000       0x30 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_RxHalfCpltCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.UART_DMARxHalfCplt
+                0x00000000        0xc .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_ErrorCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.UART_DMAError
+                0x00000000       0x20 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_IRQHandler
+                0x00000000      0x1f4 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_LIN_SendBreak
+                0x00000000       0x34 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_MultiProcessor_EnterMuteMode
+                0x00000000       0x34 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_MultiProcessor_ExitMuteMode
+                0x00000000       0x34 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_HalfDuplex_EnableTransmitter
+                0x00000000       0x38 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_HalfDuplex_EnableReceiver
+                0x00000000       0x38 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_GetState
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_GetError
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .data          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .bss           0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .text.HAL_RCC_DeInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .text.HAL_RCC_MCOConfig
+                0x00000000       0x9c .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .text.HAL_RCC_EnableCSS
+                0x00000000        0xc .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .text.HAL_RCC_DisableCSS
+                0x00000000        0xc .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .text.HAL_RCC_GetOscConfig
+                0x00000000       0xd0 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .text.HAL_RCC_GetClockConfig
+                0x00000000       0x44 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .text.HAL_RCC_CSSCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .text.HAL_RCC_NMI_IRQHandler
+                0x00000000       0x20 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .text          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .data          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .bss           0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text.HAL_DMA_Init
+                0x00000000       0xa8 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text.HAL_DMA_DeInit
+                0x00000000       0x70 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text.HAL_DMA_Start
+                0x00000000       0x4c .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text.HAL_DMA_Start_IT
+                0x00000000       0x5c .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text.HAL_DMA_Abort
+                0x00000000       0x54 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text.HAL_DMA_PollForTransfer
+                0x00000000      0x15c .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text.HAL_DMA_IRQHandler
+                0x00000000      0x190 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text.HAL_DMA_GetState
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text.HAL_DMA_GetError
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .rodata.flagBitshiftOffset.9124
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .debug_info    0x00000000     0x11c8 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .debug_abbrev  0x00000000      0x395 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .debug_loc     0x00000000      0x6f7 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .debug_aranges
+                0x00000000       0x60 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .debug_ranges  0x00000000       0xe0 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .debug_line    0x00000000      0xd1e .\libkernel.a(stm32f4xx_hal_dma.o)
+ .debug_str     0x00000000      0xa86 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .comment       0x00000000       0x4d .\libkernel.a(stm32f4xx_hal_dma.o)
+ .debug_frame   0x00000000      0x148 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .ARM.attributes
+                0x00000000       0x32 .\libkernel.a(stm32f4xx_hal_dma.o)
+ .text          0x00000000        0x0 .\libkernel.a(target_timer.o)
+ .data          0x00000000        0x0 .\libkernel.a(target_timer.o)
+ .bss           0x00000000        0x0 .\libkernel.a(target_timer.o)
+ .text          0x00000000        0x0 .\libkernel.a(core_kernel_impl.o)
+ .data          0x00000000        0x0 .\libkernel.a(core_kernel_impl.o)
+ .bss           0x00000000        0x0 .\libkernel.a(core_kernel_impl.o)
+ .text._kernel_disable_exc
+                0x00000000       0x44 .\libkernel.a(core_kernel_impl.o)
+ .text          0x00000000        0x0 .\libkernel.a(startup.o)
+ .data          0x00000000        0x0 .\libkernel.a(startup.o)
+ .bss           0x00000000        0x0 .\libkernel.a(startup.o)
+ .text          0x00000000        0x0 .\libkernel.a(task.o)
+ .data          0x00000000        0x0 .\libkernel.a(task.o)
+ .bss           0x00000000        0x0 .\libkernel.a(task.o)
+ .text._kernel_make_dormant
+                0x00000000       0x1c .\libkernel.a(task.o)
+ .text          0x00000000        0x0 .\libkernel.a(taskhook.o)
+ .data          0x00000000        0x0 .\libkernel.a(taskhook.o)
+ .bss           0x00000000        0x0 .\libkernel.a(taskhook.o)
+ .text          0x00000000        0x0 .\libkernel.a(time_event.o)
+ .data          0x00000000        0x0 .\libkernel.a(time_event.o)
+ .bss           0x00000000        0x0 .\libkernel.a(time_event.o)
+ .text._kernel_tmevt_up
+                0x00000000       0x44 .\libkernel.a(time_event.o)
+ .text._kernel_check_adjtim
+                0x00000000       0x64 .\libkernel.a(time_event.o)
+ .text._kernel_tmevt_lefttim
+                0x00000000       0x2c .\libkernel.a(time_event.o)
+ .text          0x00000000        0x0 .\libkernel.a(task_manage.o)
+ .data          0x00000000        0x0 .\libkernel.a(task_manage.o)
+ .bss           0x00000000        0x0 .\libkernel.a(task_manage.o)
+ .text.get_tst  0x00000000       0xb0 .\libkernel.a(task_manage.o)
+ .text.get_inf  0x00000000       0x54 .\libkernel.a(task_manage.o)
+ .text          0x00000000        0x0 .\libkernel.a(task_sync.o)
+ .data          0x00000000        0x0 .\libkernel.a(task_sync.o)
+ .bss           0x00000000        0x0 .\libkernel.a(task_sync.o)
+ .text          0x00000000        0x0 .\libkernel.a(task_term.o)
+ .data          0x00000000        0x0 .\libkernel.a(task_term.o)
+ .bss           0x00000000        0x0 .\libkernel.a(task_term.o)
+ .text.sns_ter  0x00000000       0x1c .\libkernel.a(task_term.o)
+ .text          0x00000000        0x0 .\libkernel.a(semaphore.o)
+ .data          0x00000000        0x0 .\libkernel.a(semaphore.o)
+ .bss           0x00000000        0x0 .\libkernel.a(semaphore.o)
+ .text.pol_sem  0x00000000       0x7c .\libkernel.a(semaphore.o)
+ .text.twai_sem
+                0x00000000       0xd8 .\libkernel.a(semaphore.o)
+ .text.ref_sem  0x00000000       0xc8 .\libkernel.a(semaphore.o)
+ .text          0x00000000        0x0 .\libkernel.a(time_manage.o)
+ .data          0x00000000        0x0 .\libkernel.a(time_manage.o)
+ .bss           0x00000000        0x0 .\libkernel.a(time_manage.o)
+ .text.set_tim  0x00000000       0x74 .\libkernel.a(time_manage.o)
+ .text.adj_tim  0x00000000       0xc8 .\libkernel.a(time_manage.o)
+ .text          0x00000000        0x0 .\libkernel.a(cyclic.o)
+ .data          0x00000000        0x0 .\libkernel.a(cyclic.o)
+ .bss           0x00000000        0x0 .\libkernel.a(cyclic.o)
+ .text.ref_cyc  0x00000000       0x88 .\libkernel.a(cyclic.o)
+ .text          0x00000000        0x0 .\libkernel.a(alarm.o)
+ .data          0x00000000        0x0 .\libkernel.a(alarm.o)
+ .bss           0x00000000        0x0 .\libkernel.a(alarm.o)
+ .text.ref_alm  0x00000000       0x88 .\libkernel.a(alarm.o)
+ .text          0x00000000        0x0 .\libkernel.a(sys_manage.o)
+ .data          0x00000000        0x0 .\libkernel.a(sys_manage.o)
+ .bss           0x00000000        0x0 .\libkernel.a(sys_manage.o)
+ .text.get_lod  0x00000000       0x8c .\libkernel.a(sys_manage.o)
+ .text.get_nth  0x00000000       0xa8 .\libkernel.a(sys_manage.o)
+ .text.sns_ker  0x00000000       0x10 .\libkernel.a(sys_manage.o)
+ .text          0x00000000        0x0 .\libkernel.a(interrupt.o)
+ .data          0x00000000        0x0 .\libkernel.a(interrupt.o)
+ .bss           0x00000000        0x0 .\libkernel.a(interrupt.o)
+ .text.clr_int  0x00000000       0xbc .\libkernel.a(interrupt.o)
+ .text.ras_int  0x00000000       0xc0 .\libkernel.a(interrupt.o)
+ .text.prb_int  0x00000000       0xb8 .\libkernel.a(interrupt.o)
+ .text.chg_ipm  0x00000000       0xc0 .\libkernel.a(interrupt.o)
+ .text.get_ipm  0x00000000       0x58 .\libkernel.a(interrupt.o)
+ .text          0x00000000        0x0 .\libkernel.a(exception.o)
+ .data          0x00000000        0x0 .\libkernel.a(exception.o)
+ .bss           0x00000000        0x0 .\libkernel.a(exception.o)
+ .text          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .data          0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .bss           0x00000000        0x0 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_OC1_SetConfig
+                0x00000000       0x58 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_OC3_SetConfig
+                0x00000000       0x5c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_OC4_SetConfig
+                0x00000000       0x48 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_SlaveTimer_SetConfig
+                0x00000000       0xb0 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Base_MspDeInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Base_DeInit
+                0x00000000       0x3c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Base_Start_IT
+                0x00000000       0x18 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Base_Stop_IT
+                0x00000000       0x2c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Base_Start_DMA
+                0x00000000       0x58 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Base_Stop_DMA
+                0x00000000       0x30 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_MspInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_MspDeInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_DeInit
+                0x00000000       0x3c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_Start
+                0x00000000       0x3c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_Stop
+                0x00000000       0x64 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_Start_IT
+                0x00000000       0x84 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_Stop_IT
+                0x00000000       0xa8 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_Start_DMA
+                0x00000000       0xfc .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_Stop_DMA
+                0x00000000       0xac .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_MspInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_MspDeInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_DeInit
+                0x00000000       0x3c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_Start
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_Stop
+                0x00000000       0x68 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_Start_IT
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_Stop_IT
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_Start_DMA
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_Stop_DMA
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_MspInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_MspDeInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_DeInit
+                0x00000000       0x3c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_Start
+                0x00000000       0x24 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_Stop
+                0x00000000       0x34 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_Start_IT
+                0x00000000       0x68 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_Stop_IT
+                0x00000000       0x7c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_Start_DMA
+                0x00000000       0xe4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_Stop_DMA
+                0x00000000       0x88 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OnePulse_MspDeInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OnePulse_DeInit
+                0x00000000       0x3c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OnePulse_Start
+                0x00000000       0x3c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OnePulse_Stop
+                0x00000000       0x64 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OnePulse_Start_IT
+                0x00000000       0x4c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OnePulse_Stop_IT
+                0x00000000       0x74 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_MspInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_MspDeInit
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_DeInit
+                0x00000000       0x3c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_Start
+                0x00000000       0x4c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_Stop
+                0x00000000       0x54 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_Start_IT
+                0x00000000       0x7c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_Stop_IT
+                0x00000000       0x80 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_Start_DMA
+                0x00000000      0x138 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_Stop_DMA
+                0x00000000       0x80 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_DMABurst_WriteStart
+                0x00000000       0xdc .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_DMABurst_WriteStop
+                0x00000000       0x78 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_DMABurst_ReadStart
+                0x00000000       0xdc .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_DMABurst_ReadStop
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_GenerateEvent
+                0x00000000       0x2c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_ConfigOCrefClear
+                0x00000000       0xc0 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_ConfigClockSource
+                0x00000000      0x188 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_ConfigTI1Input
+                0x00000000       0x10 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_SlaveConfigSynchronization
+                0x00000000       0x40 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_SlaveConfigSynchronization_IT
+                0x00000000       0x40 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_ReadCapturedValue
+                0x00000000       0x48 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PeriodElapsedCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_DMAPeriodElapsedCplt
+                0x00000000       0x10 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_DelayElapsedCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_CaptureCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_DMACaptureCplt
+                0x00000000       0x60 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_PulseFinishedCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_DMADelayPulseCplt
+                0x00000000       0x60 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_TriggerCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IRQHandler
+                0x00000000      0x154 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_DMATriggerCplt
+                0x00000000       0x10 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_ErrorCallback
+                0x00000000        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_DMAError
+                0x00000000       0x10 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Base_GetState
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_GetState
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_GetState
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_GetState
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OnePulse_GetState
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_GetState
+                0x00000000        0x8 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_Init
+                0x00000000       0x38 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_Init
+                0x00000000       0x38 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_Init
+                0x00000000       0x38 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_Encoder_Init
+                0x00000000       0xa4 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_TI1_SetConfig
+                0x00000000       0x6c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_IC_ConfigChannel
+                0x00000000      0x128 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_OC2_SetConfig
+                0x00000000       0x5c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OC_ConfigChannel
+                0x00000000       0x60 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_PWM_ConfigChannel
+                0x00000000       0xf8 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.HAL_TIM_OnePulse_ConfigChannel
+                0x00000000      0x108 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text.TIM_CCxChannelCmd
+                0x00000000       0x20 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .text          0x00000000        0x0 .\libkernel.a(wait.o)
+ .data          0x00000000        0x0 .\libkernel.a(wait.o)
+ .bss           0x00000000        0x0 .\libkernel.a(wait.o)
+ .text._kernel_wobj_make_wait_tmout
+                0x00000000       0x58 .\libkernel.a(wait.o)
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x08000000         0x00080000         xr
+SRAM             0x20000000         0x00018000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                [!provide]                PROVIDE (hardware_init_hook = 0x0)
+                0x00000000                PROVIDE (software_init_hook = 0x0)
+                0x00000000                PROVIDE (software_term_hook = 0x0)
+
+.text           0x08000000     0x5780
+                0x08000000                __text = .
+ *(.vector)
+ .vector        0x08000000      0x194 objs/kernel_cfg.o
+                0x08000000                _kernel_vector_table
+ *(.text)
+ .text          0x08000194       0x58 .\libkernel.a(start.o)
+                0x08000194                _kernel_start
+ .text          0x080001ec      0x230 .\libkernel.a(core_support.o)
+                0x080001ec                _kernel_core_exc_entry
+                0x0800022a                _kernel_pendsv_handler
+                0x080002ee                _kernel_svc_handler
+                0x08000316                _kernel_start_dispatch
+                0x0800033a                _kernel_exit_and_dispatch
+                0x08000342                _kernel_do_dispatch
+                0x080003b0                _kernel_start_r
+                0x080003d4                _kernel_call_exit_kernel
+                0x080003e4                sil_dly_nse
+ *(.text.*)
+ .text.syslog   0x0800041c       0x28 objs/sample1.o
+ .text.svc_perror.part.0.constprop.0
+                0x08000444       0x24 objs/sample1.o
+ .text.task     0x08000468      0x288 objs/sample1.o
+                0x08000468                task
+ .text.cpuexc_handler
+                0x080006f0      0x124 objs/sample1.o
+                0x080006f0                cpuexc_handler
+ .text.cyclic_handler
+                0x08000814       0x9c objs/sample1.o
+                0x08000814                cyclic_handler
+ .text.alarm_handler
+                0x080008b0       0x9c objs/sample1.o
+                0x080008b0                alarm_handler
+ .text.exc_task
+                0x0800094c       0x40 objs/sample1.o
+                0x0800094c                exc_task
+ .text.main_task
+                0x0800098c      0x7b4 objs/sample1.o
+                0x0800098c                main_task
+ .text.convert  0x08001140       0xa8 objs/log_output.o
+ .text.syslog_printf
+                0x080011e8      0x17c objs/log_output.o
+                0x080011e8                syslog_printf
+ .text.syslog_print
+                0x08001364       0x34 objs/log_output.o
+                0x08001364                syslog_print
+ .text.syslog_lostmsg
+                0x08001398       0x20 objs/log_output.o
+                0x08001398                syslog_lostmsg
+ .text.tt_syslog
+                0x080013b8      0x21c objs/vasyslog.o
+                0x080013b8                tt_syslog
+ .text.tt_perror
+                0x080015d4       0x30 objs/t_perror.o
+                0x080015d4                tt_perror
+ .text.itron_strerror
+                0x08001604       0x1c objs/strerror.o
+                0x08001604                itron_strerror
+ .text.tTask_CB_initialize
+                0x08001620        0x4 objs/tTask_tecsgen.o
+                0x08001620                tTask_CB_initialize
+ .text.tSemaphore_CB_initialize
+                0x08001624        0x4 objs/tSemaphore_tecsgen.o
+                0x08001624                tSemaphore_CB_initialize
+ .text.tInterruptRequest_CB_initialize
+                0x08001628        0x4 objs/tInterruptRequest_tecsgen.o
+                0x08001628                tInterruptRequest_CB_initialize
+ .text.tISR_CB_initialize
+                0x0800162c        0x4 objs/tISR_tecsgen.o
+                0x0800162c                tISR_CB_initialize
+ .text.tInitializeRoutine_CB_initialize
+                0x08001630        0x4 objs/tInitializeRoutine_tecsgen.o
+                0x08001630                tInitializeRoutine_CB_initialize
+ .text.tTerminateRoutine_CB_initialize
+                0x08001634        0x4 objs/tTerminateRoutine_tecsgen.o
+                0x08001634                tTerminateRoutine_CB_initialize
+ .text.tSerialPortMain_eSerialPort_open_skel
+                0x08001638        0x8 objs/tSerialPortMain_tecsgen.o
+                0x08001638                tSerialPortMain_eSerialPort_open_skel
+ .text.tSerialPortMain_eSerialPort_close_skel
+                0x08001640        0x8 objs/tSerialPortMain_tecsgen.o
+                0x08001640                tSerialPortMain_eSerialPort_close_skel
+ .text.tSerialPortMain_eSerialPort_read_skel
+                0x08001648        0x8 objs/tSerialPortMain_tecsgen.o
+                0x08001648                tSerialPortMain_eSerialPort_read_skel
+ .text.tSerialPortMain_eSerialPort_write_skel
+                0x08001650        0x8 objs/tSerialPortMain_tecsgen.o
+                0x08001650                tSerialPortMain_eSerialPort_write_skel
+ .text.tSerialPortMain_eSerialPort_control_skel
+                0x08001658        0x8 objs/tSerialPortMain_tecsgen.o
+                0x08001658                tSerialPortMain_eSerialPort_control_skel
+ .text.tSerialPortMain_eSerialPort_refer_skel
+                0x08001660        0x8 objs/tSerialPortMain_tecsgen.o
+                0x08001660                tSerialPortMain_eSerialPort_refer_skel
+ .text.tSerialPortMain_CB_initialize
+                0x08001668       0x14 objs/tSerialPortMain_tecsgen.o
+                0x08001668                tSerialPortMain_CB_initialize
+ .text.tSerialAdapter_CB_initialize
+                0x0800167c        0x4 objs/tSerialAdapter_tecsgen.o
+                0x0800167c                tSerialAdapter_CB_initialize
+ .text.tSysLog_CB_initialize
+                0x08001680       0x24 objs/tSysLog_tecsgen.o
+                0x08001680                tSysLog_CB_initialize
+ .text.tSysLogAdapter_CB_initialize
+                0x080016a4        0x4 objs/tSysLogAdapter_tecsgen.o
+                0x080016a4                tSysLogAdapter_CB_initialize
+ .text.tLogTaskMain_CB_initialize
+                0x080016a8        0x4 objs/tLogTaskMain_tecsgen.o
+                0x080016a8                tLogTaskMain_CB_initialize
+ .text.tBannerMain_CB_initialize
+                0x080016ac        0x4 objs/tBannerMain_tecsgen.o
+                0x080016ac                tBannerMain_CB_initialize
+ .text.tPutLogTarget_CB_initialize
+                0x080016b0        0x4 objs/tPutLogTarget_tecsgen.o
+                0x080016b0                tPutLogTarget_CB_initialize
+ .text.tUsart_CB_initialize
+                0x080016b4        0x4 objs/tUsart_tecsgen.o
+                0x080016b4                tUsart_CB_initialize
+ .text.tSIOPortTargetMain_CB_initialize
+                0x080016b8        0x4 objs/tSIOPortTargetMain_tecsgen.o
+                0x080016b8                tSIOPortTargetMain_CB_initialize
+ .text.tTask_start
+                0x080016bc        0x4 objs/tTask.o
+                0x080016bc                tTask_start
+ .text.tISR_start
+                0x080016c0        0xc objs/tISR.o
+                0x080016c0                tISR_start
+ .text.tInitializeRoutine_start
+                0x080016cc        0x4 objs/tInitializeRoutine.o
+                0x080016cc                tInitializeRoutine_start
+ .text.tTerminateRoutine_start
+                0x080016d0        0x4 objs/tTerminateRoutine.o
+                0x080016d0                tTerminateRoutine_start
+ .text.serialPort_writeChar
+                0x080016d4       0xac objs/tSerialPortMain.o
+ .text.tSerialPortMain_eSerialPort_open
+                0x08001780       0x90 objs/tSerialPortMain.o
+                0x08001780                tSerialPortMain_eSerialPort_open
+ .text.tSerialPortMain_eSerialPort_close
+                0x08001810       0x94 objs/tSerialPortMain.o
+                0x08001810                tSerialPortMain_eSerialPort_close
+ .text.tSerialPortMain_eSerialPort_write
+                0x080018a4       0xa0 objs/tSerialPortMain.o
+                0x080018a4                tSerialPortMain_eSerialPort_write
+ .text.tSerialPortMain_eSerialPort_read
+                0x08001944      0x180 objs/tSerialPortMain.o
+                0x08001944                tSerialPortMain_eSerialPort_read
+ .text.tSerialPortMain_eSerialPort_control
+                0x08001ac4       0x2c objs/tSerialPortMain.o
+                0x08001ac4                tSerialPortMain_eSerialPort_control
+ .text.tSerialPortMain_eSerialPort_refer
+                0x08001af0       0x30 objs/tSerialPortMain.o
+                0x08001af0                tSerialPortMain_eSerialPort_refer
+ .text.tSerialPortMain_eiSIOCBR_readySend
+                0x08001b20       0x70 objs/tSerialPortMain.o
+                0x08001b20                tSerialPortMain_eiSIOCBR_readySend
+ .text.tSerialPortMain_eiSIOCBR_readyReceive
+                0x08001b90      0x114 objs/tSerialPortMain.o
+                0x08001b90                tSerialPortMain_eiSIOCBR_readyReceive
+ .text.tSerialPortMain_enSerialPortManage_getChar
+                0x08001ca4       0x34 objs/tSerialPortMain.o
+                0x08001ca4                tSerialPortMain_enSerialPortManage_getChar
+ .text.serial_opn_por
+                0x08001cd8       0x3c objs/tSerialAdapter.o
+                0x08001cd8                serial_opn_por
+ .text.serial_rea_dat
+                0x08001d14       0x44 objs/tSerialAdapter.o
+                0x08001d14                serial_rea_dat
+ .text.serial_ctl_por
+                0x08001d58       0x40 objs/tSerialAdapter.o
+                0x08001d58                serial_ctl_por
+ .text.low_putchar
+                0x08001d98        0x4 objs/tSysLog.o
+ .text.tSysLog_eSysLog_write
+                0x08001d9c       0x98 objs/tSysLog.o
+                0x08001d9c                tSysLog_eSysLog_write
+ .text.tSysLog_eSysLog_read
+                0x08001e34       0x8c objs/tSysLog.o
+                0x08001e34                tSysLog_eSysLog_read
+ .text.tSysLog_eSysLog_mask
+                0x08001ec0       0x1c objs/tSysLog.o
+                0x08001ec0                tSysLog_eSysLog_mask
+ .text.syslog_wri_log
+                0x08001edc        0x4 objs/tSysLogAdapter.o
+                0x08001edc                syslog_wri_log
+ .text.syslog_msk_log
+                0x08001ee0        0x4 objs/tSysLogAdapter.o
+                0x08001ee0                syslog_msk_log
+ .text.logtask_putc
+                0x08001ee4       0x20 objs/tLogTaskMain.o
+ .text.target_fput_log
+                0x08001f04        0x4 objs/tLogTaskMain.o
+ .text.tLogTaskMain_eLogTaskBody_main
+                0x08001f08       0x5c objs/tLogTaskMain.o
+                0x08001f08                tLogTaskMain_eLogTaskBody_main
+ .text.tLogTaskMain_eLogTaskTerminate_main
+                0x08001f64       0x70 objs/tLogTaskMain.o
+                0x08001f64                tLogTaskMain_eLogTaskTerminate_main
+ .text.tBannerMain_eBannerInitialize_main
+                0x08001fd4       0x34 objs/tBannerMain.o
+                0x08001fd4                tBannerMain_eBannerInitialize_main
+ .text.tPutLogTarget_ePutLog_putChar
+                0x08002008       0x2c objs/tPutLogTarget.o
+                0x08002008                tPutLogTarget_ePutLog_putChar
+ .text.tUsart_eSIOPort_open
+                0x08002034       0x8c objs/tUsart.o
+                0x08002034                tUsart_eSIOPort_open
+ .text.tUsart_eSIOPort_close
+                0x080020c0        0xc objs/tUsart.o
+                0x080020c0                tUsart_eSIOPort_close
+ .text.tUsart_eSIOPort_putChar
+                0x080020cc       0x10 objs/tUsart.o
+                0x080020cc                tUsart_eSIOPort_putChar
+ .text.tUsart_eSIOPort_getChar
+                0x080020dc       0x14 objs/tUsart.o
+                0x080020dc                tUsart_eSIOPort_getChar
+ .text.tUsart_eSIOPort_enableCBR
+                0x080020f0       0x24 objs/tUsart.o
+                0x080020f0                tUsart_eSIOPort_enableCBR
+ .text.tUsart_eSIOPort_disableCBR
+                0x08002114       0x24 objs/tUsart.o
+                0x08002114                tUsart_eSIOPort_disableCBR
+ .text.tUsart_eiISR_main
+                0x08002138       0x38 objs/tUsart.o
+                0x08002138                tUsart_eiISR_main
+ .text.initialize_tecs
+                0x08002170       0x44 objs/init_tecs.o
+                0x08002170                initialize_tecs
+ .text._kernel_inthdr_54
+                0x080021b4        0xc objs/kernel_cfg.o
+                0x080021b4                _kernel_inthdr_54
+ .text._kernel_initialize_object
+                0x080021c0       0x20 objs/kernel_cfg.o
+                0x080021c0                _kernel_initialize_object
+ .text.hardware_init_hook
+                0x080021e0       0x18 .\libkernel.a(target_kernel_impl.o)
+                0x080021e0                hardware_init_hook
+ .text._kernel_target_exit
+                0x080021f8        0x8 .\libkernel.a(target_kernel_impl.o)
+                0x080021f8                _kernel_target_exit
+ .text.Error_Handler
+                0x08002200       0x2c .\libkernel.a(target_kernel_impl.o)
+                0x08002200                Error_Handler
+ .text._kernel_target_initialize
+                0x0800222c       0xc0 .\libkernel.a(target_kernel_impl.o)
+                0x0800222c                _kernel_target_initialize
+ .text.HAL_InitTick
+                0x080022ec        0x4 .\libkernel.a(target_kernel_impl.o)
+                0x080022ec                HAL_InitTick
+ .text.HAL_GetTick
+                0x080022f0       0x18 .\libkernel.a(target_kernel_impl.o)
+                0x080022f0                HAL_GetTick
+ .text.SystemInit
+                0x08002308       0x44 .\libkernel.a(system_stm32f4xx.o)
+                0x08002308                SystemInit
+ .text.BSP_LED_Init
+                0x0800234c       0x50 .\libkernel.a(stm32f4xx_nucleo.o)
+                0x0800234c                BSP_LED_Init
+ .text.BSP_LED_Toggle
+                0x0800239c       0x10 .\libkernel.a(stm32f4xx_nucleo.o)
+                0x0800239c                BSP_LED_Toggle
+ .text.SystemClock_Config
+                0x080023ac       0x90 .\libkernel.a(systemclock_config.o)
+                0x080023ac                SystemClock_Config
+ .text.HAL_GPIO_Init
+                0x0800243c      0x1e4 .\libkernel.a(stm32f4xx_hal_gpio.o)
+                0x0800243c                HAL_GPIO_Init
+ .text.HAL_GPIO_WritePin
+                0x08002620        0x8 .\libkernel.a(stm32f4xx_hal_gpio.o)
+                0x08002620                HAL_GPIO_WritePin
+ .text.HAL_GPIO_TogglePin
+                0x08002628        0x8 .\libkernel.a(stm32f4xx_hal_gpio.o)
+                0x08002628                HAL_GPIO_TogglePin
+ .text.UART_SetConfig
+                0x08002630      0x180 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .text.HAL_UART_MspInit
+                0x080027b0        0x4 .\libkernel.a(stm32f4xx_hal_uart.o)
+                0x080027b0                HAL_UART_MspInit
+ .text.HAL_UART_Init
+                0x080027b4       0x5c .\libkernel.a(stm32f4xx_hal_uart.o)
+                0x080027b4                HAL_UART_Init
+ .text.HAL_RCC_OscConfig
+                0x08002810      0x35c .\libkernel.a(stm32f4xx_hal_rcc.o)
+                0x08002810                HAL_RCC_OscConfig
+ .text.HAL_RCC_ClockConfig
+                0x08002b6c      0x200 .\libkernel.a(stm32f4xx_hal_rcc.o)
+                0x08002b6c                HAL_RCC_ClockConfig
+ .text.HAL_RCC_GetSysClockFreq
+                0x08002d6c       0x74 .\libkernel.a(stm32f4xx_hal_rcc.o)
+                0x08002d6c                HAL_RCC_GetSysClockFreq
+ .text.HAL_RCC_GetHCLKFreq
+                0x08002de0       0x34 .\libkernel.a(stm32f4xx_hal_rcc.o)
+                0x08002de0                HAL_RCC_GetHCLKFreq
+ .text.HAL_RCC_GetPCLK1Freq
+                0x08002e14       0x2c .\libkernel.a(stm32f4xx_hal_rcc.o)
+                0x08002e14                HAL_RCC_GetPCLK1Freq
+ .text.HAL_RCC_GetPCLK2Freq
+                0x08002e40       0x2c .\libkernel.a(stm32f4xx_hal_rcc.o)
+                0x08002e40                HAL_RCC_GetPCLK2Freq
+ .text.target_hrt_initialize
+                0x08002e6c       0xb0 .\libkernel.a(target_timer.o)
+                0x08002e6c                target_hrt_initialize
+ .text.target_hrt_terminate
+                0x08002f1c       0x34 .\libkernel.a(target_timer.o)
+                0x08002f1c                target_hrt_terminate
+ .text.target_hrt_handler
+                0x08002f50       0x14 .\libkernel.a(target_timer.o)
+                0x08002f50                target_hrt_handler
+ .text.syslog.constprop.0
+                0x08002f64       0x28 .\libkernel.a(core_kernel_impl.o)
+ .text._kernel_set_exc_int_priority
+                0x08002f8c       0x48 .\libkernel.a(core_kernel_impl.o)
+                0x08002f8c                _kernel_set_exc_int_priority
+ .text._kernel_enable_exc
+                0x08002fd4       0x44 .\libkernel.a(core_kernel_impl.o)
+                0x08002fd4                _kernel_enable_exc
+ .text._kernel_core_initialize
+                0x08003018       0xdc .\libkernel.a(core_kernel_impl.o)
+                0x08003018                _kernel_core_initialize
+ .text._kernel_core_terminate
+                0x080030f4       0x18 .\libkernel.a(core_kernel_impl.o)
+                0x080030f4                _kernel_core_terminate
+ .text._kernel_config_int
+                0x0800310c       0xc4 .\libkernel.a(core_kernel_impl.o)
+                0x0800310c                _kernel_config_int
+ .text._kernel_core_int_entry
+                0x080031d0       0x28 .\libkernel.a(core_kernel_impl.o)
+                0x080031d0                _kernel_core_int_entry
+ .text._kernel_default_exc_handler
+                0x080031f8       0x3c .\libkernel.a(core_kernel_impl.o)
+                0x080031f8                _kernel_default_exc_handler
+ .text._kernel_default_int_handler
+                0x08003234       0x28 .\libkernel.a(core_kernel_impl.o)
+                0x08003234                _kernel_default_int_handler
+ .text.sta_ker  0x0800325c       0x5c .\libkernel.a(startup.o)
+                0x0800325c                sta_ker
+ .text.ext_ker  0x080032b8       0x18 .\libkernel.a(startup.o)
+                0x080032b8                ext_ker
+ .text._kernel_exit_kernel
+                0x080032d0       0x2c .\libkernel.a(startup.o)
+                0x080032d0                _kernel_exit_kernel
+ .text._kernel_search_schedtsk
+                0x080032fc       0x64 .\libkernel.a(task.o)
+                0x080032fc                _kernel_search_schedtsk
+ .text._kernel_make_runnable
+                0x08003360       0x4c .\libkernel.a(task.o)
+                0x08003360                _kernel_make_runnable
+ .text._kernel_initialize_task
+                0x080033ac       0xd4 .\libkernel.a(task.o)
+                0x080033ac                _kernel_initialize_task
+ .text._kernel_make_non_runnable
+                0x08003480       0xfc .\libkernel.a(task.o)
+                0x08003480                _kernel_make_non_runnable
+ .text._kernel_make_active
+                0x0800357c       0x24 .\libkernel.a(task.o)
+                0x0800357c                _kernel_make_active
+ .text._kernel_change_priority
+                0x080035a0      0x15c .\libkernel.a(task.o)
+                0x080035a0                _kernel_change_priority
+ .text._kernel_rotate_ready_queue
+                0x080036fc       0x64 .\libkernel.a(task.o)
+                0x080036fc                _kernel_rotate_ready_queue
+ .text._kernel_task_terminate
+                0x08003760       0x88 .\libkernel.a(task.o)
+                0x08003760                _kernel_task_terminate
+ .text._kernel_initialize_tmevt
+                0x080037e8       0x44 .\libkernel.a(time_event.o)
+                0x080037e8                _kernel_initialize_tmevt
+ .text._kernel_tmevt_down
+                0x0800382c       0x70 .\libkernel.a(time_event.o)
+                0x0800382c                _kernel_tmevt_down
+ .text._kernel_update_current_evttim
+                0x0800389c       0x64 .\libkernel.a(time_event.o)
+                0x0800389c                _kernel_update_current_evttim
+ .text._kernel_set_hrt_event
+                0x08003900       0x68 .\libkernel.a(time_event.o)
+                0x08003900                _kernel_set_hrt_event
+ .text._kernel_tmevtb_register
+                0x08003968       0x5c .\libkernel.a(time_event.o)
+                0x08003968                _kernel_tmevtb_register
+ .text._kernel_tmevtb_enqueue_reltim
+                0x080039c4       0x88 .\libkernel.a(time_event.o)
+                0x080039c4                _kernel_tmevtb_enqueue_reltim
+ .text._kernel_tmevtb_dequeue
+                0x08003a4c       0x98 .\libkernel.a(time_event.o)
+                0x08003a4c                _kernel_tmevtb_dequeue
+ .text._kernel_signal_time
+                0x08003ae4      0x14c .\libkernel.a(time_event.o)
+                0x08003ae4                _kernel_signal_time
+ .text.act_tsk  0x08003c30       0xcc .\libkernel.a(task_manage.o)
+                0x08003c30                act_tsk
+ .text.can_act  0x08003cfc       0x88 .\libkernel.a(task_manage.o)
+                0x08003cfc                can_act
+ .text.chg_pri  0x08003d84      0x100 .\libkernel.a(task_manage.o)
+                0x08003d84                chg_pri
+ .text.get_pri  0x08003e84       0x8c .\libkernel.a(task_manage.o)
+                0x08003e84                get_pri
+ .text.slp_tsk  0x08003f10       0x94 .\libkernel.a(task_sync.o)
+                0x08003f10                slp_tsk
+ .text.tslp_tsk
+                0x08003fa4       0xb4 .\libkernel.a(task_sync.o)
+                0x08003fa4                tslp_tsk
+ .text.wup_tsk  0x08004058       0xd0 .\libkernel.a(task_sync.o)
+                0x08004058                wup_tsk
+ .text.can_wup  0x08004128       0x94 .\libkernel.a(task_sync.o)
+                0x08004128                can_wup
+ .text.rel_wai  0x080041bc      0x120 .\libkernel.a(task_sync.o)
+                0x080041bc                rel_wai
+ .text.sus_tsk  0x080042dc       0xdc .\libkernel.a(task_sync.o)
+                0x080042dc                sus_tsk
+ .text.rsm_tsk  0x080043b8       0xa8 .\libkernel.a(task_sync.o)
+                0x080043b8                rsm_tsk
+ .text.dly_tsk  0x08004460       0xb0 .\libkernel.a(task_sync.o)
+                0x08004460                dly_tsk
+ .text.ext_tsk  0x08004510       0x88 .\libkernel.a(task_term.o)
+                0x08004510                ext_tsk
+ .text.ras_ter  0x08004598      0x128 .\libkernel.a(task_term.o)
+                0x08004598                ras_ter
+ .text.dis_ter  0x080046c0       0x58 .\libkernel.a(task_term.o)
+                0x080046c0                dis_ter
+ .text.ena_ter  0x08004718       0x70 .\libkernel.a(task_term.o)
+                0x08004718                ena_ter
+ .text.ter_tsk  0x08004788       0xa4 .\libkernel.a(task_term.o)
+                0x08004788                ter_tsk
+ .text._kernel_initialize_semaphore
+                0x0800482c       0x30 .\libkernel.a(semaphore.o)
+                0x0800482c                _kernel_initialize_semaphore
+ .text.sig_sem  0x0800485c       0xe8 .\libkernel.a(semaphore.o)
+                0x0800485c                sig_sem
+ .text.wai_sem  0x08004944       0xb4 .\libkernel.a(semaphore.o)
+                0x08004944                wai_sem
+ .text.ini_sem  0x080049f8       0x90 .\libkernel.a(semaphore.o)
+                0x080049f8                ini_sem
+ .text.get_tim  0x08004a88       0x68 .\libkernel.a(time_manage.o)
+                0x08004a88                get_tim
+ .text.fch_hrt  0x08004af0       0x1c .\libkernel.a(time_manage.o)
+                0x08004af0                fch_hrt
+ .text._kernel_call_cyclic
+                0x08004b0c       0x50 .\libkernel.a(cyclic.o)
+                0x08004b0c                _kernel_call_cyclic
+ .text._kernel_initialize_cyclic
+                0x08004b5c       0x68 .\libkernel.a(cyclic.o)
+                0x08004b5c                _kernel_initialize_cyclic
+ .text.sta_cyc  0x08004bc4       0xa8 .\libkernel.a(cyclic.o)
+                0x08004bc4                sta_cyc
+ .text.stp_cyc  0x08004c6c       0x80 .\libkernel.a(cyclic.o)
+                0x08004c6c                stp_cyc
+ .text._kernel_call_alarm
+                0x08004cec       0x40 .\libkernel.a(alarm.o)
+                0x08004cec                _kernel_call_alarm
+ .text._kernel_initialize_alarm
+                0x08004d2c       0x44 .\libkernel.a(alarm.o)
+                0x08004d2c                _kernel_initialize_alarm
+ .text.sta_alm  0x08004d70       0xa0 .\libkernel.a(alarm.o)
+                0x08004d70                sta_alm
+ .text.stp_alm  0x08004e10       0x78 .\libkernel.a(alarm.o)
+                0x08004e10                stp_alm
+ .text.rot_rdq  0x08004e88       0xa0 .\libkernel.a(sys_manage.o)
+                0x08004e88                rot_rdq
+ .text.get_tid  0x08004f28       0x44 .\libkernel.a(sys_manage.o)
+                0x08004f28                get_tid
+ .text.loc_cpu  0x08004f6c       0x28 .\libkernel.a(sys_manage.o)
+                0x08004f6c                loc_cpu
+ .text.unl_cpu  0x08004f94       0x24 .\libkernel.a(sys_manage.o)
+                0x08004f94                unl_cpu
+ .text.dis_dsp  0x08004fb8       0x58 .\libkernel.a(sys_manage.o)
+                0x08004fb8                dis_dsp
+ .text.ena_dsp  0x08005010       0xa0 .\libkernel.a(sys_manage.o)
+                0x08005010                ena_dsp
+ .text.sns_ctx  0x080050b0       0x10 .\libkernel.a(sys_manage.o)
+                0x080050b0                sns_ctx
+ .text.sns_loc  0x080050c0       0x10 .\libkernel.a(sys_manage.o)
+                0x080050c0                sns_loc
+ .text.sns_dsp  0x080050d0       0x10 .\libkernel.a(sys_manage.o)
+                0x080050d0                sns_dsp
+ .text.sns_dpn  0x080050e0       0x28 .\libkernel.a(sys_manage.o)
+                0x080050e0                sns_dpn
+ .text._kernel_initialize_interrupt
+                0x08005108       0x28 .\libkernel.a(interrupt.o)
+                0x08005108                _kernel_initialize_interrupt
+ .text.dis_int  0x08005130       0xbc .\libkernel.a(interrupt.o)
+                0x08005130                dis_int
+ .text.ena_int  0x080051ec       0xc0 .\libkernel.a(interrupt.o)
+                0x080051ec                ena_int
+ .text._kernel_initialize_exception
+                0x080052ac       0x24 .\libkernel.a(exception.o)
+                0x080052ac                _kernel_initialize_exception
+ .text.xsns_dpn
+                0x080052d0       0x38 .\libkernel.a(exception.o)
+                0x080052d0                xsns_dpn
+ .text.HAL_TIM_Base_MspInit
+                0x08005308        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+                0x08005308                HAL_TIM_Base_MspInit
+ .text.HAL_TIM_Base_Start
+                0x0800530c       0x20 .\libkernel.a(stm32f4xx_hal_tim.o)
+                0x0800530c                HAL_TIM_Base_Start
+ .text.HAL_TIM_Base_Stop
+                0x0800532c       0x30 .\libkernel.a(stm32f4xx_hal_tim.o)
+                0x0800532c                HAL_TIM_Base_Stop
+ .text.HAL_TIM_OnePulse_MspInit
+                0x0800535c        0x4 .\libkernel.a(stm32f4xx_hal_tim.o)
+                0x0800535c                HAL_TIM_OnePulse_MspInit
+ .text.TIM_Base_SetConfig
+                0x08005360       0x98 .\libkernel.a(stm32f4xx_hal_tim.o)
+                0x08005360                TIM_Base_SetConfig
+ .text.HAL_TIM_Base_Init
+                0x080053f8       0x38 .\libkernel.a(stm32f4xx_hal_tim.o)
+                0x080053f8                HAL_TIM_Base_Init
+ .text.HAL_TIM_OnePulse_Init
+                0x08005430       0x4c .\libkernel.a(stm32f4xx_hal_tim.o)
+                0x08005430                HAL_TIM_OnePulse_Init
+ .text._kernel_wait_tmout
+                0x0800547c       0xac .\libkernel.a(wait.o)
+                0x0800547c                _kernel_wait_tmout
+ .text._kernel_make_wait_tmout
+                0x08005528       0x70 .\libkernel.a(wait.o)
+                0x08005528                _kernel_make_wait_tmout
+ .text._kernel_wait_complete
+                0x08005598       0x58 .\libkernel.a(wait.o)
+                0x08005598                _kernel_wait_complete
+ .text._kernel_wait_tmout_ok
+                0x080055f0       0x9c .\libkernel.a(wait.o)
+                0x080055f0                _kernel_wait_tmout_ok
+ .text._kernel_wobj_make_wait
+                0x0800568c       0x58 .\libkernel.a(wait.o)
+                0x0800568c                _kernel_wobj_make_wait
+ .text._kernel_init_wait_queue
+                0x080056e4       0x9c .\libkernel.a(wait.o)
+                0x080056e4                _kernel_init_wait_queue
+ *(.empty.*)
+ .empty._kernel_dtqcb_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_dtqcb_table
+ .empty._kernel_dtqinib_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_dtqinib_table
+ .empty._kernel_flgcb_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_flgcb_table
+ .empty._kernel_flginib_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_flginib_table
+ .empty._kernel_mpfcb_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_mpfcb_table
+ .empty._kernel_mpfinib_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_mpfinib_table
+ .empty._kernel_mtxcb_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_mtxcb_table
+ .empty._kernel_mtxinib_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_mtxinib_table
+ .empty._kernel_pdqcb_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_pdqcb_table
+ .empty._kernel_pdqinib_table
+                0x08005780        0x0 objs/kernel_cfg.o
+                0x08005780                _kernel_pdqinib_table
+                0x08005780                _etext = .
+                [!provide]                PROVIDE (etext = .)
+
+.glue_7         0x08005780        0x0
+ .glue_7        0x08005780        0x0 linker stubs
+
+.glue_7t        0x08005780        0x0
+ .glue_7t       0x08005780        0x0 linker stubs
+
+.vfp11_veneer   0x08005780        0x0
+ .vfp11_veneer  0x08005780        0x0 linker stubs
+
+.v4_bx          0x08005780        0x0
+ .v4_bx         0x08005780        0x0 linker stubs
+
+.iplt           0x08005780        0x0
+ .iplt          0x08005780        0x0 objs/sample1.o
+
+.rodata         0x08005780     0x1181
+ *(.rodata)
+ .rodata        0x08005780        0xc objs/sample1.o
+ *(.rodata.*)
+ .rodata.str1.4
+                0x0800578c        0xe objs/sample1.o
+ *fill*         0x0800579a        0x2 
+ .rodata.svc_perror.part.0.constprop.0.str1.4
+                0x0800579c       0x14 objs/sample1.o
+ .rodata.task.str1.4
+                0x080057b0       0xc2 objs/sample1.o
+                                0x11a (size before relaxing)
+ *fill*         0x08005872        0x2 
+ .rodata.cpuexc_handler.str1.4
+                0x08005874      0x112 objs/sample1.o
+ *fill*         0x08005986        0x2 
+ .rodata.cyclic_handler.str1.4
+                0x08005988       0x46 objs/sample1.o
+ *fill*         0x080059ce        0x2 
+ .rodata.exc_task.str1.4
+                0x080059d0       0x16 objs/sample1.o
+ *fill*         0x080059e6        0x2 
+ .rodata.main_task.str1.4
+                0x080059e8      0x507 objs/sample1.o
+ *fill*         0x08005eef        0x1 
+ .rodata.syslog_print.str1.4
+                0x08005ef0       0x1e objs/log_output.o
+ *fill*         0x08005f0e        0x2 
+ .rodata.syslog_lostmsg.str1.4
+                0x08005f10       0x16 objs/log_output.o
+ *fill*         0x08005f26        0x2 
+ .rodata.radHEX
+                0x08005f28       0x11 objs/log_output.o
+ *fill*         0x08005f39        0x3 
+ .rodata.raddec
+                0x08005f3c        0xb objs/log_output.o
+ *fill*         0x08005f47        0x1 
+ .rodata.radhex
+                0x08005f48       0x11 objs/log_output.o
+ *fill*         0x08005f59        0x3 
+ .rodata.message
+                0x08005f5c       0x2d objs/t_perror.o
+ *fill*         0x08005f89        0x3 
+ .rodata.itron_strerror.str1.4
+                0x08005f8c        0xe objs/strerror.o
+ *fill*         0x08005f9a        0x2 
+ .rodata.str1.4
+                0x08005f9c       0xc9 objs/strerror.o
+ *fill*         0x08006065        0x3 
+ .rodata.CSWTCH.1
+                0x08006068      0x108 objs/strerror.o
+ .rodata.tTask_INIB_tab
+                0x08006170        0x4 objs/tTask_tecsgen.o
+                0x08006170                tTask_INIB_tab
+ .rodata.tSemaphore_INIB_tab
+                0x08006174        0x8 objs/tSemaphore_tecsgen.o
+                0x08006174                tSemaphore_INIB_tab
+ .rodata.tInterruptRequest_INIB_tab
+                0x0800617c        0x4 objs/tInterruptRequest_tecsgen.o
+                0x0800617c                tInterruptRequest_INIB_tab
+ .rodata.tISR_INIB_tab
+                0x08006180        0x4 objs/tISR_tecsgen.o
+                0x08006180                tISR_INIB_tab
+ .rodata.SerialPort1_SerialPortMain_eSerialPort_des
+                0x08006184        0x8 objs/tSerialPortMain_tecsgen.o
+                0x08006184                SerialPort1_SerialPortMain_eSerialPort_des
+ .rodata.tSerialPortMain_INIB_tab
+                0x0800618c       0x10 objs/tSerialPortMain_tecsgen.o
+                0x0800618c                tSerialPortMain_INIB_tab
+ .rodata.tSerialPortMain_eSerialPort_MT_
+                0x0800619c       0x18 objs/tSerialPortMain_tecsgen.o
+                0x0800619c                tSerialPortMain_eSerialPort_MT_
+ .rodata.SerialAdapter_cSerialPort
+                0x080061b4        0x4 objs/tSerialAdapter_tecsgen.o
+                0x080061b4                SerialAdapter_cSerialPort
+ .rodata.tSerialAdapter_SINGLE_CELL_INIB
+                0x080061b8        0x8 objs/tSerialAdapter_tecsgen.o
+                0x080061b8                tSerialAdapter_SINGLE_CELL_INIB
+ .rodata.tSysLog_SINGLE_CELL_INIB
+                0x080061c0       0x10 objs/tSysLog_tecsgen.o
+                0x080061c0                tSysLog_SINGLE_CELL_INIB
+ .rodata.tLogTaskMain_SINGLE_CELL_INIB
+                0x080061d0        0x8 objs/tLogTaskMain_tecsgen.o
+                0x080061d0                tLogTaskMain_SINGLE_CELL_INIB
+ .rodata.str1.4
+                0x080061d8       0x22 objs/tBannerMain_tecsgen.o
+                                 0x25 (size before relaxing)
+ *fill*         0x080061fa        0x2 
+ .rodata.tBannerMain_SINGLE_CELL_INIB
+                0x080061fc        0x8 objs/tBannerMain_tecsgen.o
+                0x080061fc                tBannerMain_SINGLE_CELL_INIB
+ .rodata.tUsart_INIB_tab
+                0x08006204        0x8 objs/tUsart_tecsgen.o
+                0x08006204                tUsart_INIB_tab
+ .rodata.tLogTaskMain_eLogTaskBody_main.str1.4
+                0x0800620c       0x20 objs/tLogTaskMain.o
+ .rodata.tLogTaskMain_eLogTaskTerminate_main.str1.4
+                0x0800622c       0x19 objs/tLogTaskMain.o
+ *fill*         0x08006245        0x3 
+ .rodata.banner
+                0x08006248      0x15b objs/tBannerMain.o
+ *fill*         0x080063a3        0x1 
+ .rodata._kernel_alminib_table
+                0x080063a4        0xc objs/kernel_cfg.o
+                0x080063a4                _kernel_alminib_table
+ .rodata._kernel_bitpat_cfgint
+                0x080063b0       0x1c objs/kernel_cfg.o
+                0x080063b0                _kernel_bitpat_cfgint
+ .rodata._kernel_cycinib_table
+                0x080063cc       0x14 objs/kernel_cfg.o
+                0x080063cc                _kernel_cycinib_table
+ .rodata._kernel_exc_tbl
+                0x080063e0      0x194 objs/kernel_cfg.o
+                0x080063e0                _kernel_exc_tbl
+ .rodata._kernel_excinib_table
+                0x08006574        0xc objs/kernel_cfg.o
+                0x08006574                _kernel_excinib_table
+ .rodata._kernel_inirtnb_table
+                0x08006580       0x10 objs/kernel_cfg.o
+                0x08006580                _kernel_inirtnb_table
+ .rodata._kernel_intinib_table
+                0x08006590       0x18 objs/kernel_cfg.o
+                0x08006590                _kernel_intinib_table
+ .rodata._kernel_istk
+                0x080065a8        0x4 objs/kernel_cfg.o
+                0x080065a8                _kernel_istk
+ .rodata._kernel_istkpt
+                0x080065ac        0x4 objs/kernel_cfg.o
+                0x080065ac                _kernel_istkpt
+ .rodata._kernel_seminib_table
+                0x080065b0       0x18 objs/kernel_cfg.o
+                0x080065b0                _kernel_seminib_table
+ .rodata._kernel_terrtnb_table
+                0x080065c8       0x10 objs/kernel_cfg.o
+                0x080065c8                _kernel_terrtnb_table
+ .rodata._kernel_tinib_table
+                0x080065d8       0x90 objs/kernel_cfg.o
+                0x080065d8                _kernel_tinib_table
+ .rodata._kernel_tmax_almid
+                0x08006668        0x4 objs/kernel_cfg.o
+                0x08006668                _kernel_tmax_almid
+ .rodata._kernel_tmax_cycid
+                0x0800666c        0x4 objs/kernel_cfg.o
+                0x0800666c                _kernel_tmax_cycid
+ .rodata._kernel_tmax_semid
+                0x08006670        0x4 objs/kernel_cfg.o
+                0x08006670                _kernel_tmax_semid
+ .rodata._kernel_tmax_tskid
+                0x08006674        0x4 objs/kernel_cfg.o
+                0x08006674                _kernel_tmax_tskid
+ .rodata._kernel_tnum_cfg_intno
+                0x08006678        0x4 objs/kernel_cfg.o
+                0x08006678                _kernel_tnum_cfg_intno
+ .rodata._kernel_tnum_def_excno
+                0x0800667c        0x4 objs/kernel_cfg.o
+                0x0800667c                _kernel_tnum_def_excno
+ .rodata._kernel_tnum_inirtn
+                0x08006680        0x4 objs/kernel_cfg.o
+                0x08006680                _kernel_tnum_inirtn
+ .rodata._kernel_tnum_terrtn
+                0x08006684        0x4 objs/kernel_cfg.o
+                0x08006684                _kernel_tnum_terrtn
+ .rodata._kernel_torder_table
+                0x08006688       0x18 objs/kernel_cfg.o
+                0x08006688                _kernel_torder_table
+ .rodata.APBAHBPrescTable
+                0x080066a0       0x10 .\libkernel.a(stm32f4xx_hal_rcc.o)
+                0x080066a0                APBAHBPrescTable
+ .rodata._kernel_config_int.str1.4
+                0x080066b0       0x7e .\libkernel.a(core_kernel_impl.o)
+ *fill*         0x0800672e        0x2 
+ .rodata._kernel_default_exc_handler.str1.4
+                0x08006730       0x63 .\libkernel.a(core_kernel_impl.o)
+ *fill*         0x08006793        0x1 
+ .rodata._kernel_default_int_handler.str1.4
+                0x08006794       0x2d .\libkernel.a(core_kernel_impl.o)
+ *fill*         0x080067c1        0x3 
+ .rodata.nvic_sys_pri_reg
+                0x080067c4       0x10 .\libkernel.a(core_kernel_impl.o)
+ .rodata._kernel_search_schedtsk.str1.4
+                0x080067d4       0x21 .\libkernel.a(task.o)
+ *fill*         0x080067f5        0x3 
+ .rodata._kernel_make_non_runnable.str1.4
+                0x080067f8       0x37 .\libkernel.a(task.o)
+ *fill*         0x0800682f        0x1 
+ .rodata.bitmap_search_table
+                0x08006830        0xf .\libkernel.a(task.o)
+ *fill*         0x0800683f        0x1 
+ .rodata._kernel_signal_time.str1.4
+                0x08006840       0x65 .\libkernel.a(time_event.o)
+ *fill*         0x080068a5        0x3 
+ .rodata.rel_wai.str1.4
+                0x080068a8       0x30 .\libkernel.a(task_sync.o)
+ .rodata.sig_sem.str1.4
+                0x080068d8       0x2f .\libkernel.a(semaphore.o)
+ .rodata._kernel_wait_tmout.str1.4
+                0x080068d8       0x30 .\libkernel.a(wait.o)
+ .rodata._kernel_make_wait_tmout.str1.4
+                0x080068d8       0x29 .\libkernel.a(wait.o)
+ .rodata._kernel_init_wait_queue.str1.4
+                0x08006901       0x2f .\libkernel.a(wait.o)
+
+.rel.dyn        0x08006904        0x0
+ .rel.iplt      0x08006904        0x0 objs/sample1.o
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x08006901                __exidx_start = .
+
+.ARM.exidx
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+                0x08006901                __exidx_end = .
+                0x08006904                . = ALIGN (0x4)
+                0x08006904                __idata_start = .
+
+.data           0x20000000        0x8 load address 0x08006904
+                0x20000000                __data_start = .
+ *(.data)
+ *(.data.*)
+ .data.SystemCoreClock
+                0x20000000        0x4 .\libkernel.a(system_stm32f4xx.o)
+                0x20000000                SystemCoreClock
+ .data.GPIO_PORT
+                0x20000004        0x4 .\libkernel.a(stm32f4xx_nucleo.o)
+                0x20000004                GPIO_PORT
+                0x0800690c                __idata_end = (__idata_start + SIZEOF (.data))
+                0x20000008                _edata = .
+                [!provide]                PROVIDE (edata = .)
+
+.igot.plt       0x20000008        0x0 load address 0x0800690c
+ .igot.plt      0x20000008        0x0 objs/sample1.o
+                0x20000008                . = ALIGN (0x4)
+
+.bss            0x20000008     0x3d50 load address 0x08006910
+                0x20000008                __bss_start = .
+ *(.bss)
+ *(.bss.*)
+ .bss.volatile_var
+                0x20000008        0x4 objs/sample1.o
+ *fill*         0x2000000c        0x4 
+ .bss._kernel_istack
+                0x20000010     0x1000 objs/kernel_cfg.o
+ .bss._kernel_stack_EXC_TASK
+                0x20001010      0x400 objs/kernel_cfg.o
+ .bss._kernel_stack_MAIN_TASK
+                0x20001410      0x400 objs/kernel_cfg.o
+ .bss._kernel_stack_TASK1
+                0x20001810      0x400 objs/kernel_cfg.o
+ .bss._kernel_stack_TASK2
+                0x20001c10      0x400 objs/kernel_cfg.o
+ .bss._kernel_stack_TASK3
+                0x20002010      0x400 objs/kernel_cfg.o
+ .bss._kernel_stack_TSKID_tTask_LogTask_Task
+                0x20002410     0x1000 objs/kernel_cfg.o
+ .bss.UartHandle
+                0x20003410       0x40 .\libkernel.a(target_kernel_impl.o)
+ .bss._kernel_kerflg
+                0x20003450        0x4 .\libkernel.a(startup.o)
+                0x20003450                _kernel_kerflg
+ .bss._kernel_mtxhook_check_ceilpri
+                0x20003454        0x4 .\libkernel.a(taskhook.o)
+                0x20003454                _kernel_mtxhook_check_ceilpri
+ .bss._kernel_mtxhook_release_all
+                0x20003458        0x4 .\libkernel.a(taskhook.o)
+                0x20003458                _kernel_mtxhook_release_all
+ .bss._kernel_mtxhook_scan_ceilmtx
+                0x2000345c        0x4 .\libkernel.a(taskhook.o)
+                0x2000345c                _kernel_mtxhook_scan_ceilmtx
+ *(COMMON)
+ COMMON         0x20003460        0xc objs/sample1.o
+                0x20003460                message
+                0x20003464                task_loop
+                0x20003468                cpuexc_tskid
+ COMMON         0x2000346c      0x234 objs/tSerialPortMain_tecsgen.o
+                0x2000346c                tSerialPortMain_SerialPort1_SerialPortMain_CB_receiveBuffer_INIT
+                0x2000356c                tSerialPortMain_SerialPort1_SerialPortMain_CB_sendBuffer_INIT
+                0x2000366c                tSerialPortMain_CB_tab
+ COMMON         0x200036a0      0x41c objs/tSysLog_tecsgen.o
+                0x200036a0                tSysLog_SINGLE_CELL_CB
+                0x200036bc                tSysLog_SINGLE_CELL_CB_logBuffer_INIT
+ COMMON         0x20003abc      0x164 objs/kernel_cfg.o
+                0x20003abc                _kernel_cyccb_table
+                0x20003ad4                _kernel_semcb_table
+                0x20003af4                _kernel_tmevt_heap
+                0x20003b18                _kernel_almcb_table
+                0x20003b30                _kernel_tcb_table
+ COMMON         0x20003c20       0x78 .\libkernel.a(target_timer.o)
+                0x20003c20                Tim5Handle
+                0x20003c5c                Tim2Handle
+ COMMON         0x20003c98        0x8 .\libkernel.a(core_kernel_impl.o)
+                0x20003c98                _kernel_saved_iipm
+                0x20003c9c                _kernel_lock_flag
+ COMMON         0x20003ca0       0x94 .\libkernel.a(task.o)
+                0x20003ca0                _kernel_p_schedtsk
+                0x20003ca4                _kernel_ready_queue
+                0x20003d24                _kernel_dspflg
+                0x20003d28                _kernel_ready_primap
+                0x20003d2c                _kernel_p_runtsk
+                0x20003d30                _kernel_enadsp
+ *fill*         0x20003d34        0x4 
+ COMMON         0x20003d38       0x20 .\libkernel.a(time_event.o)
+                0x20003d38                _kernel_monotonic_evttim
+                0x20003d3c                _kernel_in_signal_time
+                0x20003d40                _kernel_boundary_evttim
+                0x20003d44                _kernel_current_evttim
+                0x20003d48                _kernel_current_hrtcnt
+                0x20003d50                _kernel_systim_offset
+                0x20003d58                . = ALIGN (0x4)
+                0x20003d58                . = ALIGN (0x4)
+                0x20003d58                _end = .
+                0x20003d58                __bss_end = .
+                [!provide]                PROVIDE (end = .)
+LOAD objs/sample1.o
+LOAD objs/log_output.o
+LOAD objs/vasyslog.o
+LOAD objs/t_perror.o
+LOAD objs/strerror.o
+LOAD objs/tTask_tecsgen.o
+LOAD objs/tSemaphore_tecsgen.o
+LOAD objs/tInterruptRequest_tecsgen.o
+LOAD objs/tISR_tecsgen.o
+LOAD objs/tInitializeRoutine_tecsgen.o
+LOAD objs/tTerminateRoutine_tecsgen.o
+LOAD objs/tSerialPortMain_tecsgen.o
+LOAD objs/tSerialAdapter_tecsgen.o
+LOAD objs/tSysLog_tecsgen.o
+LOAD objs/tSysLogAdapter_tecsgen.o
+LOAD objs/tLogTaskMain_tecsgen.o
+LOAD objs/tBannerMain_tecsgen.o
+LOAD objs/tPutLogTarget_tecsgen.o
+LOAD objs/tUsart_tecsgen.o
+LOAD objs/tSIOPortTargetMain_tecsgen.o
+LOAD objs/tTask.o
+LOAD objs/tISR.o
+LOAD objs/tInitializeRoutine.o
+LOAD objs/tTerminateRoutine.o
+LOAD objs/tSerialPortMain.o
+LOAD objs/tSerialAdapter.o
+LOAD objs/tSysLog.o
+LOAD objs/tSysLogAdapter.o
+LOAD objs/tLogTaskMain.o
+LOAD objs/tBannerMain.o
+LOAD objs/tPutLogTarget.o
+LOAD objs/tUsart.o
+LOAD objs/init_tecs.o
+LOAD objs/kernel_cfg.o
+LOAD .\libkernel.a
+LOAD c:/cygwin64/home/hiro2/tecs/arm-9.3.1/2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m+fp/softfp\libc.a
+LOAD c:/cygwin64/home/hiro2/tecs/arm-9.3.1/2020-q2-update/bin/../lib/gcc/arm-none-eabi/9.3.1/thumb/v7e-m+fp/softfp\libgcc.a
+OUTPUT(asp.exe elf32-littlearm)
+LOAD linker stubs
+
+.debug_info     0x00000000    0x4c5dd
+ .debug_info    0x00000000     0x3147 objs/sample1.o
+ .debug_info    0x00003147      0x4df objs/log_output.o
+ .debug_info    0x00003626      0x1d4 objs/vasyslog.o
+ .debug_info    0x000037fa      0x1f5 objs/t_perror.o
+ .debug_info    0x000039ef       0xe3 objs/strerror.o
+ .debug_info    0x00003ad2      0xe03 objs/tTask_tecsgen.o
+ .debug_info    0x000048d5      0xa02 objs/tSemaphore_tecsgen.o
+ .debug_info    0x000052d7      0xb93 objs/tInterruptRequest_tecsgen.o
+ .debug_info    0x00005e6a      0xc55 objs/tISR_tecsgen.o
+ .debug_info    0x00006abf      0xa03 objs/tInitializeRoutine_tecsgen.o
+ .debug_info    0x000074c2      0xdd6 objs/tTerminateRoutine_tecsgen.o
+ .debug_info    0x00008298     0x1105 objs/tSerialPortMain_tecsgen.o
+ .debug_info    0x0000939d      0xb80 objs/tSerialAdapter_tecsgen.o
+ .debug_info    0x00009f1d      0xd7a objs/tSysLog_tecsgen.o
+ .debug_info    0x0000ac97      0xd3c objs/tSysLogAdapter_tecsgen.o
+ .debug_info    0x0000b9d3      0xd9b objs/tLogTaskMain_tecsgen.o
+ .debug_info    0x0000c76e      0x9c8 objs/tBannerMain_tecsgen.o
+ .debug_info    0x0000d136      0xbdf objs/tPutLogTarget_tecsgen.o
+ .debug_info    0x0000dd15      0xc0e objs/tUsart_tecsgen.o
+ .debug_info    0x0000e923      0xc28 objs/tSIOPortTargetMain_tecsgen.o
+ .debug_info    0x0000f54b      0xe1c objs/tTask.o
+ .debug_info    0x00010367      0xc86 objs/tISR.o
+ .debug_info    0x00010fed      0xa41 objs/tInitializeRoutine.o
+ .debug_info    0x00011a2e      0xdfc objs/tTerminateRoutine.o
+ .debug_info    0x0001282a     0x20a9 objs/tSerialPortMain.o
+ .debug_info    0x000148d3      0xd4f objs/tSerialAdapter.o
+ .debug_info    0x00015622     0x16dc objs/tSysLog.o
+ .debug_info    0x00016cfe      0xf36 objs/tSysLogAdapter.o
+ .debug_info    0x00017c34     0x1270 objs/tLogTaskMain.o
+ .debug_info    0x00018ea4      0xb9b objs/tBannerMain.o
+ .debug_info    0x00019a3f      0xe0d objs/tPutLogTarget.o
+ .debug_info    0x0001a84c     0x16b0 objs/tUsart.o
+ .debug_info    0x0001befc      0xab5 objs/init_tecs.o
+ .debug_info    0x0001c9b1     0x287a objs/kernel_cfg.o
+ .debug_info    0x0001f22b       0x26 .\libkernel.a(start.o)
+ .debug_info    0x0001f251       0x26 .\libkernel.a(core_support.o)
+ .debug_info    0x0001f277     0x19c2 .\libkernel.a(target_kernel_impl.o)
+ .debug_info    0x00020c39      0x529 .\libkernel.a(system_stm32f4xx.o)
+ .debug_info    0x00021162     0x1174 .\libkernel.a(stm32f4xx_nucleo.o)
+ .debug_info    0x000222d6      0xda1 .\libkernel.a(systemclock_config.o)
+ .debug_info    0x00023077     0x1076 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .debug_info    0x000240ed     0x1c96 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .debug_info    0x00025d83     0x171c .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .debug_info    0x0002749f     0x1554 .\libkernel.a(target_timer.o)
+ .debug_info    0x000289f3     0x2b05 .\libkernel.a(core_kernel_impl.o)
+ .debug_info    0x0002b4f8     0x1365 .\libkernel.a(startup.o)
+ .debug_info    0x0002c85d     0x24c1 .\libkernel.a(task.o)
+ .debug_info    0x0002ed1e     0x156e .\libkernel.a(taskhook.o)
+ .debug_info    0x0003028c     0x1d19 .\libkernel.a(time_event.o)
+ .debug_info    0x00031fa5     0x2111 .\libkernel.a(task_manage.o)
+ .debug_info    0x000340b6     0x2652 .\libkernel.a(task_sync.o)
+ .debug_info    0x00036708     0x1f3b .\libkernel.a(task_term.o)
+ .debug_info    0x00038643     0x259b .\libkernel.a(semaphore.o)
+ .debug_info    0x0003abde     0x17ec .\libkernel.a(time_manage.o)
+ .debug_info    0x0003c3ca     0x1a79 .\libkernel.a(cyclic.o)
+ .debug_info    0x0003de43     0x19cf .\libkernel.a(alarm.o)
+ .debug_info    0x0003f812     0x22e2 .\libkernel.a(sys_manage.o)
+ .debug_info    0x00041af4     0x2898 .\libkernel.a(interrupt.o)
+ .debug_info    0x0004438c     0x1720 .\libkernel.a(exception.o)
+ .debug_info    0x00045aac     0x465b .\libkernel.a(stm32f4xx_hal_tim.o)
+ .debug_info    0x0004a107     0x24d6 .\libkernel.a(wait.o)
+
+.debug_abbrev   0x00000000     0xb5cf
+ .debug_abbrev  0x00000000      0x36d objs/sample1.o
+ .debug_abbrev  0x0000036d      0x1b4 objs/log_output.o
+ .debug_abbrev  0x00000521      0x107 objs/vasyslog.o
+ .debug_abbrev  0x00000628       0xf5 objs/t_perror.o
+ .debug_abbrev  0x0000071d       0x8a objs/strerror.o
+ .debug_abbrev  0x000007a7      0x217 objs/tTask_tecsgen.o
+ .debug_abbrev  0x000009be      0x217 objs/tSemaphore_tecsgen.o
+ .debug_abbrev  0x00000bd5      0x22d objs/tInterruptRequest_tecsgen.o
+ .debug_abbrev  0x00000e02      0x217 objs/tISR_tecsgen.o
+ .debug_abbrev  0x00001019      0x1f6 objs/tInitializeRoutine_tecsgen.o
+ .debug_abbrev  0x0000120f      0x20a objs/tTerminateRoutine_tecsgen.o
+ .debug_abbrev  0x00001419      0x2d3 objs/tSerialPortMain_tecsgen.o
+ .debug_abbrev  0x000016ec      0x205 objs/tSerialAdapter_tecsgen.o
+ .debug_abbrev  0x000018f1      0x20a objs/tSysLog_tecsgen.o
+ .debug_abbrev  0x00001afb      0x1e8 objs/tSysLogAdapter_tecsgen.o
+ .debug_abbrev  0x00001ce3      0x1f7 objs/tLogTaskMain_tecsgen.o
+ .debug_abbrev  0x00001eda      0x1e3 objs/tBannerMain_tecsgen.o
+ .debug_abbrev  0x000020bd      0x1e8 objs/tPutLogTarget_tecsgen.o
+ .debug_abbrev  0x000022a5      0x217 objs/tUsart_tecsgen.o
+ .debug_abbrev  0x000024bc      0x20a objs/tSIOPortTargetMain_tecsgen.o
+ .debug_abbrev  0x000026c6      0x235 objs/tTask.o
+ .debug_abbrev  0x000028fb      0x235 objs/tISR.o
+ .debug_abbrev  0x00002b30      0x221 objs/tInitializeRoutine.o
+ .debug_abbrev  0x00002d51      0x235 objs/tTerminateRoutine.o
+ .debug_abbrev  0x00002f86      0x4f0 objs/tSerialPortMain.o
+ .debug_abbrev  0x00003476      0x262 objs/tSerialAdapter.o
+ .debug_abbrev  0x000036d8      0x3cf objs/tSysLog.o
+ .debug_abbrev  0x00003aa7      0x23d objs/tSysLogAdapter.o
+ .debug_abbrev  0x00003ce4      0x389 objs/tLogTaskMain.o
+ .debug_abbrev  0x0000406d      0x291 objs/tBannerMain.o
+ .debug_abbrev  0x000042fe      0x305 objs/tPutLogTarget.o
+ .debug_abbrev  0x00004603      0x385 objs/tUsart.o
+ .debug_abbrev  0x00004988      0x204 objs/init_tecs.o
+ .debug_abbrev  0x00004b8c      0x307 objs/kernel_cfg.o
+ .debug_abbrev  0x00004e93       0x14 .\libkernel.a(start.o)
+ .debug_abbrev  0x00004ea7       0x14 .\libkernel.a(core_support.o)
+ .debug_abbrev  0x00004ebb      0x382 .\libkernel.a(target_kernel_impl.o)
+ .debug_abbrev  0x0000523d      0x13f .\libkernel.a(system_stm32f4xx.o)
+ .debug_abbrev  0x0000537c      0x2f8 .\libkernel.a(stm32f4xx_nucleo.o)
+ .debug_abbrev  0x00005674      0x269 .\libkernel.a(systemclock_config.o)
+ .debug_abbrev  0x000058dd      0x2ee .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .debug_abbrev  0x00005bcb      0x3f1 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .debug_abbrev  0x00005fbc      0x444 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .debug_abbrev  0x00006400      0x2c3 .\libkernel.a(target_timer.o)
+ .debug_abbrev  0x000066c3      0x5bd .\libkernel.a(core_kernel_impl.o)
+ .debug_abbrev  0x00006c80      0x347 .\libkernel.a(startup.o)
+ .debug_abbrev  0x00006fc7      0x50f .\libkernel.a(task.o)
+ .debug_abbrev  0x000074d6      0x241 .\libkernel.a(taskhook.o)
+ .debug_abbrev  0x00007717      0x59f .\libkernel.a(time_event.o)
+ .debug_abbrev  0x00007cb6      0x4ed .\libkernel.a(task_manage.o)
+ .debug_abbrev  0x000081a3      0x533 .\libkernel.a(task_sync.o)
+ .debug_abbrev  0x000086d6      0x550 .\libkernel.a(task_term.o)
+ .debug_abbrev  0x00008c26      0x55c .\libkernel.a(semaphore.o)
+ .debug_abbrev  0x00009182      0x426 .\libkernel.a(time_manage.o)
+ .debug_abbrev  0x000095a8      0x467 .\libkernel.a(cyclic.o)
+ .debug_abbrev  0x00009a0f      0x488 .\libkernel.a(alarm.o)
+ .debug_abbrev  0x00009e97      0x586 .\libkernel.a(sys_manage.o)
+ .debug_abbrev  0x0000a41d      0x569 .\libkernel.a(interrupt.o)
+ .debug_abbrev  0x0000a986      0x36a .\libkernel.a(exception.o)
+ .debug_abbrev  0x0000acf0      0x4ac .\libkernel.a(stm32f4xx_hal_tim.o)
+ .debug_abbrev  0x0000b19c      0x433 .\libkernel.a(wait.o)
+
+.debug_loc      0x00000000    0x14918
+ .debug_loc     0x00000000     0x2ea3 objs/sample1.o
+ .debug_loc     0x00002ea3      0x782 objs/log_output.o
+ .debug_loc     0x00003625      0x307 objs/vasyslog.o
+ .debug_loc     0x0000392c       0xef objs/t_perror.o
+ .debug_loc     0x00003a1b       0x35 objs/strerror.o
+ .debug_loc     0x00003a50      0x2be objs/tSerialPortMain_tecsgen.o
+ .debug_loc     0x00003d0e       0x4a objs/tTask.o
+ .debug_loc     0x00003d58       0x4a objs/tISR.o
+ .debug_loc     0x00003da2       0x4a objs/tInitializeRoutine.o
+ .debug_loc     0x00003dec       0x4a objs/tTerminateRoutine.o
+ .debug_loc     0x00003e36      0xfe9 objs/tSerialPortMain.o
+ .debug_loc     0x00004e1f      0x4e6 objs/tSerialAdapter.o
+ .debug_loc     0x00005305      0x2ea objs/tSysLog.o
+ .debug_loc     0x000055ef       0xde objs/tSysLogAdapter.o
+ .debug_loc     0x000056cd      0x1f6 objs/tLogTaskMain.o
+ .debug_loc     0x000058c3       0xc1 objs/tBannerMain.o
+ .debug_loc     0x00005984       0x99 objs/tPutLogTarget.o
+ .debug_loc     0x00005a1d      0x8b9 objs/tUsart.o
+ .debug_loc     0x000062d6       0x25 .\libkernel.a(target_kernel_impl.o)
+ .debug_loc     0x000062fb      0x11e .\libkernel.a(system_stm32f4xx.o)
+ .debug_loc     0x00006419      0x13d .\libkernel.a(stm32f4xx_nucleo.o)
+ .debug_loc     0x00006556      0x585 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .debug_loc     0x00006adb     0x148d .\libkernel.a(stm32f4xx_hal_uart.o)
+ .debug_loc     0x00007f68      0x8ba .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .debug_loc     0x00008822       0x4a .\libkernel.a(target_timer.o)
+ .debug_loc     0x0000886c     0x1139 .\libkernel.a(core_kernel_impl.o)
+ .debug_loc     0x000099a5       0x7e .\libkernel.a(startup.o)
+ .debug_loc     0x00009a23      0xe4f .\libkernel.a(task.o)
+ .debug_loc     0x0000a872      0x959 .\libkernel.a(time_event.o)
+ .debug_loc     0x0000b1cb      0x7fa .\libkernel.a(task_manage.o)
+ .debug_loc     0x0000b9c5      0x995 .\libkernel.a(task_sync.o)
+ .debug_loc     0x0000c35a      0x434 .\libkernel.a(task_term.o)
+ .debug_loc     0x0000c78e      0x8d2 .\libkernel.a(semaphore.o)
+ .debug_loc     0x0000d060      0x340 .\libkernel.a(time_manage.o)
+ .debug_loc     0x0000d3a0      0x402 .\libkernel.a(cyclic.o)
+ .debug_loc     0x0000d7a2      0x3d2 .\libkernel.a(alarm.o)
+ .debug_loc     0x0000db74      0x788 .\libkernel.a(sys_manage.o)
+ .debug_loc     0x0000e2fc      0xedd .\libkernel.a(interrupt.o)
+ .debug_loc     0x0000f1d9      0x151 .\libkernel.a(exception.o)
+ .debug_loc     0x0000f32a     0x48ac .\libkernel.a(stm32f4xx_hal_tim.o)
+ .debug_loc     0x00013bd6      0xd42 .\libkernel.a(wait.o)
+
+.debug_aranges  0x00000000     0x1018
+ .debug_aranges
+                0x00000000       0x58 objs/sample1.o
+ .debug_aranges
+                0x00000058       0x38 objs/log_output.o
+ .debug_aranges
+                0x00000090       0x20 objs/vasyslog.o
+ .debug_aranges
+                0x000000b0       0x20 objs/t_perror.o
+ .debug_aranges
+                0x000000d0       0x20 objs/strerror.o
+ .debug_aranges
+                0x000000f0       0x20 objs/tTask_tecsgen.o
+ .debug_aranges
+                0x00000110       0x20 objs/tSemaphore_tecsgen.o
+ .debug_aranges
+                0x00000130       0x20 objs/tInterruptRequest_tecsgen.o
+ .debug_aranges
+                0x00000150       0x20 objs/tISR_tecsgen.o
+ .debug_aranges
+                0x00000170       0x20 objs/tInitializeRoutine_tecsgen.o
+ .debug_aranges
+                0x00000190       0x20 objs/tTerminateRoutine_tecsgen.o
+ .debug_aranges
+                0x000001b0       0x50 objs/tSerialPortMain_tecsgen.o
+ .debug_aranges
+                0x00000200       0x20 objs/tSerialAdapter_tecsgen.o
+ .debug_aranges
+                0x00000220       0x20 objs/tSysLog_tecsgen.o
+ .debug_aranges
+                0x00000240       0x20 objs/tSysLogAdapter_tecsgen.o
+ .debug_aranges
+                0x00000260       0x20 objs/tLogTaskMain_tecsgen.o
+ .debug_aranges
+                0x00000280       0x20 objs/tBannerMain_tecsgen.o
+ .debug_aranges
+                0x000002a0       0x20 objs/tPutLogTarget_tecsgen.o
+ .debug_aranges
+                0x000002c0       0x20 objs/tUsart_tecsgen.o
+ .debug_aranges
+                0x000002e0       0x20 objs/tSIOPortTargetMain_tecsgen.o
+ .debug_aranges
+                0x00000300       0x20 objs/tTask.o
+ .debug_aranges
+                0x00000320       0x20 objs/tISR.o
+ .debug_aranges
+                0x00000340       0x20 objs/tInitializeRoutine.o
+ .debug_aranges
+                0x00000360       0x20 objs/tTerminateRoutine.o
+ .debug_aranges
+                0x00000380       0x68 objs/tSerialPortMain.o
+ .debug_aranges
+                0x000003e8       0x48 objs/tSerialAdapter.o
+ .debug_aranges
+                0x00000430       0x48 objs/tSysLog.o
+ .debug_aranges
+                0x00000478       0x40 objs/tSysLogAdapter.o
+ .debug_aranges
+                0x000004b8       0x40 objs/tLogTaskMain.o
+ .debug_aranges
+                0x000004f8       0x20 objs/tBannerMain.o
+ .debug_aranges
+                0x00000518       0x28 objs/tPutLogTarget.o
+ .debug_aranges
+                0x00000540       0x50 objs/tUsart.o
+ .debug_aranges
+                0x00000590       0x20 objs/init_tecs.o
+ .debug_aranges
+                0x000005b0       0x28 objs/kernel_cfg.o
+ .debug_aranges
+                0x000005d8       0x20 .\libkernel.a(start.o)
+ .debug_aranges
+                0x000005f8       0x20 .\libkernel.a(core_support.o)
+ .debug_aranges
+                0x00000618       0x48 .\libkernel.a(target_kernel_impl.o)
+ .debug_aranges
+                0x00000660       0x28 .\libkernel.a(system_stm32f4xx.o)
+ .debug_aranges
+                0x00000688       0x50 .\libkernel.a(stm32f4xx_nucleo.o)
+ .debug_aranges
+                0x000006d8       0x20 .\libkernel.a(systemclock_config.o)
+ .debug_aranges
+                0x000006f8       0x58 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .debug_aranges
+                0x00000750      0x108 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .debug_aranges
+                0x00000858       0x80 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .debug_aranges
+                0x000008d8       0x30 .\libkernel.a(target_timer.o)
+ .debug_aranges
+                0x00000908       0x68 .\libkernel.a(core_kernel_impl.o)
+ .debug_aranges
+                0x00000970       0x30 .\libkernel.a(startup.o)
+ .debug_aranges
+                0x000009a0       0x60 .\libkernel.a(task.o)
+ .debug_aranges
+                0x00000a00       0x18 .\libkernel.a(taskhook.o)
+ .debug_aranges
+                0x00000a18       0x70 .\libkernel.a(time_event.o)
+ .debug_aranges
+                0x00000a88       0x48 .\libkernel.a(task_manage.o)
+ .debug_aranges
+                0x00000ad0       0x58 .\libkernel.a(task_sync.o)
+ .debug_aranges
+                0x00000b28       0x48 .\libkernel.a(task_term.o)
+ .debug_aranges
+                0x00000b70       0x50 .\libkernel.a(semaphore.o)
+ .debug_aranges
+                0x00000bc0       0x38 .\libkernel.a(time_manage.o)
+ .debug_aranges
+                0x00000bf8       0x40 .\libkernel.a(cyclic.o)
+ .debug_aranges
+                0x00000c38       0x40 .\libkernel.a(alarm.o)
+ .debug_aranges
+                0x00000c78       0x80 .\libkernel.a(sys_manage.o)
+ .debug_aranges
+                0x00000cf8       0x58 .\libkernel.a(interrupt.o)
+ .debug_aranges
+                0x00000d50       0x28 .\libkernel.a(exception.o)
+ .debug_aranges
+                0x00000d78      0x250 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .debug_aranges
+                0x00000fc8       0x50 .\libkernel.a(wait.o)
+
+.debug_ranges   0x00000000     0x2cf0
+ .debug_ranges  0x00000000      0x350 objs/sample1.o
+ .debug_ranges  0x00000350       0x28 objs/log_output.o
+ .debug_ranges  0x00000378       0x10 objs/vasyslog.o
+ .debug_ranges  0x00000388       0x10 objs/t_perror.o
+ .debug_ranges  0x00000398       0x10 objs/strerror.o
+ .debug_ranges  0x000003a8       0x10 objs/tTask_tecsgen.o
+ .debug_ranges  0x000003b8       0x10 objs/tSemaphore_tecsgen.o
+ .debug_ranges  0x000003c8       0x10 objs/tInterruptRequest_tecsgen.o
+ .debug_ranges  0x000003d8       0x10 objs/tISR_tecsgen.o
+ .debug_ranges  0x000003e8       0x10 objs/tInitializeRoutine_tecsgen.o
+ .debug_ranges  0x000003f8       0x10 objs/tTerminateRoutine_tecsgen.o
+ .debug_ranges  0x00000408       0x40 objs/tSerialPortMain_tecsgen.o
+ .debug_ranges  0x00000448       0x10 objs/tSerialAdapter_tecsgen.o
+ .debug_ranges  0x00000458       0x10 objs/tSysLog_tecsgen.o
+ .debug_ranges  0x00000468       0x10 objs/tSysLogAdapter_tecsgen.o
+ .debug_ranges  0x00000478       0x10 objs/tLogTaskMain_tecsgen.o
+ .debug_ranges  0x00000488       0x10 objs/tBannerMain_tecsgen.o
+ .debug_ranges  0x00000498       0x10 objs/tPutLogTarget_tecsgen.o
+ .debug_ranges  0x000004a8       0x10 objs/tUsart_tecsgen.o
+ .debug_ranges  0x000004b8       0x10 objs/tSIOPortTargetMain_tecsgen.o
+ .debug_ranges  0x000004c8       0x10 objs/tTask.o
+ .debug_ranges  0x000004d8       0x10 objs/tISR.o
+ .debug_ranges  0x000004e8       0x10 objs/tInitializeRoutine.o
+ .debug_ranges  0x000004f8       0x10 objs/tTerminateRoutine.o
+ .debug_ranges  0x00000508      0x2e8 objs/tSerialPortMain.o
+ .debug_ranges  0x000007f0       0x38 objs/tSerialAdapter.o
+ .debug_ranges  0x00000828      0x100 objs/tSysLog.o
+ .debug_ranges  0x00000928       0x30 objs/tSysLogAdapter.o
+ .debug_ranges  0x00000958       0x48 objs/tLogTaskMain.o
+ .debug_ranges  0x000009a0       0x28 objs/tBannerMain.o
+ .debug_ranges  0x000009c8       0x88 objs/tPutLogTarget.o
+ .debug_ranges  0x00000a50       0xd8 objs/tUsart.o
+ .debug_ranges  0x00000b28       0x10 objs/init_tecs.o
+ .debug_ranges  0x00000b38       0x18 objs/kernel_cfg.o
+ .debug_ranges  0x00000b50       0x90 .\libkernel.a(target_kernel_impl.o)
+ .debug_ranges  0x00000be0       0x18 .\libkernel.a(system_stm32f4xx.o)
+ .debug_ranges  0x00000bf8       0x40 .\libkernel.a(stm32f4xx_nucleo.o)
+ .debug_ranges  0x00000c38       0x60 .\libkernel.a(systemclock_config.o)
+ .debug_ranges  0x00000c98       0x60 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .debug_ranges  0x00000cf8      0x150 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .debug_ranges  0x00000e48      0x180 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .debug_ranges  0x00000fc8       0x80 .\libkernel.a(target_timer.o)
+ .debug_ranges  0x00001048      0x2d0 .\libkernel.a(core_kernel_impl.o)
+ .debug_ranges  0x00001318       0x50 .\libkernel.a(startup.o)
+ .debug_ranges  0x00001368      0x3b8 .\libkernel.a(task.o)
+ .debug_ranges  0x00001720      0x270 .\libkernel.a(time_event.o)
+ .debug_ranges  0x00001990       0xf8 .\libkernel.a(task_manage.o)
+ .debug_ranges  0x00001a88      0x1e0 .\libkernel.a(task_sync.o)
+ .debug_ranges  0x00001c68      0x140 .\libkernel.a(task_term.o)
+ .debug_ranges  0x00001da8      0x168 .\libkernel.a(semaphore.o)
+ .debug_ranges  0x00001f10       0xf0 .\libkernel.a(time_manage.o)
+ .debug_ranges  0x00002000       0xc0 .\libkernel.a(cyclic.o)
+ .debug_ranges  0x000020c0       0x90 .\libkernel.a(alarm.o)
+ .debug_ranges  0x00002150      0x1b8 .\libkernel.a(sys_manage.o)
+ .debug_ranges  0x00002308      0x240 .\libkernel.a(interrupt.o)
+ .debug_ranges  0x00002548       0x48 .\libkernel.a(exception.o)
+ .debug_ranges  0x00002590      0x4e0 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .debug_ranges  0x00002a70      0x280 .\libkernel.a(wait.o)
+
+.debug_line     0x00000000    0x1c698
+ .debug_line    0x00000000      0xc45 objs/sample1.o
+ .debug_line    0x00000c45      0x41a objs/log_output.o
+ .debug_line    0x0000105f      0x29b objs/vasyslog.o
+ .debug_line    0x000012fa      0x178 objs/t_perror.o
+ .debug_line    0x00001472      0x12e objs/strerror.o
+ .debug_line    0x000015a0      0x317 objs/tTask_tecsgen.o
+ .debug_line    0x000018b7      0x270 objs/tSemaphore_tecsgen.o
+ .debug_line    0x00001b27      0x29b objs/tInterruptRequest_tecsgen.o
+ .debug_line    0x00001dc2      0x2d8 objs/tISR_tecsgen.o
+ .debug_line    0x0000209a      0x280 objs/tInitializeRoutine_tecsgen.o
+ .debug_line    0x0000231a      0x32f objs/tTerminateRoutine_tecsgen.o
+ .debug_line    0x00002649      0x3a2 objs/tSerialPortMain_tecsgen.o
+ .debug_line    0x000029eb      0x29e objs/tSerialAdapter_tecsgen.o
+ .debug_line    0x00002c89      0x2ed objs/tSysLog_tecsgen.o
+ .debug_line    0x00002f76      0x2ea objs/tSysLogAdapter_tecsgen.o
+ .debug_line    0x00003260      0x302 objs/tLogTaskMain_tecsgen.o
+ .debug_line    0x00003562      0x250 objs/tBannerMain_tecsgen.o
+ .debug_line    0x000037b2      0x2c6 objs/tPutLogTarget_tecsgen.o
+ .debug_line    0x00003a78      0x2c8 objs/tUsart_tecsgen.o
+ .debug_line    0x00003d40      0x2f4 objs/tSIOPortTargetMain_tecsgen.o
+ .debug_line    0x00004034      0x318 objs/tTask.o
+ .debug_line    0x0000434c      0x2db objs/tISR.o
+ .debug_line    0x00004627      0x281 objs/tInitializeRoutine.o
+ .debug_line    0x000048a8      0x330 objs/tTerminateRoutine.o
+ .debug_line    0x00004bd8     0x1048 objs/tSerialPortMain.o
+ .debug_line    0x00005c20      0x481 objs/tSerialAdapter.o
+ .debug_line    0x000060a1      0x789 objs/tSysLog.o
+ .debug_line    0x0000682a      0x35d objs/tSysLogAdapter.o
+ .debug_line    0x00006b87      0x54e objs/tLogTaskMain.o
+ .debug_line    0x000070d5      0x2d8 objs/tBannerMain.o
+ .debug_line    0x000073ad      0x432 objs/tPutLogTarget.o
+ .debug_line    0x000077df      0x86b objs/tUsart.o
+ .debug_line    0x0000804a      0x26f objs/init_tecs.o
+ .debug_line    0x000082b9      0x543 objs/kernel_cfg.o
+ .debug_line    0x000087fc       0x83 .\libkernel.a(start.o)
+ .debug_line    0x0000887f      0x140 .\libkernel.a(core_support.o)
+ .debug_line    0x000089bf      0x5c7 .\libkernel.a(target_kernel_impl.o)
+ .debug_line    0x00008f86      0x2da .\libkernel.a(system_stm32f4xx.o)
+ .debug_line    0x00009260      0x4a1 .\libkernel.a(stm32f4xx_nucleo.o)
+ .debug_line    0x00009701      0x3a0 .\libkernel.a(systemclock_config.o)
+ .debug_line    0x00009aa1      0x8ab .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .debug_line    0x0000a34c     0x1a2f .\libkernel.a(stm32f4xx_hal_uart.o)
+ .debug_line    0x0000bd7b      0xfad .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .debug_line    0x0000cd28      0x4c9 .\libkernel.a(target_timer.o)
+ .debug_line    0x0000d1f1      0xf2a .\libkernel.a(core_kernel_impl.o)
+ .debug_line    0x0000e11b      0x4c5 .\libkernel.a(startup.o)
+ .debug_line    0x0000e5e0      0xf47 .\libkernel.a(task.o)
+ .debug_line    0x0000f527      0x379 .\libkernel.a(taskhook.o)
+ .debug_line    0x0000f8a0      0xcf5 .\libkernel.a(time_event.o)
+ .debug_line    0x00010595      0xda6 .\libkernel.a(task_manage.o)
+ .debug_line    0x0001133b     0x12a5 .\libkernel.a(task_sync.o)
+ .debug_line    0x000125e0      0xb52 .\libkernel.a(task_term.o)
+ .debug_line    0x00013132     0x10d4 .\libkernel.a(semaphore.o)
+ .debug_line    0x00014206      0x7e1 .\libkernel.a(time_manage.o)
+ .debug_line    0x000149e7      0xaa6 .\libkernel.a(cyclic.o)
+ .debug_line    0x0001548d      0xa2a .\libkernel.a(alarm.o)
+ .debug_line    0x00015eb7      0xe43 .\libkernel.a(sys_manage.o)
+ .debug_line    0x00016cfa     0x10e5 .\libkernel.a(interrupt.o)
+ .debug_line    0x00017ddf      0x47f .\libkernel.a(exception.o)
+ .debug_line    0x0001825e     0x378f .\libkernel.a(stm32f4xx_hal_tim.o)
+ .debug_line    0x0001b9ed      0xcab .\libkernel.a(wait.o)
+
+.debug_str      0x00000000     0x5a26
+ .debug_str     0x00000000      0x454 objs/sample1.o
+                                0x512 (size before relaxing)
+ .debug_str     0x00000454       0xb5 objs/log_output.o
+                                0x2a4 (size before relaxing)
+ .debug_str     0x00000509       0x1f objs/vasyslog.o
+                                0x22f (size before relaxing)
+ .debug_str     0x00000528       0x16 objs/t_perror.o
+                                0x233 (size before relaxing)
+ .debug_str     0x0000053e       0x16 objs/strerror.o
+                                0x1c6 (size before relaxing)
+ .debug_str     0x00000554      0x6c4 objs/tTask_tecsgen.o
+                                0x9a8 (size before relaxing)
+ .debug_str     0x00000c18       0x34 objs/tSemaphore_tecsgen.o
+                                0x61c (size before relaxing)
+ .debug_str     0x00000c4c      0x3ce objs/tInterruptRequest_tecsgen.o
+                                0x9e2 (size before relaxing)
+ .debug_str     0x0000101a       0x44 objs/tISR_tecsgen.o
+                                0x84e (size before relaxing)
+ .debug_str     0x0000105e       0xb1 objs/tInitializeRoutine_tecsgen.o
+                                0x682 (size before relaxing)
+ .debug_str     0x0000110f       0x5b objs/tTerminateRoutine_tecsgen.o
+                                0x9cb (size before relaxing)
+ .debug_str     0x0000116a      0x3a5 objs/tSerialPortMain_tecsgen.o
+                                0xbad (size before relaxing)
+ .debug_str     0x0000150f       0x9c objs/tSerialAdapter_tecsgen.o
+                                0x71c (size before relaxing)
+ .debug_str     0x000015ab       0x54 objs/tSysLog_tecsgen.o
+                                0x944 (size before relaxing)
+ .debug_str     0x000015ff       0x3c objs/tSysLogAdapter_tecsgen.o
+                                0x92c (size before relaxing)
+ .debug_str     0x0000163b       0x38 objs/tLogTaskMain_tecsgen.o
+                                0x988 (size before relaxing)
+ .debug_str     0x00001673       0x36 objs/tBannerMain_tecsgen.o
+                                0x639 (size before relaxing)
+ .debug_str     0x000016a9       0x3a objs/tPutLogTarget_tecsgen.o
+                                0x835 (size before relaxing)
+ .debug_str     0x000016e3       0x2c objs/tUsart_tecsgen.o
+                                0x82c (size before relaxing)
+ .debug_str     0x0000170f       0x5e objs/tSIOPortTargetMain_tecsgen.o
+                                0x87a (size before relaxing)
+ .debug_str     0x0000176d       0x4b objs/tTask.o
+                                0x9ca (size before relaxing)
+ .debug_str     0x000017b8       0x33 objs/tISR.o
+                                0x877 (size before relaxing)
+ .debug_str     0x000017eb       0x60 objs/tInitializeRoutine.o
+                                0x6bc (size before relaxing)
+ .debug_str     0x0000184b       0x5f objs/tTerminateRoutine.o
+                                0x9f2 (size before relaxing)
+ .debug_str     0x000018aa      0x3e0 objs/tSerialPortMain.o
+                                0xd7d (size before relaxing)
+ .debug_str     0x00001c8a       0x4f objs/tSerialAdapter.o
+                                0x72d (size before relaxing)
+ .debug_str     0x00001cd9      0x571 objs/tSysLog.o
+                                0xeed (size before relaxing)
+ .debug_str     0x0000224a       0x48 objs/tSysLogAdapter.o
+                                0xa0c (size before relaxing)
+ .debug_str     0x00002292       0x64 objs/tLogTaskMain.o
+                                0xbbc (size before relaxing)
+ .debug_str     0x000022f6       0x39 objs/tBannerMain.o
+                                0x6d3 (size before relaxing)
+ .debug_str     0x0000232f       0x45 objs/tPutLogTarget.o
+                                0x96f (size before relaxing)
+ .debug_str     0x00002374      0x12b objs/tUsart.o
+                                0xa7a (size before relaxing)
+ .debug_str     0x0000249f       0x2b objs/init_tecs.o
+                                0x766 (size before relaxing)
+ .debug_str     0x000024ca      0xce3 objs/kernel_cfg.o
+                               0x200a (size before relaxing)
+ .debug_str     0x000031ad       0x2f .\libkernel.a(start.o)
+                                 0x74 (size before relaxing)
+ .debug_str     0x000031dc       0x28 .\libkernel.a(core_support.o)
+                                 0x7b (size before relaxing)
+ .debug_str     0x00003204      0x4a8 .\libkernel.a(target_kernel_impl.o)
+                               0x118d (size before relaxing)
+ .debug_str     0x000036ac       0xbf .\libkernel.a(system_stm32f4xx.o)
+                                0x39e (size before relaxing)
+ .debug_str     0x0000376b      0x17d .\libkernel.a(stm32f4xx_nucleo.o)
+                                0xc73 (size before relaxing)
+ .debug_str     0x000038e8      0x17c .\libkernel.a(systemclock_config.o)
+                                0x87d (size before relaxing)
+ .debug_str     0x00003a64      0x12f .\libkernel.a(stm32f4xx_hal_gpio.o)
+                                0x914 (size before relaxing)
+ .debug_str     0x00003b93      0x3bc .\libkernel.a(stm32f4xx_hal_uart.o)
+                                0xe90 (size before relaxing)
+ .debug_str     0x00003f4f      0x17c .\libkernel.a(stm32f4xx_hal_rcc.o)
+                                0xadf (size before relaxing)
+ .debug_str     0x000040cb       0xca .\libkernel.a(target_timer.o)
+                                0xeb1 (size before relaxing)
+ .debug_str     0x00004195      0x157 .\libkernel.a(core_kernel_impl.o)
+                               0x1208 (size before relaxing)
+ .debug_str     0x000042ec       0x8f .\libkernel.a(startup.o)
+                                0xdda (size before relaxing)
+ .debug_str     0x0000437b      0x30a .\libkernel.a(task.o)
+                               0x12a7 (size before relaxing)
+ .debug_str     0x00004685       0x15 .\libkernel.a(taskhook.o)
+                                0xf74 (size before relaxing)
+ .debug_str     0x0000469a      0x1d0 .\libkernel.a(time_event.o)
+                                0xffc (size before relaxing)
+ .debug_str     0x0000486a       0x7c .\libkernel.a(task_manage.o)
+                               0x10e6 (size before relaxing)
+ .debug_str     0x000048e6       0x68 .\libkernel.a(task_sync.o)
+                               0x11d2 (size before relaxing)
+ .debug_str     0x0000494e       0x57 .\libkernel.a(task_term.o)
+                               0x10de (size before relaxing)
+ .debug_str     0x000049a5       0xea .\libkernel.a(semaphore.o)
+                               0x1339 (size before relaxing)
+ .debug_str     0x00004a8f       0x31 .\libkernel.a(time_manage.o)
+                                0xe55 (size before relaxing)
+ .debug_str     0x00004ac0       0x55 .\libkernel.a(cyclic.o)
+                                0xf1e (size before relaxing)
+ .debug_str     0x00004b15       0x5a .\libkernel.a(alarm.o)
+                                0xefa (size before relaxing)
+ .debug_str     0x00004b6f       0x3e .\libkernel.a(sys_manage.o)
+                               0x1107 (size before relaxing)
+ .debug_str     0x00004bad       0xb0 .\libkernel.a(interrupt.o)
+                               0x1272 (size before relaxing)
+ .debug_str     0x00004c5d       0x45 .\libkernel.a(exception.o)
+                               0x104b (size before relaxing)
+ .debug_str     0x00004ca2      0xd17 .\libkernel.a(stm32f4xx_hal_tim.o)
+                               0x1828 (size before relaxing)
+ .debug_str     0x000059b9       0x6d .\libkernel.a(wait.o)
+                               0x12a7 (size before relaxing)
+
+.comment        0x00000000       0x4c
+ .comment       0x00000000       0x4c objs/sample1.o
+                                 0x4d (size before relaxing)
+ .comment       0x0000004c       0x4d objs/log_output.o
+ .comment       0x0000004c       0x4d objs/vasyslog.o
+ .comment       0x0000004c       0x4d objs/t_perror.o
+ .comment       0x0000004c       0x4d objs/strerror.o
+ .comment       0x0000004c       0x4d objs/tTask_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tSemaphore_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tInterruptRequest_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tISR_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tInitializeRoutine_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tTerminateRoutine_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tSerialPortMain_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tSerialAdapter_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tSysLog_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tSysLogAdapter_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tLogTaskMain_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tBannerMain_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tPutLogTarget_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tUsart_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tSIOPortTargetMain_tecsgen.o
+ .comment       0x0000004c       0x4d objs/tTask.o
+ .comment       0x0000004c       0x4d objs/tISR.o
+ .comment       0x0000004c       0x4d objs/tInitializeRoutine.o
+ .comment       0x0000004c       0x4d objs/tTerminateRoutine.o
+ .comment       0x0000004c       0x4d objs/tSerialPortMain.o
+ .comment       0x0000004c       0x4d objs/tSerialAdapter.o
+ .comment       0x0000004c       0x4d objs/tSysLog.o
+ .comment       0x0000004c       0x4d objs/tSysLogAdapter.o
+ .comment       0x0000004c       0x4d objs/tLogTaskMain.o
+ .comment       0x0000004c       0x4d objs/tBannerMain.o
+ .comment       0x0000004c       0x4d objs/tPutLogTarget.o
+ .comment       0x0000004c       0x4d objs/tUsart.o
+ .comment       0x0000004c       0x4d objs/init_tecs.o
+ .comment       0x0000004c       0x4d objs/kernel_cfg.o
+ .comment       0x0000004c       0x4d .\libkernel.a(target_kernel_impl.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(system_stm32f4xx.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(stm32f4xx_nucleo.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(systemclock_config.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(stm32f4xx_hal_uart.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(target_timer.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(core_kernel_impl.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(startup.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(task.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(taskhook.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(time_event.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(task_manage.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(task_sync.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(task_term.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(semaphore.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(time_manage.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(cyclic.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(alarm.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(sys_manage.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(interrupt.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(exception.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(stm32f4xx_hal_tim.o)
+ .comment       0x0000004c       0x4d .\libkernel.a(wait.o)
+
+.ARM.attributes
+                0x00000000       0x30
+ .ARM.attributes
+                0x00000000       0x32 objs/sample1.o
+ .ARM.attributes
+                0x00000032       0x32 objs/log_output.o
+ .ARM.attributes
+                0x00000064       0x32 objs/vasyslog.o
+ .ARM.attributes
+                0x00000096       0x32 objs/t_perror.o
+ .ARM.attributes
+                0x000000c8       0x32 objs/strerror.o
+ .ARM.attributes
+                0x000000fa       0x32 objs/tTask_tecsgen.o
+ .ARM.attributes
+                0x0000012c       0x32 objs/tSemaphore_tecsgen.o
+ .ARM.attributes
+                0x0000015e       0x32 objs/tInterruptRequest_tecsgen.o
+ .ARM.attributes
+                0x00000190       0x32 objs/tISR_tecsgen.o
+ .ARM.attributes
+                0x000001c2       0x32 objs/tInitializeRoutine_tecsgen.o
+ .ARM.attributes
+                0x000001f4       0x32 objs/tTerminateRoutine_tecsgen.o
+ .ARM.attributes
+                0x00000226       0x32 objs/tSerialPortMain_tecsgen.o
+ .ARM.attributes
+                0x00000258       0x32 objs/tSerialAdapter_tecsgen.o
+ .ARM.attributes
+                0x0000028a       0x32 objs/tSysLog_tecsgen.o
+ .ARM.attributes
+                0x000002bc       0x32 objs/tSysLogAdapter_tecsgen.o
+ .ARM.attributes
+                0x000002ee       0x32 objs/tLogTaskMain_tecsgen.o
+ .ARM.attributes
+                0x00000320       0x32 objs/tBannerMain_tecsgen.o
+ .ARM.attributes
+                0x00000352       0x32 objs/tPutLogTarget_tecsgen.o
+ .ARM.attributes
+                0x00000384       0x32 objs/tUsart_tecsgen.o
+ .ARM.attributes
+                0x000003b6       0x32 objs/tSIOPortTargetMain_tecsgen.o
+ .ARM.attributes
+                0x000003e8       0x32 objs/tTask.o
+ .ARM.attributes
+                0x0000041a       0x32 objs/tISR.o
+ .ARM.attributes
+                0x0000044c       0x32 objs/tInitializeRoutine.o
+ .ARM.attributes
+                0x0000047e       0x32 objs/tTerminateRoutine.o
+ .ARM.attributes
+                0x000004b0       0x32 objs/tSerialPortMain.o
+ .ARM.attributes
+                0x000004e2       0x32 objs/tSerialAdapter.o
+ .ARM.attributes
+                0x00000514       0x32 objs/tSysLog.o
+ .ARM.attributes
+                0x00000546       0x32 objs/tSysLogAdapter.o
+ .ARM.attributes
+                0x00000578       0x32 objs/tLogTaskMain.o
+ .ARM.attributes
+                0x000005aa       0x32 objs/tBannerMain.o
+ .ARM.attributes
+                0x000005dc       0x32 objs/tPutLogTarget.o
+ .ARM.attributes
+                0x0000060e       0x32 objs/tUsart.o
+ .ARM.attributes
+                0x00000640       0x32 objs/init_tecs.o
+ .ARM.attributes
+                0x00000672       0x32 objs/kernel_cfg.o
+ .ARM.attributes
+                0x000006a4       0x20 .\libkernel.a(start.o)
+ .ARM.attributes
+                0x000006c4       0x20 .\libkernel.a(core_support.o)
+ .ARM.attributes
+                0x000006e4       0x32 .\libkernel.a(target_kernel_impl.o)
+ .ARM.attributes
+                0x00000716       0x32 .\libkernel.a(system_stm32f4xx.o)
+ .ARM.attributes
+                0x00000748       0x32 .\libkernel.a(stm32f4xx_nucleo.o)
+ .ARM.attributes
+                0x0000077a       0x32 .\libkernel.a(systemclock_config.o)
+ .ARM.attributes
+                0x000007ac       0x32 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .ARM.attributes
+                0x000007de       0x32 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .ARM.attributes
+                0x00000810       0x32 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .ARM.attributes
+                0x00000842       0x32 .\libkernel.a(target_timer.o)
+ .ARM.attributes
+                0x00000874       0x32 .\libkernel.a(core_kernel_impl.o)
+ .ARM.attributes
+                0x000008a6       0x32 .\libkernel.a(startup.o)
+ .ARM.attributes
+                0x000008d8       0x32 .\libkernel.a(task.o)
+ .ARM.attributes
+                0x0000090a       0x37 .\libkernel.a(taskhook.o)
+ .ARM.attributes
+                0x00000941       0x32 .\libkernel.a(time_event.o)
+ .ARM.attributes
+                0x00000973       0x32 .\libkernel.a(task_manage.o)
+ .ARM.attributes
+                0x000009a5       0x32 .\libkernel.a(task_sync.o)
+ .ARM.attributes
+                0x000009d7       0x32 .\libkernel.a(task_term.o)
+ .ARM.attributes
+                0x00000a09       0x32 .\libkernel.a(semaphore.o)
+ .ARM.attributes
+                0x00000a3b       0x32 .\libkernel.a(time_manage.o)
+ .ARM.attributes
+                0x00000a6d       0x32 .\libkernel.a(cyclic.o)
+ .ARM.attributes
+                0x00000a9f       0x32 .\libkernel.a(alarm.o)
+ .ARM.attributes
+                0x00000ad1       0x32 .\libkernel.a(sys_manage.o)
+ .ARM.attributes
+                0x00000b03       0x32 .\libkernel.a(interrupt.o)
+ .ARM.attributes
+                0x00000b35       0x32 .\libkernel.a(exception.o)
+ .ARM.attributes
+                0x00000b67       0x32 .\libkernel.a(stm32f4xx_hal_tim.o)
+ .ARM.attributes
+                0x00000b99       0x32 .\libkernel.a(wait.o)
+
+.debug_frame    0x00000000     0x2ad0
+ .debug_frame   0x00000000      0x140 objs/sample1.o
+ .debug_frame   0x00000140       0xb0 objs/log_output.o
+ .debug_frame   0x000001f0       0x38 objs/vasyslog.o
+ .debug_frame   0x00000228       0x30 objs/t_perror.o
+ .debug_frame   0x00000258       0x20 objs/strerror.o
+ .debug_frame   0x00000278       0x20 objs/tTask_tecsgen.o
+ .debug_frame   0x00000298       0x20 objs/tSemaphore_tecsgen.o
+ .debug_frame   0x000002b8       0x20 objs/tInterruptRequest_tecsgen.o
+ .debug_frame   0x000002d8       0x20 objs/tISR_tecsgen.o
+ .debug_frame   0x000002f8       0x20 objs/tInitializeRoutine_tecsgen.o
+ .debug_frame   0x00000318       0x20 objs/tTerminateRoutine_tecsgen.o
+ .debug_frame   0x00000338       0x80 objs/tSerialPortMain_tecsgen.o
+ .debug_frame   0x000003b8       0x20 objs/tSerialAdapter_tecsgen.o
+ .debug_frame   0x000003d8       0x20 objs/tSysLog_tecsgen.o
+ .debug_frame   0x000003f8       0x20 objs/tSysLogAdapter_tecsgen.o
+ .debug_frame   0x00000418       0x20 objs/tLogTaskMain_tecsgen.o
+ .debug_frame   0x00000438       0x20 objs/tBannerMain_tecsgen.o
+ .debug_frame   0x00000458       0x20 objs/tPutLogTarget_tecsgen.o
+ .debug_frame   0x00000478       0x20 objs/tUsart_tecsgen.o
+ .debug_frame   0x00000498       0x20 objs/tSIOPortTargetMain_tecsgen.o
+ .debug_frame   0x000004b8       0x20 objs/tTask.o
+ .debug_frame   0x000004d8       0x20 objs/tISR.o
+ .debug_frame   0x000004f8       0x20 objs/tInitializeRoutine.o
+ .debug_frame   0x00000518       0x20 objs/tTerminateRoutine.o
+ .debug_frame   0x00000538      0x158 objs/tSerialPortMain.o
+ .debug_frame   0x00000690       0xf0 objs/tSerialAdapter.o
+ .debug_frame   0x00000780       0xcc objs/tSysLog.o
+ .debug_frame   0x0000084c       0x60 objs/tSysLogAdapter.o
+ .debug_frame   0x000008ac       0xa8 objs/tLogTaskMain.o
+ .debug_frame   0x00000954       0x30 objs/tBannerMain.o
+ .debug_frame   0x00000984       0x48 objs/tPutLogTarget.o
+ .debug_frame   0x000009cc       0x98 objs/tUsart.o
+ .debug_frame   0x00000a64       0x2c objs/init_tecs.o
+ .debug_frame   0x00000a90       0x3c objs/kernel_cfg.o
+ .debug_frame   0x00000acc       0x9c .\libkernel.a(target_kernel_impl.o)
+ .debug_frame   0x00000b68       0x3c .\libkernel.a(system_stm32f4xx.o)
+ .debug_frame   0x00000ba4       0xb4 .\libkernel.a(stm32f4xx_nucleo.o)
+ .debug_frame   0x00000c58       0x38 .\libkernel.a(systemclock_config.o)
+ .debug_frame   0x00000c90       0xe0 .\libkernel.a(stm32f4xx_hal_gpio.o)
+ .debug_frame   0x00000d70      0x3c4 .\libkernel.a(stm32f4xx_hal_uart.o)
+ .debug_frame   0x00001134      0x178 .\libkernel.a(stm32f4xx_hal_rcc.o)
+ .debug_frame   0x000012ac       0x60 .\libkernel.a(target_timer.o)
+ .debug_frame   0x0000130c      0x12c .\libkernel.a(core_kernel_impl.o)
+ .debug_frame   0x00001438       0x68 .\libkernel.a(startup.o)
+ .debug_frame   0x000014a0      0x138 .\libkernel.a(task.o)
+ .debug_frame   0x000015d8      0x190 .\libkernel.a(time_event.o)
+ .debug_frame   0x00001768       0xdc .\libkernel.a(task_manage.o)
+ .debug_frame   0x00001844      0x150 .\libkernel.a(task_sync.o)
+ .debug_frame   0x00001994       0xbc .\libkernel.a(task_term.o)
+ .debug_frame   0x00001a50      0x128 .\libkernel.a(semaphore.o)
+ .debug_frame   0x00001b78       0x80 .\libkernel.a(time_manage.o)
+ .debug_frame   0x00001bf8       0xb8 .\libkernel.a(cyclic.o)
+ .debug_frame   0x00001cb0       0xac .\libkernel.a(alarm.o)
+ .debug_frame   0x00001d5c      0x15c .\libkernel.a(sys_manage.o)
+ .debug_frame   0x00001eb8      0x17c .\libkernel.a(interrupt.o)
+ .debug_frame   0x00002034       0x3c .\libkernel.a(exception.o)
+ .debug_frame   0x00002070      0x95c .\libkernel.a(stm32f4xx_hal_tim.o)
+ .debug_frame   0x000029cc      0x104 .\libkernel.a(wait.o)

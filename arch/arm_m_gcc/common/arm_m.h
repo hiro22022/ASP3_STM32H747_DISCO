@@ -47,6 +47,9 @@
 #ifndef ARM_M_H
 #define ARM_M_H
 
+//#include "stm32h747xx.h"
+//#include "core_cm7.h"
+
 /*
  *  EPSRのTビット
  */
@@ -66,7 +69,7 @@
 #define EXC_RETURN              0xfffffffd
 #endif
 #define EXC_RETURN_PREFIX       0xff000000
-#define EXC_RETURN_HANDLER      0x0
+// #define EXC_RETURN_HANDLER      0x0
 #define EXC_RETURN_THREAD       0x8
 #define EXC_RETURN_MSP          0x0
 #define EXC_RETURN_PSP          0x4
@@ -204,6 +207,7 @@
 #define CCR_STKALIGN    0x00000200
 #define CPACR_BASE      0xE000ED88U                            /*!< System Control Space Base Address  */
 
+#if 1
 /*
  * FPU関連レジスタ
  */
@@ -226,5 +230,7 @@
 #elif defined(TOPPERS_FPU_LAZYSTACKING)
 #define FPCCR_INIT FPCCR_LAZYSTACKING
 #endif /* defined(TOPPERS_FPU_NO_PRESERV) */
+
+#endif // 0
 
 #endif  /* ARM_M_H */

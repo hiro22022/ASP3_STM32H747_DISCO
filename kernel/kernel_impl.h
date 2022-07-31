@@ -200,5 +200,7 @@ extern void	exit_kernel(void);
  */
 typedef void	(*NFYHDR)(intptr_t exinf);
 
+void led_set( int val );
+
 #endif /* TOPPERS_MACRO_ONLY */
 #endif /* TOPPERS_KERNEL_IMPL_H */

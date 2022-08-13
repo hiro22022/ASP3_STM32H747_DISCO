@@ -1,0 +1,61 @@
+
+# object files and generated files
+*.o
+*.map
+*.bin
+*.exe
+*.elf
+*.su
+*.d
+gen
+objs
+offset.*
+cfg1_out.*
+cfg2_out.*
+kernel_cfg.*
+libkernel.a
+
+Image_*.c
+Image_*.h
+*.pyc
+libapp.a
+
+# asset sources
+/test/common/assets
+
+# Xcode project
+DerivedData
+*.xcodeproj
+
+# tecsmerge backup
+*.c_1
+*.c_2
+*.c_3
+
+# executables of example project
+/test/*/build/*.exe
+/test/*/build/test
+
+# OS X's infamous thingy
+.DS_Store
+
+# mbed-cli
+#
+# FIXME: should I exclude `.mbed`?
+#
+# https://github.com/ARMmbed/mbed-cli:
+#
+# > As a rule, because mbed_settings.py contains local settings
+# > (possibly relevant only to a single OS on a single machine), it should not be versioned.
+#
+.temp
+**/vendor/**
+!*.lib
+!*.bld
+mbed_settings.py
+/test/*/mbed-app/BUILD
+
+# pipenv
+.venv
+
+.vscode

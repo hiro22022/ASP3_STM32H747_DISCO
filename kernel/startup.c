@@ -48,12 +48,6 @@
 #include "time_event.h"
 #include <sil.h>
 
-/********************************************/
-#if 0
-extern const FP _kernel_vector_table[];
-FP	*vect_tab;
-#endif
-
 /*
  *  トレースログマクロのデフォルト定義
  */
@@ -92,9 +86,7 @@ sta_ker(void)
 	uint_t	i;
 
 	/********************************************/
-#if 0
-	vect_tab = _kernel_vector_table;
-#endif 
+// #ifdef FORCE_REF_VECTOR_TABLE
 led_set(1);
 	/*
 	 *  TECSの初期化

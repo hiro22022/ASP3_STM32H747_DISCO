@@ -49,7 +49,6 @@ void MX_GPIO_Init(void)
     GPIO_InitStruct.Alternate = GPIO_AF0_MCO;
     HAL_GPIO_Init(CEC_CK_MCO1_GPIO_Port, &GPIO_InitStruct);
 
-    _kernel_vt = _kernel_vector_table;        /* 参照がないとリンカで消される (--gc-sections) */
-
+     _kernel_vt = _kernel_vector_table;        /* 参照がないとリンカで消される (--gc-sections) */
 }
 

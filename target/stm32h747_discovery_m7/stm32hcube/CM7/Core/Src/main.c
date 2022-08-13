@@ -73,6 +73,9 @@ TIM_HandleTypeDef htim_clk;
 
 UART_HandleTypeDef huart1;
 
+/*---------------------------------------*/
+int   b_sta_ker;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -240,13 +243,6 @@ usart_ISRHandler(void)
 		/*
 		 *  送信可能コールバックルーチンを呼び出す．
 		 */
-#if 0
-    for( i = 0; i < 1000000; i++ )
-      if( (i / 200000) % 2 == 0 )
-        led_set( 8 );
-      else
-        led_set( 4 );
-#endif // 0
 		ciSIOCBR_readySend();
 	}
 }
@@ -358,7 +354,7 @@ SIO_puts( char *s)
 }
 
 static char
-SIO_getchar()
+SIO_getchar(void)
 {
   char c;
   int  next_rp;
@@ -371,6 +367,14 @@ SIO_getchar()
 
   return c;
 }
+
+static void
+SIO_flush(void)
+{
+  /* すべての送信が終わるのを待つ */
+  while( sio_send_buf_rp != sio_send_buf_wp ) {}
+}
+
 
 static void
 ciSIOCBR_readyReceive()
@@ -552,7 +556,8 @@ int main(void)
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_TIM3, sizeof(MSG_TIM3), 0xfffffff);
 
   /* 割込み許可 */
-  __enable_irq();
+  // __enable_irq();
+  __enable_fault_irq();   // start.S で cpsid f で禁止されてくる
   /* TIM5 Interrupt Vector Number = TIM_CLK_IRQNO */
   NVIC_EnableIRQ( TIM_CLK_IRQNO );
   NVIC_EnableIRQ( USART1_IRQn );
@@ -595,16 +600,16 @@ int main(void)
   char c;
   led_set( 1 );
   usart_ena_rxint();
+  led_set( 2 );
   SIO_puts( "> " );
   while( (c = SIO_getchar()) != '\r' ){
+  led_set( 3 );
     buf[ 0 ] = c;
     buf[ 1 ] = '\0';
     SIO_puts( buf );
   }
 
-  led_set( 2 );
   SIO_puts( "\r\n" );
-  led_set( 3 );
 
 #define MSG_MAIN_LOOP1 "MAIN_LOOP1 Start\r\n"
   // HAL_UART_Transmit(&huart1, (uint8_t*)MSG_MAIN_LOOP1, sizeof(MSG_MAIN_LOOP1), 0xfffffff);
@@ -656,8 +661,14 @@ int main(void)
   snprintf( buf, sizeof(buf), "sta_ker()\r\n" );
 //  HAL_UART_Transmit(&huart1, (uint8_t*)buf, strnlen(buf, sizeof(buf)), 0xfffffff);
   SIO_puts(buf);
+  SIO_flush();
+#if 1
+  __disable_fault_irq();      // start.S で禁止するのと同様に変更
+  b_sta_ker = true;
   sta_ker();
   /* USER CODE END 3 */
+#endif // 0
+  while(1){}
 }
 
 /**
@@ -962,7 +973,7 @@ static void MX_TIM5_Init(void)
 void TIM_CLK_IRQHandler()
 {
   tim_clk_count++;
-#if 0
+#if 1
   if( tim_clk_count % COUNT_BASE == 0 )
     led_set( tim_clk_count / COUNT_BASE );
 #elif 0
@@ -1054,8 +1065,16 @@ static void MX_USART1_UART_Init(void)
 /* USART1 Handler */
 void USART1_IRQHandler()
 {
+  void   _kernel_inthdr_53(void);
+
+  if( !b_sta_ker ){
   // HAL_UART_IRQHandler(&huart1);
-  usart_ISRHandler();
+    usart_ISRHandler();
+  }
+  else{
+    _kernel_inthdr_53();
+  }
+
 }
 
 /**

@@ -13,7 +13,6 @@ objs
 offset.*
 cfg1_out.*
 cfg2_out.*
-kernel_cfg.*
 libkernel.a
 
 Image_*.c

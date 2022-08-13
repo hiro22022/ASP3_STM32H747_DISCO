@@ -311,9 +311,7 @@ CFG_COBJS      := $(addprefix $(OBJDIR)/, $(CFG_COBJS))
 #
 #  コンパイルのための変数の定義
 #
-APPL_OBJS = $(APPL_ASMOBJS) $(APPL_COBJS) $(APPL_CXXOBJS) \
-			main.o syscalls.o sysmem.o \
-			stm32h7xx_hal_uart.o stm32h7xx_hal_tim.o stm32h7xx_hal_tim_ex.o stm32h7xx_hal_uart_ex.o
+APPL_OBJS = $(APPL_ASMOBJS) $(APPL_COBJS) $(APPL_CXXOBJS) 
 #main_no_sprintf.o
 SYSSVC_OBJS = $(SYSSVC_ASMOBJS) $(SYSSVC_COBJS)
 KERNEL_LIB_OBJS = $(KERNEL_ASMOBJS) $(KERNEL_COBJS) $(KERNEL_LCOBJS)

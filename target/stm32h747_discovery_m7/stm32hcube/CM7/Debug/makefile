@@ -59,6 +59,8 @@ STM32H747_CM7.bin \
 LIBDIR += \
 -L $(ASP3BASEDIR)
 
+LDSCRIPT = ../STM32H747XIHX_FLASH.ld
+
 # All Target
 all: main-build
 
@@ -66,8 +68,8 @@ all: main-build
 main-build: STM32H747_CM7.elf secondary-outputs
 
 # Tool invocations
-STM32H747_CM7.elf: $(OBJS) $(USER_OBJS) C:\cygwin64\home\hiro2\STM32Cube\STM32H747_mx\STM32H747\CM7\STM32H747XIHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32H747_CM7.elf" @"objects.list" @"objects_asp3.list" $(ASP3OBJS) $(USER_OBJS) $(LIBDIR) $(LIBS) -mcpu=cortex-m7 -T"C:\cygwin64\home\hiro2\STM32Cube\STM32H747_mx\STM32H747\CM7\STM32H747XIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32H747_CM7.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group -Wl,-M > STM32H747_CM7.map
+STM32H747_CM7.elf: $(OBJS) $(USER_OBJS) $(LDSCRIPT) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32H747_CM7.elf" @"objects.list" @"objects_asp3.list" $(ASP3OBJS) $(USER_OBJS) $(LIBDIR) $(LIBS) -mcpu=cortex-m7 -T$(LDSCRIPT) --specs=nosys.specs -Wl,-Map="STM32H747_CM7.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group -Wl,-M > STM32H747_CM7.map
 	@echo 'Finished building target: $@'
 	@echo ' '
 

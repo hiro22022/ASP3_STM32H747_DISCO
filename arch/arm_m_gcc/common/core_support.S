@@ -1,9 +1,3 @@
-/* stm32cube の生成したベクターテーブルに合わせる */
-/* stm32cube の生成するベクターテーブルは .weak 指定されているので、容易に置き換えることができる */
-
-#define _kernel_pendsv_handler  PendSV_Handler
-
-/*----------------------------------------------------------------*/
 /*
  *  TOPPERS/ASP Kernel
  *      Toyohashi Open Platform for Embedded Real-Time Systems/
@@ -409,6 +403,15 @@ ALABEL(dispatcher_0)
 	and   r0, r2, #EXC_RETURN_PREFIX
 	cmp   r0, #EXC_RETURN_PREFIX
 	bne   dispatcher_1
+/*-----------------------------------------------------*/
+#if 1
+	push  {r0-r3}
+	mov	  r0, #13
+	bl    led_set
+	bl	  print_p_run
+	pop	  {r0-r3}
+#endif
+/*-----------------------------------------------------*/
 	/* r1, r2 は例外ハンドラの先頭で未定義となるため退避 */
 	mov   r4, r1
 	mov   r5, r2
@@ -421,6 +424,15 @@ ALABEL(dispatcher_0)
  * r2 : p_runtsk->tskctxb.pc
  */
 ALABEL(dispatcher_1)
+/*-----------------------------------------------------*/
+#if 1
+	push  {r0-r3}
+	mov	  r0, #14
+	bl    led_set
+	bl	  print_p_run
+	pop	  {r0-r3}
+#endif
+/*-----------------------------------------------------*/
 #ifdef LOG_DSP_LEAVE
 	push  {r1, r2}
 	mov   r0, r1

@@ -116,6 +116,8 @@
 #include "kernel_cfg.h"
 #include "sample1.h"
 
+#include "cmsis_gcc.h"
+
 /*
  *  サービスコールのエラーのログ出力
  */
@@ -247,6 +249,60 @@ void
 cpuexc_handler(void *p_excinf)
 {
 	syslog(LOG_NOTICE, "CPU exception handler (p_excinf = %08p).", p_excinf);
+	        uint32_t  *exc_inf = (uint32_t  *)p_excinf;
+
+/****************************************************************/
+	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)exc_inf,exc_inf[0], exc_inf[1], exc_inf[2], exc_inf[3]);
+	exc_inf = &exc_inf[4];
+	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)exc_inf,exc_inf[0], exc_inf[1], exc_inf[2], exc_inf[3]);
+	exc_inf = &exc_inf[4];
+	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)exc_inf,exc_inf[0], exc_inf[1], exc_inf[2], exc_inf[3]);
+	exc_inf = &exc_inf[4];
+	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)exc_inf,exc_inf[0], exc_inf[1], exc_inf[2], exc_inf[3]);
+
+	/*
+	 *  |  primask | basepri  |
+	 *  |      EXC_RETURN     |
+	 *  |          R0         |
+	 *  |          R1         |
+	 *  |          R2         |
+	 *  |          R3         |
+	 *  |         R12         |
+	 *  |          LR         |
+	 *  |          PC         |
+	 *  |         xPSR        |
+	 */
+	exc_inf = (uint32_t  *)p_excinf;
+	syslog( LOG_NOTICE, "primask=%04X basepri=%04X EXC_RETURN=%08X",
+					exc_inf[0]>>16, exc_inf[0]&0xffff,exc_inf[1]);
+	syslog( LOG_NOTICE, "R0=%08X R1=%08X R2=%08X R3=%08X",
+					exc_inf[2], exc_inf[3],exc_inf[4],exc_inf[5]);
+	syslog( LOG_NOTICE, "R12=%08X LR=%08X PC=%08X xPSR=%08X",
+					exc_inf[6], exc_inf[7],exc_inf[8],exc_inf[9]);
+
+#define CFSR    0xE000ED28
+	syslog( LOG_NOTICE, "CFSR=%08x", *(int32_t*)CFSR );
+
+	/* print msp */
+	uint32_t *msp = (uint32_t *)__get_MSP();
+	syslog( LOG_NOTICE, "msp=%08x", (int32_t)msp );
+	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)msp,msp[0], msp[1], msp[2], msp[3]);
+	msp = &msp[4];
+	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)msp,msp[0], msp[1], msp[2], msp[3]);
+	msp = &msp[4];
+	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)msp,msp[0], msp[1], msp[2], msp[3]);
+	msp = &msp[4];
+	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)msp,msp[0], msp[1], msp[2], msp[3]);
+/****************************************************************/
+
 	if (sns_ctx() != true) {
 		syslog(LOG_WARNING,
 					"sns_ctx() is not true in CPU exception handler.");

@@ -540,6 +540,12 @@ int main(void)
     }
   }
 
+#if 0
+/*
+ * タイマーが作動していることを確認するコード
+ * TIM2 から値を呼出して、0.1 秒ごとに更新する
+ * (タイマーが 1μ秒ごとにカウントする前提)
+ */
 #define MSG_LED1 "LED1!\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_LED1, sizeof(MSG_LED1), 0xfffffff);
 
@@ -551,6 +557,7 @@ int main(void)
   }
 #define MSG_LED2 "LED2!\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_LED2, sizeof(MSG_LED2), 0xfffffff);
+#endif /* 0 */
 
 #define MSG_TIM3 "hello CM7 Enable Interrupt!\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_TIM3, sizeof(MSG_TIM3), 0xfffffff);
@@ -611,10 +618,6 @@ int main(void)
 
   SIO_puts( "\r\n" );
 
-#define MSG_MAIN_LOOP1 "MAIN_LOOP1 Start\r\n"
-  // HAL_UART_Transmit(&huart1, (uint8_t*)MSG_MAIN_LOOP1, sizeof(MSG_MAIN_LOOP1), 0xfffffff);
-  SIO_puts(MSG_MAIN_LOOP1);
-
 #if 0
   /* USER CODE END TIM5_Init 2 */
   for(j=0; j<64; ){
@@ -626,26 +629,27 @@ int main(void)
   /* USER CODE END 2 */
 #endif
 
-  /* Infinite loop */
+#if 0
   led_set( 4 );
-
-#define MSG_MAIN_LOOP2 "MAIN_LOOP2 Start\r\n"
-//  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_MAIN_LOOP2, sizeof(MSG_MAIN_LOOP2), 0xfffffff);
-  SIO_puts( MSG_MAIN_LOOP2 );
+/* SIO にたくさん流しても、問題ないことを確認する */
+#define MSG_SIO_TEST "SIO TEST Start\r\n"
+//  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_SIO_TEST, sizeof(MSG_SIO_TEST), 0xfffffff);
+  SIO_puts( MSG_SIO_TEST );
   /* USER CODE BEGIN WHILE */
   led_set( 5 );
   for( i = 0; i < 32; i++ ){
     snprintf( buf, sizeof buf, "Loop %d\r\n", i);
     SIO_puts( buf );
   }
-  led_set( 8 );
+#endif // 0
 #if 0
+  led_set( 5 );
   for (i = 0; i < 10000000; i++ )
   {
-    led_set( 9 );
+    led_set( 6 );
     /* USER CODE END WHILE */
     if( tim_clk_count % 333 == 0 ){
-      led_set( 10 );
+      led_set( 7 );
       snprintf( buf, sizeof(buf), "tim_clk_count=%lu i=%d\r\n", tim_clk_count/COUNT_BASE, i );
 //      led_set( tim_clk_count / COUNT_BASE );
 //      HAL_UART_Transmit(&huart1, (uint8_t*)buf, strnlen(buf, sizeof(buf)), 0xfffffff);
@@ -657,7 +661,7 @@ int main(void)
   }
 #endif // 0
 
-  led_set( 11 );
+  led_set( 8 );
   snprintf( buf, sizeof(buf), "sta_ker()\r\n" );
 //  HAL_UART_Transmit(&huart1, (uint8_t*)buf, strnlen(buf, sizeof(buf)), 0xfffffff);
   SIO_puts(buf);
@@ -668,6 +672,7 @@ int main(void)
   sta_ker();
   /* USER CODE END 3 */
 #endif // 0
+  /* Infinite loop */
   while(1){}
 }
 

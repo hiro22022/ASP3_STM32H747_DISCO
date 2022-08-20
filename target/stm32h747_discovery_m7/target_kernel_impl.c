@@ -279,7 +279,7 @@ void software_term_hook(void){}
 void
 print_p_run(uint32_t no)
 {
-#if 1
+#if 0
 	syslog( LOG_NOTICE, "print_p_run: no=%d", no);
 	if( p_runtsk ){
 		syslog( LOG_NOTICE, "wai_sem: p_runtsk   pc=%08x sp=%08x",

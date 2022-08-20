@@ -240,11 +240,14 @@ core_initialize(void)
 	enable_exc(EXCNO_SECURE);
 #endif /* TOPPERS_ENABLE_TRUSTZONE */
 
+#if 0
+	/* COrtex-M7 では、8byte アライメント固定で、このビットは変更できない */
 	/*
 	 *  Configuration Control RegisterのSTKALIGNビットを0にする
 	 *  スタックは8byteアラインでなく、4byteアライン
 	 */
 	sil_andw((void *)CCR_BASE, ~CCR_STKALIGN);
+#endif
 
 #ifdef TOPPERS_FPU_ENABLE
 	sil_orw((uint32_t *)CPACR, CPACR_FPU_ENABLE);

@@ -146,6 +146,7 @@ target_initialize(void)
 	 */
 	usart_early_init();
 #else // f401
+	core_initialize();
 
 #endif // f401
 }
@@ -271,3 +272,30 @@ void _init(void){}
 #endif // 0
 
 void software_term_hook(void){}
+
+
+/*-------------------------------------------*/
+#include "task.h"
+void
+print_p_run(uint32_t no)
+{
+#if 1
+	syslog( LOG_NOTICE, "print_p_run: no=%d", no);
+	if( p_runtsk ){
+		syslog( LOG_NOTICE, "wai_sem: p_runtsk   pc=%08x sp=%08x",
+						p_runtsk->tskctxb.pc, p_runtsk->tskctxb.sp);
+	}
+	else {
+		syslog( LOG_NOTICE, "wai_sem: p_runtsk=0" );
+	}
+	if( p_schedtsk ){
+		syslog( LOG_NOTICE, "wai_sem: p_schedtsk pc=%08x sp=%08x",
+						p_schedtsk->tskctxb.pc, p_schedtsk->tskctxb.sp);
+	}
+	else {
+		syslog( LOG_NOTICE, "wai_sem: p_schedtsk=0" );
+	}
+	syslog( LOG_NOTICE, "wai_sem: ipsr=%08x", get_ipsr() );
+#endif // 0
+}
+/*-------------------------------------------*/

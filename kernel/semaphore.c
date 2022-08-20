@@ -50,19 +50,6 @@
 #include "wait.h"
 #include "semaphore.h"
 
-
-/*-------------------------------------------*/
-void
-print_p_run(void)
-{
-        syslog( LOG_NOTICE, "wai_sem: p_runtsk   pc=%08x", p_runtsk->tskctxb.pc);
-        syslog( LOG_NOTICE, "wai_sem: p_runtsk   sp=%08x", p_runtsk->tskctxb.sp);
-        syslog( LOG_NOTICE, "wai_sem: p_schedtsk pc=%08x", p_schedtsk->tskctxb.pc);
-        syslog( LOG_NOTICE, "wai_sem: p_schedtsk sp=%08x", p_schedtsk->tskctxb.sp);
-        syslog( LOG_NOTICE, "wai_sem: ipsr=%08x", get_ipsr() );
-}
-/*-------------------------------------------*/
-
 /*
  *  トレースログマクロのデフォルト定義
  */

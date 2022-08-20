@@ -62,6 +62,29 @@
 	ATHUMB(core_exc_entry)
 	AGLOBAL(core_exc_entry)
 ALABEL(core_exc_entry)
+
+/*-----------------------------------------*/
+	/* なぜか EXC_RETURN で例外が発生してしまう */
+#if 0
+	/* CFSR の INVPC が建っていたら無視... うまくいかず */
+	ldr	r0, =0xE000ED28	/* CFSR */
+	ldr r1, [r0]
+	tst r1, 0x00040000	/* INVPC */
+	beq not_invpc
+	ldr	r1, =0x00040000	/* 取っておいた方がよいが … */
+	str r1, [r0]		/* INVPC をクリア */
+	bx  lr				/* リターン ... ここでふっとぶ */
+#elsif 0
+	/* IPSR の値が 6 なら無視 */
+	mrs r0, ipsr		/* 割込み番号 */
+	cmp r0, 6			/* usage exception ? */
+	beq not_invpc
+	bx  lr				/* リターン ... ここでふっとぶ */
+#endif /* 0 */
+
+not_invpc:
+/*-----------------------------------------*/
+
 	/*
 	 *  例外/割込みが発生すると，発生時にアクティブなスタックにスクラ
 	 *  ッチレジスタ等が保存される．
@@ -167,6 +190,16 @@ ALABEL(pendsv_handler_0)
 	str    r2, [r0, #TCB_sp]
 	str    lr, [r0, #TCB_pc]
 ALABEL(pendsv_handler_1)
+/*-----------------------------------------------------*/
+#ifdef PRINT_P_RUN
+	push  {r0-r3}
+	mov	  r0, #10
+	bl    led_set
+	mov	  r0, #10
+	bl	  print_p_run
+	pop	  {r0-r3}
+#endif
+/*-----------------------------------------------------*/
 	/*
 	 * この時点でのレジスタ
 	 * r0 : p_runtsk
@@ -227,9 +260,23 @@ ALABEL(return_to_idle)
 	 * そのため以下のように ldr 命令を直接記述している．
 	 */
 AALIGN(2)
-	ldr    pc, [pc]
+#if 1
+	ldr    pc, [pc] /* return_to_idle のコメント参照 */
 	.word  EXC_RETURN
+#else
+	ldr pc, =#EXC_RETURN
+#endif
 ALABEL(return_to_thread)
+/*-----------------------------------------------------*/
+#ifdef PRINT_P_RUN
+	push  {r0-r3}
+	mov	  r0, #9
+	bl    led_set
+	mov	  r0, #9
+	bl	  print_p_run
+	pop	  {r0-r3}
+#endif
+/*-----------------------------------------------------*/
 	/*
 	 * この時点でのレジスタ
 	 * r0 : p_runtsk
@@ -261,9 +308,24 @@ ALABEL(return_to_thread_0)
 	mov    r1, #1
 	str    r1, [r0]
 	dsb /* lock_cpu_dsp() のコメント参照 */
+	/*** 大山 add ***/
+	/*------------------------------*/
+	isb		/*********/
+	/*------------------------------*/
 AALIGN(2)
+#if 0
 	ldr    pc, [pc] /* return_to_idle のコメント参照 */
 	.word  EXC_RETURN
+#elsif 0
+	ldr pc, =#EXC_RETURN
+/*	ldr pc, =my_loop */
+#else
+	ldr lr, =0xFFFFFFFD		/* TESTING PATTERN */
+/*	ldr lr, =0xFFFFFFFD	 */	/* #EXC_RETURN Thread Mode PSP  Right */
+/*	ldr lr, =0xFFFFFFF1	 */	/* #EXC_RETURN Handler Mode PSP  Wrong */
+/*	ldr lr, =0xFFFFFFF9	 */	/* #EXC_RETURN Thread Mode MSP  Wrong */
+	bx  lr
+#endif
 	/*
 	 * この時点でのレジスタ
 	 * lr  : p_runtsk->tskctxb.pc
@@ -289,6 +351,16 @@ ALABEL(svc_handler)
 	mov    r0, r4
 	bl     log_dsp_leave
 #endif /* LOG_DSP_LEAVE */
+/*-----------------------------------------------------*/
+#ifdef PRINT_P_RUN
+	push  {r0-r3}
+	mov	  r0, #11
+	bl    led_set
+	mov	  r0, #11
+	bl	  print_p_run
+	pop	  {r0-r3}
+#endif
+/*-----------------------------------------------------*/
 	/* CPU ロック解除状態へ */
 	ldr    r0, =lock_flag
 	mov    r1, #0
@@ -396,6 +468,16 @@ ALABEL(dispatcher_0)
 	bl    log_dsp_enter
 	pop   {r1, r2}
 #endif /* LOG_DSP_ENTER */
+/*-----------------------------------------------------*/
+#ifdef PRINT_P_RUN
+	push  {r0-r3}
+	mov	  r0, #12
+	bl    led_set
+	mov	  r0, #12
+	bl	  print_p_run
+	pop	  {r0-r3}
+#endif
+/*-----------------------------------------------------*/
 	str   r1, [r2] /* p_runtsk = p_schedtsk */
 	cbz   r1, idle_loop /* p_runtsk == NULL ならアイドル処理へ */
 	ldr   r2, [r1, #TCB_pc]
@@ -404,10 +486,11 @@ ALABEL(dispatcher_0)
 	cmp   r0, #EXC_RETURN_PREFIX
 	bne   dispatcher_1
 /*-----------------------------------------------------*/
-#if 1
+#ifdef PRINT_P_RUN
 	push  {r0-r3}
 	mov	  r0, #13
 	bl    led_set
+	mov	  r0, #13
 	bl	  print_p_run
 	pop	  {r0-r3}
 #endif
@@ -425,10 +508,11 @@ ALABEL(dispatcher_0)
  */
 ALABEL(dispatcher_1)
 /*-----------------------------------------------------*/
-#if 1
+#ifdef PRINT_P_RUN
 	push  {r0-r3}
 	mov	  r0, #14
 	bl    led_set
+	mov	  r0, #14
 	bl	  print_p_run
 	pop	  {r0-r3}
 #endif

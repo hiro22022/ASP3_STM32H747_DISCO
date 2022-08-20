@@ -248,21 +248,15 @@ ID	cpuexc_tskid;		/* CPU例外を起こしたタスクのID */
 void
 cpuexc_handler(void *p_excinf)
 {
+	int	   i;
 	syslog(LOG_NOTICE, "CPU exception handler (p_excinf = %08p).", p_excinf);
-	        uint32_t  *exc_inf = (uint32_t  *)p_excinf;
 
 /****************************************************************/
-	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
-					(int32_t)exc_inf,exc_inf[0], exc_inf[1], exc_inf[2], exc_inf[3]);
-	exc_inf = &exc_inf[4];
-	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
-					(int32_t)exc_inf,exc_inf[0], exc_inf[1], exc_inf[2], exc_inf[3]);
-	exc_inf = &exc_inf[4];
-	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
-					(int32_t)exc_inf,exc_inf[0], exc_inf[1], exc_inf[2], exc_inf[3]);
-	exc_inf = &exc_inf[4];
-	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
-					(int32_t)exc_inf,exc_inf[0], exc_inf[1], exc_inf[2], exc_inf[3]);
+	uint32_t  *exc_inf = (uint32_t  *)p_excinf;
+	for( i = 0; i < 8; i++, exc_inf = &exc_inf[4] ){
+		syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)exc_inf, exc_inf[0], exc_inf[1], exc_inf[2], exc_inf[3]);
+	}
 
 	/*
 	 *  |  primask | basepri  |
@@ -277,11 +271,11 @@ cpuexc_handler(void *p_excinf)
 	 *  |         xPSR        |
 	 */
 	exc_inf = (uint32_t  *)p_excinf;
-	syslog( LOG_NOTICE, "primask=%04X basepri=%04X EXC_RETURN=%08X",
+	syslog( LOG_NOTICE, "primask=%04x basepri=%04x EXC_RETURN=%08x",
 					exc_inf[0]>>16, exc_inf[0]&0xffff,exc_inf[1]);
-	syslog( LOG_NOTICE, "R0=%08X R1=%08X R2=%08X R3=%08X",
+	syslog( LOG_NOTICE, " R0=%08x R1=%08x R2=%08x R3=%08x",
 					exc_inf[2], exc_inf[3],exc_inf[4],exc_inf[5]);
-	syslog( LOG_NOTICE, "R12=%08X LR=%08X PC=%08X xPSR=%08X",
+	syslog( LOG_NOTICE, "R12=%08x LR=%08x PC=%08x xPSR=%08x",
 					exc_inf[6], exc_inf[7],exc_inf[8],exc_inf[9]);
 
 #define CFSR    0xE000ED28
@@ -290,16 +284,8 @@ cpuexc_handler(void *p_excinf)
 	/* print msp */
 	uint32_t *msp = (uint32_t *)__get_MSP();
 	syslog( LOG_NOTICE, "msp=%08x", (int32_t)msp );
-	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
-					(int32_t)msp,msp[0], msp[1], msp[2], msp[3]);
-	msp = &msp[4];
-	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
-					(int32_t)msp,msp[0], msp[1], msp[2], msp[3]);
-	msp = &msp[4];
-	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
-					(int32_t)msp,msp[0], msp[1], msp[2], msp[3]);
-	msp = &msp[4];
-	syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+	for( i = 0; i < 8; i++, msp = &msp[4] )
+		syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
 					(int32_t)msp,msp[0], msp[1], msp[2], msp[3]);
 /****************************************************************/
 
@@ -438,6 +424,12 @@ main_task(intptr_t exinf)
 	SVC_PERROR(get_tim(&stime2));
 	task_loop = LOOP_REF * 400LU / (ulong_t)(stime2 - stime1) * 1000LU;
 
+#if 1
+	int i;
+	for( i = 0; i<1000; i++)
+		syslog( LOG_NOTICE, "stime1=%d stime2=%d diff=%d task_loop=%d",
+						stime1, stime2, stime2 - stime1, task_loop);
+#endif
 #endif /* TASK_LOOP */
 
 	/*

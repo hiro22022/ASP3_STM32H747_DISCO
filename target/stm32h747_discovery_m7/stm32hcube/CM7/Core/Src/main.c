@@ -38,7 +38,7 @@
 
 // タイマの OnePulse モードを使用する
 // どうしても割込みが入ってくれないようなので、あきらめる
-#define OnePulseF401
+// #define OnePulseF401
 
 // Disable & Enable Update Interrupt
 #define __HAL_TIM_UDIS_DISABLE(__HANDLE__)  ((__HANDLE__)->Instance->CR1|=TIM_CR1_UDIS)
@@ -1030,19 +1030,21 @@ void TIM_CLK_IRQHandler()
 #elif 0
   // カウント1 が期待したように動作するかのテスト
   __HAL_TIM_SET_AUTORELOAD(&htim_clk, (tim_clk_count%2)==0?1:1000);
-#else
+#elif 0
   __HAL_TIM_SET_AUTORELOAD(&htim_clk, 1000);
 #endif
-  __disable_irq();  // ここへ来たということは割込み許可されている。
-                    // 以下の2つの間で割込みが入ると 1μ秒以下で終わることが保証できない。
-                    // タイマー時間が十分長い場合は、不要だが、ここでは最短 1μ秒となることを仮定する。
-	__HAL_TIM_SET_COUNTER(&htim_clk, 0);          // カウンタを 0にする
-  __HAL_TIM_CLEAR_FLAG(&htim_clk, TIM_SR_UIF);  // 割込みフラグをクリア
-  __enable_irq();
-
-
-  if( b_sta_ker )
+  if( ! b_sta_ker ){
+    __HAL_TIM_SET_AUTORELOAD(&htim_clk, 1000);
+    __disable_irq();  // ここへ来たということは割込み許可されている。
+                      // 以下の2つの間で割込みが入ると 1μ秒以下で終わることが保証できない。
+                      // タイマー時間が十分長い場合は、不要だが、ここでは最短 1μ秒となることを仮定する。
+    __HAL_TIM_SET_COUNTER(&htim_clk, 0);          // カウンタを 0にする
+    __HAL_TIM_CLEAR_FLAG(&htim_clk, TIM_SR_UIF);  // 割込みフラグをクリア
+    __enable_irq();
+  }
+  else {
     target_hrt_handler();
+  }
 
 #else // OnePulseF401
   if( tim_clk_count % 1000  == 0 ){

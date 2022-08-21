@@ -632,6 +632,13 @@ signal_time(void)
 		 */
 		while (p_last_tmevtn >= p_top_tmevtn
 							&& EVTTIM_LE(top_evttim, current_evttim)) {
+#if 1
+			/* 5μ秒以上ずれがあったら表示する */
+			if( EVTTIM_ADVANCE(top_evttim)-EVTTIM_ADVANCE(current_evttim) < -5 ){
+				syslog(LOG_NOTICE, "signal_time diff_time=%d",
+								EVTTIM_ADVANCE(top_evttim)-EVTTIM_ADVANCE(current_evttim));
+			}
+#endif
 			p_tmevtb = tmevtb_delete_top();
 			(*(p_tmevtb->callback))(p_tmevtb->arg);
 			callflag = true;
@@ -645,7 +652,7 @@ signal_time(void)
 	/*
 	 *  タイムイベントが処理されなかった場合．
 	 */
-#define IGNORE_NO_TIME_EVENT_PROCESSED
+// #define IGNORE_NO_TIME_EVENT_PROCESSED
 #ifndef IGNORE_NO_TIME_EVENT_PROCESSED
 	if (nocall == 0) {
 		syslog_0(LOG_NOTICE, "no time event is processed in hrt interrupt.");

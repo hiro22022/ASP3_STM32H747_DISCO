@@ -101,6 +101,22 @@ target_hrt_set_event(HRTCNT hrtcnt)
 	__HAL_TIM_SET_COUNTER(&Tim5Handle, 0);
 	__HAL_TIM_SET_AUTORELOAD(&Tim5Handle, hrtcnt);
 	HAL_TIM_Base_Start(&Tim5Handle);
+#else
+#if 0
+	syslog( LOG_NOTICE, "target_hrt_set_event hrtcnt=%d", hrtcnt);
+#endif
+	/* hrtcnt がゼロの場合長時間割込みがかからない
+	 * hrtcnt が 0 になることはないはずだが、万一に備えて 0 から変更する
+	 */
+	if(hrtcnt==0)
+		hrtcnt = 1;
+    __HAL_TIM_SET_AUTORELOAD(&Tim5Handle, hrtcnt);
+    __disable_irq();  // ここへ来たということは割込み許可されている。
+                      // 以下の2つの間で割込みが入ると 1μ秒以下で終わることが保証できない。
+                      // タイマー時間が十分長い場合は、不要だが、ここでは最短 1μ秒となることを仮定する。
+    __HAL_TIM_SET_COUNTER(&Tim5Handle, 0);          // カウンタを 0にする
+    __HAL_TIM_CLEAR_FLAG(&Tim5Handle, TIM_SR_UIF);  // 割込みフラグをクリア
+    __enable_irq();
 #endif
 }
 

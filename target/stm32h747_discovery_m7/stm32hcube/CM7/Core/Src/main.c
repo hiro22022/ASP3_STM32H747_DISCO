@@ -165,207 +165,6 @@ led_blink( int i, int j )
   }
 
 }
-/*---------------------------------------------*/
-
-/*
- *  受信バッファに文字があるか？
- */
-static bool_t
-usart_getready()
-{
-	return (USART1->ISR & USART_ISR_RXNE_RXFNE) != 0;
-}
-
-/*
- *  送信バッファに空きがあるか？
- */
-static bool_t
-usart_putready()
-{
-	return (USART1->ISR & USART_ISR_TXE_TXFNF) != 0;
-}
-
-/*
- *  受信した文字の取出し
- */
-static char
-usart_getchar()
-{
-	return (char)(USART1->RDR);
-}
-
-/*
- *  送信する文字の書込み
- */
-static void
-usart_putchar(char c)
-{
-	(USART1->TDR) = (uint32_t)(uint8_t)c;
-}
-
-static void ciSIOCBR_readyReceive();
-static void ciSIOCBR_readySend();
-
-static void
-usart_ISRHandler(void)
-{
-
-	if (usart_getready()) {
-		/*
-		 *  受信通知コールバックルーチンを呼び出す．
-		 */
-		ciSIOCBR_readyReceive();
-	}
-	if (usart_putready()) {
-		/*
-		 *  送信可能コールバックルーチンを呼び出す．
-		 */
-		ciSIOCBR_readySend();
-	}
-}
-
-static void
-usart_ena_txint(void)
-{
-	// UART_IT_TXE CR1 bit 7
-	USART1->CR1 |= USART_CR1_TXEIE_TXFNFIE;
-}
-
-static void
-usart_ena_rxint(void)
-{
-   // UART_IT_RXNE CR1 bit 5
-	USART1->CR1 |= USART_CR1_RXNEIE_RXFNEIE;
-}
-
-static void
-usart_dis_txint(void)
-{
-	// UART_IT_TXE CR1 bit 7
-	USART1->CR1 &= ~USART_CR1_TXEIE_TXFNFIE;
-}
-
-static void
-usart_dis_rxint(void)
-{
-   // UART_IT_RXNE CR1 bit 5
-	USART1->CR1 &= ~USART_CR1_RXNEIE_RXFNEIE;
-}
-
-static char
-usart_getchar_block()
-{
-  while( usart_getready() == 0 ) {}
- 	return usart_getchar();
-}
-
-static void
-usart_puts( char *s)
-{
-  while(*s){
-    while(!usart_putready()) ;
-    usart_putchar(*s++);
-  }
-}
-
-/*---------------------------------------------*/
-#define SIO_BUF_LEN   256
-char  sio_send_buf[ SIO_BUF_LEN ];
-volatile  int  sio_send_buf_wp;
-volatile  int  sio_send_buf_rp;
-
-char  sio_receive_buf[ SIO_BUF_LEN ];
-volatile  int  sio_receive_buf_wp;
-volatile  int  sio_receive_buf_rp;
-volatile  int  sio_receive_discard;
-
-static void
-SIO_putchar( int c )
-{
-  int  next_wp;
-    sio_send_buf[sio_send_buf_wp] = (char)c;
-    next_wp = sio_send_buf_wp + 1;
-    if( next_wp >= SIO_BUF_LEN )
-      next_wp  = 0;
-    // 空きができるまで待つ
-    while( next_wp == sio_send_buf_rp )
-    { }
-    sio_send_buf_wp = next_wp;
-
-  usart_ena_txint();      // 最初の一文字(空になっている)場合、すぐに割込みが入る
-}
-
-static void
-SIO_puts( char *s)
-{
-    while( *s ){
-      SIO_putchar( *s++ );
-    }
-}
-
-static char
-SIO_getchar(void)
-{
-  char c;
-  int  next_rp;
-  while( sio_receive_buf_wp == sio_receive_buf_rp ){}
-  c = sio_receive_buf[ sio_receive_buf_rp ];
-  next_rp = sio_receive_buf_rp + 1;
-  if( next_rp >= SIO_BUF_LEN )
-    next_rp = 0;
-  sio_receive_buf_rp = next_rp;
-
-  return c;
-}
-
-static void
-SIO_flush(void)
-{
-  /* すべての送信が終わるのを待つ */
-  while( sio_send_buf_rp != sio_send_buf_wp ) {}
-}
-
-
-static void
-ciSIOCBR_readyReceive()
-{
-  char c;
-  int next_wp;
-  /* 受信データがあるか? */
-  if( usart_getready() == 0 )
-    return;
-  c = usart_getchar();
-  sio_receive_buf[ sio_receive_buf_wp ] = c;
-  next_wp = sio_receive_buf_wp + 1;
-  if( next_wp >= SIO_BUF_LEN )
-    next_wp = 0;
-  if( next_wp != sio_receive_buf_rp )
-    sio_receive_buf_wp = next_wp;
-  else
-    sio_receive_discard = 1;
-}
-
-static void
-ciSIOCBR_readySend()
-{
-  int  next_rp;
-
-  if( sio_send_buf_rp == sio_send_buf_wp ){
-    /* これ以上送るものがないので、割込みを禁止して終了する */
-    usart_dis_txint();
-  }
-  else{
-    usart_putchar( sio_send_buf[sio_send_buf_rp] );
-    next_rp = sio_send_buf_rp + 1;
-    if( next_rp >= SIO_BUF_LEN )
-      next_rp = 0;
-    sio_send_buf_rp = next_rp;
-  }
-}
-
-/*---------------------------------------------*/
-
-
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -503,29 +302,6 @@ int main(void)
 #define MSG_HAL_TIM_INIT_DONE "HAL_TIM_Base_Start Done\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_TIM_INIT_DONE, sizeof(MSG_HAL_TIM_INIT_DONE), 0xfffffff);
 
-#define MSG_USART "usart_puts test\r\n"
-  // 割込みを使わず送信する
-  usart_puts(MSG_USART);
-
-  char c;
-  led_set( 1 );
-  usart_ena_rxint();
-  led_set( 2 );
-  SIO_puts( "> " );
-  while( (c = SIO_getchar()) != '\r' ){
-  led_set( 3 );
-    buf[ 0 ] = c;
-    buf[ 1 ] = '\0';
-    SIO_puts( buf );
-  }
-
-  SIO_puts( "\r\n" );
-
-  led_set( 8 );
-  snprintf( buf, sizeof(buf), "sta_ker()\r\n" );
-//  HAL_UART_Transmit(&huart1, (uint8_t*)buf, strnlen(buf, sizeof(buf)), 0xfffffff);
-  SIO_puts(buf);
-  SIO_flush();
 #if 1
   __disable_fault_irq();      // start.S で禁止するのと同様に変更
   b_sta_ker = true;
@@ -742,18 +518,7 @@ void TIM_CLK_IRQHandler()
   void target_hrt_handler(void);    /* target_timer.c */
   tim_clk_count++;
 
-  if( ! b_sta_ker ){
-    __HAL_TIM_SET_AUTORELOAD(&htim_clk, 1000);
-    __disable_irq();  // ここへ来たということは割込み許可されている。
-                      // 以下の2つの間で割込みが入ると 1μ秒以下で終わることが保証できない。
-                      // タイマー時間が十分長い場合は、不要だが、ここでは最短 1μ秒となることを仮定する。
-    __HAL_TIM_SET_COUNTER(&htim_clk, 0);          // カウンタを 0にする
-    __HAL_TIM_CLEAR_FLAG(&htim_clk, TIM_SR_UIF);  // 割込みフラグをクリア
-    __enable_irq();
-  }
-  else {
-    target_hrt_handler();
-  }
+  target_hrt_handler();
 }
 
 /**
@@ -810,11 +575,7 @@ void USART1_IRQHandler()
 {
   void   _kernel_inthdr_53(void);
 
-  if( !b_sta_ker ){
-  // HAL_UART_IRQHandler(&huart1);
-    usart_ISRHandler();
-  }
-  else{
+  if( b_sta_ker ){
     _kernel_inthdr_53();
   }
 

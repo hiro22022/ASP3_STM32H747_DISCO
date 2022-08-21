@@ -68,8 +68,15 @@ uint32_t  tim_clk_count;
 
 /* Private variables ---------------------------------------------------------*/
 
+#if 0
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim_clk;
+#else
+extern TIM_HandleTypeDef Tim2Handle;
+extern TIM_HandleTypeDef Tim5Handle;
+#define htim2 Tim2Handle
+#define htim_clk Tim5Handle
+#endif
 
 UART_HandleTypeDef huart1;
 
@@ -812,8 +819,8 @@ static void MX_TIM2_Init(void)
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 #else
-//	htim2.Init.Period = 0xFFFFFFFF;
-	htim2.Init.Period = 0xFFFF;                       // 65,535 μsec
+	htim2.Init.Period = 0xFFFFFFFF;
+//	htim2.Init.Period = 0xffff;                            // 65,535 μsec
 	htim2.Init.Prescaler = (TIMX_CLOCK_HZ/1000000);    /* 1μsec / count */
 	htim2.Init.ClockDivision = 0;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -977,8 +984,9 @@ static void MX_TIM5_Init(void)
 
 void TIM_CLK_IRQHandler()
 {
+  void target_hrt_handler(void);    /* target_timer.c */
   tim_clk_count++;
-#if 1
+#if 0
   if( tim_clk_count % COUNT_BASE == 0 )
     led_set( tim_clk_count / COUNT_BASE );
 #elif 0
@@ -1004,6 +1012,10 @@ void TIM_CLK_IRQHandler()
 	__HAL_TIM_SET_COUNTER(&htim_clk, 0);          // カウンタを 0にする
   __HAL_TIM_CLEAR_FLAG(&htim_clk, TIM_SR_UIF);  // 割込みフラグをクリア
   __enable_irq();
+
+
+  if( b_sta_ker )
+    target_hrt_handler();
 
 #else // OnePulseF401
   __disable_irq();

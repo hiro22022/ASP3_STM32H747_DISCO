@@ -409,6 +409,10 @@ update_current_evttim(void)
 Inline EVTTIM
 calc_current_evttim_ub(void)
 {
+#ifdef CALC_CURRENT_EVTTIM
+	syslog( LOG_NOTICE, "calc_current_evttim_ub=%d",
+						(int)(current_evttim + ((EVTTIM) TSTEP_HRTCNT)));
+#endif
 	return(current_evttim + ((EVTTIM) TSTEP_HRTCNT));
 }
 
@@ -581,6 +585,13 @@ tmevt_lefttim(TMEVTB *p_tmevtb)
  */
 #ifdef TOPPERS_sigtim
 
+#define LED_SET_ON_SIGNAL_TIME
+#ifdef LED_SET_ON_SIGNAL_TIME
+void led_set(int);
+static int signal_count;
+#define SIGNAL_COUNT  1000
+#endif
+
 void
 signal_time(void)
 {
@@ -589,6 +600,13 @@ signal_time(void)
 #ifndef TOPPERS_OMIT_SYSLOG
 	uint_t	nocall = 0;
 #endif /* TOPPERS_OMIT_SYSLOG */
+
+#ifdef LED_SET_ON_SIGNAL_TIME
+	if( signal_count++ % SIGNAL_COUNT == 0 ){
+		led_set(signal_count/SIGNAL_COUNT);
+		// syslog( LOG_NOTICE, "signal_time current_evttim=%d", current_evttim );
+	}
+#endif
 
 	assert(sense_context());
 	assert(!sense_lock());
@@ -627,9 +645,12 @@ signal_time(void)
 	/*
 	 *  タイムイベントが処理されなかった場合．
 	 */
+#define IGNORE_NO_TIME_EVENT_PROCESSED
+#ifndef IGNORE_NO_TIME_EVENT_PROCESSED
 	if (nocall == 0) {
 		syslog_0(LOG_NOTICE, "no time event is processed in hrt interrupt.");
 	}
+#endif
 #endif /* TOPPERS_OMIT_SYSLOG */
 
 	/*

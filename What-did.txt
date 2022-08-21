@@ -32,11 +32,59 @@ STM32F401RE のターゲット依存部、arch をベースに移植する
  ・タイマー
  ・シリアル
 
+デバッグに役立つ LED の設定
+    C:\Users\hiro2\Desktop\TECS-TOPPERS\TECS開発\STM32H747\STM32H747DiscoveryのLEDを点灯させるまで.pptx
+クロックの設定
+    C:\Users\hiro2\Desktop\TECS-TOPPERS\TECS開発\STM32H747\20220627_STM32H747Discoveryのクロック.pptx
+シリアル
+    stm32cube の生成コードは、割込みを使用していなかったので、割込みを使用する版をつくってみた
+    main.c の usart_xxx, sio_xxx を参照
+
 アセンブラ記述されている部分は、Cortex-M4 と M7 で共通のようなので、そのまま使用する方針。
 stm32cube の生成コードをベースに、タイマー、シリアルを実装するコードを生成する。
 
 いきなり target を完成させるのではなく、stm32cube の main.c で、クロック、タイマー、シリアルを動作させて、
 そこから sta_ker を呼出す方法で起動させる。
 
+シリアルは、f401 と、レジスタがかなり相違する。
+    tUsart.c のコードを書き換える。
+    オープン処理は、main.c で行ったものを引き継ぐこととして、空にした。
+    クローズは、しない。
 
+割込みベクターテーブルを整える。
+    まずは kerenel_cfg.c を一部書き換える方針とする。
+    f401 と h747 で割込み番号が同じなので、そこを入れ変える。
+    割込みハンドラの入り口を main.c に変更しておく
+   ★ cfg 実行都度書き換える必要がある
 
+カーネルを動作させてみる
+    pendsv_handler の出口で例外発生
+    sample1.c の cpu_exception へ飛んでくる
+    CFSR の bit 18 が ON ⇒ INVPC
+
+デバッグコードを入れる
+    sample1.c の cpu_exception に例外情報を出力するようにした。
+    ★ core_support.S に print_p_run をディスパッチ処理に入れ、いくらか情報を出すようにした。
+
+pendsv_handler が割込み処理の途中から開始されている模様
+    調査の過程で作成した資料。
+        C:\Users\hiro2\Desktop\TECS-TOPPERS\TECS開発\STM32H747\20220817_STM32H747Discoveryのカーネル起動.pptx
+    割込み優先度の設定に問題がありそう。
+    その観点で調べたところ core_initialize が呼び出されていないことが原因そう。
+    入れてみたところ、例外は発生しなくなった。
+    もう一つ例外発生条件が不明。
+    多重に発生した例外が終わっていない状態で、スレッドモードへ移行しようとしていることが
+    原因と推測するが、プロセッサがどのようにそれを判定しているか理解できていない。
+
+タイマー割込み target_timer.[ch] を変更
+    とりあえず、一定周期でタイマー割込みを入れてみる
+    ★ タイマーの再設定を空にする
+    これは Makefile.target で変更可能だったが、気づくのが遅れた
+
+#if 0
+#if 1
+PRINT_P_RUN
+IGNORE_NO_TIME_EVENT_PROCESSED
+ALWAYS_LOG_EMERGE
+LED_SET_ON_SIGNAL_TIME
+CALC_CURRENT_EVTTIM

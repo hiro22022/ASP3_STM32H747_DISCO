@@ -111,7 +111,8 @@ eSysLog_write(uint_t priority, const SYSLOG *p_syslog)
 	 *  ログ時刻の設定
 	 */
 	SYSLOG_GET_LOGTIM(&(((SYSLOG *) p_syslog)->logtim));
-
+// #define ALWAYS_LOG_EMERGE
+#ifndef ALWAYS_LOG_EMERGE
 	/*
 	 *  ログバッファに記録
 	 */
@@ -134,6 +135,14 @@ eSysLog_write(uint_t priority, const SYSLOG *p_syslog)
 	 *  低レベル出力
 	 */
 	if ((VAR_lowMask & LOG_MASK(priority)) != 0U) {
+#else
+	static int flag = 0;
+	if( flag == 0 ){
+		flag = 1;
+		syslog( LOG_NOTICE, "*** ALWAYS_LOG_EMERGE ***"); 
+	}
+	if(1){
+#endif
 		syslog_print(p_syslog, low_putchar);
 	}
 

@@ -97,9 +97,11 @@ target_hrt_get_current(void)
 Inline void
 target_hrt_set_event(HRTCNT hrtcnt)
 {
+#if 0
 	__HAL_TIM_SET_COUNTER(&Tim5Handle, 0);
 	__HAL_TIM_SET_AUTORELOAD(&Tim5Handle, hrtcnt);
 	HAL_TIM_Base_Start(&Tim5Handle);
+#endif
 }
 
 /*
@@ -108,7 +110,9 @@ target_hrt_set_event(HRTCNT hrtcnt)
  */
 Inline void target_hrt_raise_event(void)
 {
+#if 0
 	Tim5Handle.Instance->EGR = TIM_EVENTSOURCE_UPDATE;
+#endif
 }
 
 /*

@@ -321,6 +321,9 @@ cpuexc_handler(void *p_excinf)
 void
 cyclic_handler(intptr_t exinf)
 {
+#if 1
+	syslog( LOG_NOTICE, "cyc");
+#endif
 	SVC_PERROR(rot_rdq(HIGH_PRIORITY));
 	SVC_PERROR(rot_rdq(MID_PRIORITY));
 	SVC_PERROR(rot_rdq(LOW_PRIORITY));
@@ -425,10 +428,8 @@ main_task(intptr_t exinf)
 	task_loop = LOOP_REF * 400LU / (ulong_t)(stime2 - stime1) * 1000LU;
 
 #if 1
-	int i;
-	for( i = 0; i<1000; i++)
-		syslog( LOG_NOTICE, "stime1=%d stime2=%d diff=%d task_loop=%d",
-						stime1, stime2, stime2 - stime1, task_loop);
+	syslog( LOG_NOTICE, "LOOP_REF=%d stime1=%08x stime2=%08x diff=%08x task_loop=%08x",
+						LOOP_REF, (int)stime1, (int)stime2, (int)(stime2 - stime1), (int)task_loop);
 #endif
 #endif /* TASK_LOOP */
 

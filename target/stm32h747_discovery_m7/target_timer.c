@@ -131,8 +131,10 @@ target_hrt_terminate(intptr_t exinf)
 void
 target_hrt_handler(void)
 {
+#if 0
 	/* Clear Event */
 	__HAL_TIM_CLEAR_FLAG(&Tim5Handle, TIM_SR_UIF);
+#endif
 	/*
 	 *  高分解能タイマ割込みを処理する．
 	 */

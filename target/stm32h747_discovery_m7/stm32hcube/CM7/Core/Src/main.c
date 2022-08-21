@@ -38,7 +38,7 @@
 
 // タイマの OnePulse モードを使用する
 // どうしても割込みが入ってくれないようなので、あきらめる
-// #define OnePulseF401
+#define OnePulseF401
 
 // Disable & Enable Update Interrupt
 #define __HAL_TIM_UDIS_DISABLE(__HANDLE__)  ((__HANDLE__)->Instance->CR1|=TIM_CR1_UDIS)
@@ -589,6 +589,7 @@ int main(void)
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_TIM_INIT_DONE, sizeof(MSG_HAL_TIM_INIT_DONE), 0xfffffff);
 
 #else // OnePulseF401
+#if 0
   // 最初の割込みを入れる
   __disable_irq();
 	__HAL_TIM_SET_COUNTER(&htim_clk, 0);
@@ -599,6 +600,15 @@ int main(void)
 	__HAL_TIM_ENABLE_IT(&htim_clk, TIM_IT_UPDATE);
  	HAL_TIM_Base_Start_IT(&htim_clk);
   __enable_irq();
+#else
+  int hrtcnt = 1000;
+	__HAL_TIM_SET_COUNTER(&Tim5Handle, 0);
+	__HAL_TIM_SET_AUTORELOAD(&Tim5Handle, hrtcnt);
+	HAL_TIM_Base_Start(&Tim5Handle);
+#define TIM_CLK_OnePuluesInitMSG "HAL_TIM_Base_Start OnePulse 1st\r\n"
+  HAL_UART_Transmit(&huart1, (uint8_t*)TIM_CLK_OnePuluesInitMSG, sizeof(TIM_CLK_OnePuluesInitMSG), 0xfffffff);
+
+#endif
 #endif // OnePulseF401
 
 #if 0
@@ -857,8 +867,8 @@ static void MX_TIM2_Init(void)
     HAL_UART_Transmit(&huart1, (uint8_t*)MSG_BASE_START_ERR, sizeof(MSG_BASE_START_ERR), 0xfffffff);
     Error_Handler();
   }
-#define MSG_HAL_TIM_INIT_DONE "HAL_TIM_Base_Start Done\r\n"
-  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_TIM_INIT_DONE, sizeof(MSG_HAL_TIM_INIT_DONE), 0xfffffff);
+#define MSG_HAL_TIM2_INIT_DONE "HAL_TIM_Base_Start TIM2 Done\r\n"
+  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_TIM2_INIT_DONE, sizeof(MSG_HAL_TIM2_INIT_DONE), 0xfffffff);
 #endif
   /* USER CODE END TIM2_Init 2 */
 
@@ -936,6 +946,7 @@ static void MX_TIM5_Init(void)
 
   /* USER CODE END TIM5_Init 1 */
   htim_clk.Instance = TIM_CLK;
+#ifndef OnePulseF401
 #if 0
   htim_clk.Init.Prescaler = 0;
   htim_clk.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -950,18 +961,33 @@ static void MX_TIM5_Init(void)
 	htim_clk.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;  /* STM32H747 added */
 #endif
 
-#ifndef OnePulseF401
   if (HAL_TIM_Base_Init(&htim_clk) != HAL_OK)
   {
     Error_Handler();
   }
 
 #else // OnePulseF401
+	/* Enable Clock. Use APB1 timer clock */
+	__HAL_RCC_TIM5_CLK_ENABLE();
+
+	htim_clk.Init.Period = 0xFF;
+	htim_clk.Init.Prescaler = (TIMX_CLOCK_HZ/1000000);
+	htim_clk.Init.ClockDivision = 0;
+	htim_clk.Init.CounterMode = TIM_COUNTERMODE_UP;
+
 	/* One-pulse Mode */
 	if(HAL_TIM_OnePulse_Init(&htim_clk,TIM_OPMODE_SINGLE) != HAL_OK) {
 		/* Initialization Error */
 		Error_Handler();
 	}
+	/* clear interrupt */
+	__HAL_TIM_CLEAR_FLAG(&htim_clk, TIM_SR_UIF);
+	/* enable interrupt */
+	__HAL_TIM_ENABLE_IT(&htim_clk, TIM_IT_UPDATE);
+
+#define HALTIMOnePulseInitMSG "HAL_TIM_OnePulse_Init done\r\n"
+    HAL_UART_Transmit(&huart1, (uint8_t*)HALTIMOnePulseInitMSG, sizeof(HALTIMOnePulseInitMSG), 0xfffffff);
+
 #endif  //OnePulseF401
 
 #if 1
@@ -1018,13 +1044,19 @@ void TIM_CLK_IRQHandler()
     target_hrt_handler();
 
 #else // OnePulseF401
-  __disable_irq();
-  __HAL_TIM_CLEAR_FLAG(&htim_clk, TIM_SR_UIF);  // 割込みフラグをクリア
-	__HAL_TIM_SET_COUNTER(&htim_clk, 0);
-	__HAL_TIM_SET_AUTORELOAD(&htim_clk, 1000);
-	HAL_TIM_Base_Start_IT(&htim_clk);
-  __HAL_TIM_ENABLE(&htim_clk);
-  __enable_irq();
+  if( tim_clk_count % 1000  == 0 ){
+    #define TIM_CLK_IRQHandlerMSG "TIM_CLK_IRQHandler OnePulse\r\n"
+    HAL_UART_Transmit(&huart1, (uint8_t*)TIM_CLK_IRQHandlerMSG, sizeof(TIM_CLK_IRQHandlerMSG), 0xfffffff);
+  }
+
+	/* Clear Event */
+	__HAL_TIM_CLEAR_FLAG(&Tim5Handle, TIM_SR_UIF);
+
+  int hrtcnt = 1000;
+
+	__HAL_TIM_SET_COUNTER(&Tim5Handle, 0);
+	__HAL_TIM_SET_AUTORELOAD(&Tim5Handle, hrtcnt);
+	HAL_TIM_Base_Start(&Tim5Handle);
 
 #endif // OnePulseF401
 }

@@ -89,6 +89,7 @@ pendsv_handler が割込み処理の途中から開始されている模様
 基本的な移植は完了
     機能としては移植作業完了。
     移植を完了させるには main.c から移す作業が必要。
+    ★ここまでの成果： commit c0424260013ed562d806428e9c1272bb809029fb (HEAD -> main)
 
 #if 0
 #if 1
@@ -97,3 +98,5 @@ IGNORE_NO_TIME_EVENT_PROCESSED
 ALWAYS_LOG_EMERGE
 LED_SET_ON_SIGNAL_TIME
 CALC_CURRENT_EVTTIM
+
+

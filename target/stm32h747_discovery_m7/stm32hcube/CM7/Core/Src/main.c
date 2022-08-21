@@ -974,6 +974,7 @@ static void MX_TIM5_Init(void)
 	htim_clk.Init.Prescaler = (TIMX_CLOCK_HZ/1000000);
 	htim_clk.Init.ClockDivision = 0;
 	htim_clk.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim_clk.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;  /* STM32H747 added */
 
 	/* One-pulse Mode */
 	if(HAL_TIM_OnePulse_Init(&htim_clk,TIM_OPMODE_SINGLE) != HAL_OK) {

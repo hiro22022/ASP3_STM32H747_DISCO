@@ -110,6 +110,7 @@ target_hrt_set_event(HRTCNT hrtcnt)
 	 */
 	if(hrtcnt==0)
 		hrtcnt = 1;
+
     __HAL_TIM_SET_AUTORELOAD(&Tim5Handle, hrtcnt);
     __disable_irq();  // ここへ来たということは割込み許可されている。
                       // 以下の2つの間で割込みが入ると 1μ秒以下で終わることが保証できない。

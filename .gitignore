@@ -10,6 +10,7 @@
 *.lst
 *.srec
 *.syms
+*.timestamp
 gen
 objs
 offset.*

@@ -352,6 +352,18 @@ exc_task(intptr_t exinf)
 	SVC_PERROR(ras_ter(cpuexc_tskid));
 }
 
+void
+dump_CM4(void)
+{
+	uint32_t  *p = (uint32_t *)0x08100000;
+	int      i;
+
+	syslog( LOG_NOTICE, "msp=%08x", (int32_t)p );
+	for( i = 0; i < 8; i++, p = &p[4] )
+		syslog( LOG_NOTICE, "%08x: %08x %08x %08x %08x",
+					(int32_t)p,p[0], p[1], p[2], p[3]);
+}
+
 /*
  *  メインタスク
  */
@@ -571,6 +583,10 @@ main_task(intptr_t exinf)
 
 		case '\003':
 		case 'Q':
+			break;
+
+		case 'D':
+			dump_CM4();
 			break;
 
 		default:

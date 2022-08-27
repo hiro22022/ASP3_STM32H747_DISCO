@@ -263,7 +263,9 @@ void led_set( int val )
     led_conf[0].gpio->BSRR = rs_val;
 }
 /*-------------------------------------------*/
+#endif
 
+#if 0
 /*
  * libc.a(lib_a-init.o): in function `__libc_init_array':
  *    init.c:40: undefined reference to `_init'

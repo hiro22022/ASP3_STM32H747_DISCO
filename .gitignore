@@ -8,6 +8,8 @@
 *.su
 *.d
 *.lst
+*.srec
+*.syms
 gen
 objs
 offset.*

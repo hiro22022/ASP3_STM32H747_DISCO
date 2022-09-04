@@ -171,8 +171,15 @@ task(intptr_t exinf)
 	char		c;
 
 	while (true) {
+#if 1
+#define COM_VAR (*(uint32_t *)0x10040000)
+#define COM_VAR2 (*(uint32_t *)0x10040004)
+		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_VAR=%08x COM_VAR2=%08x",
+										tskno, ++n, graph[tskno-1], COM_VAR, COM_VAR2);
+#else
 		syslog(LOG_NOTICE, "task%d is running (%03d).   %s",
 										tskno, ++n, graph[tskno-1]);
+#endif
 		consume_time(task_loop);
 		c = message[tskno-1];
 		message[tskno-1] = 0;
@@ -355,7 +362,8 @@ exc_task(intptr_t exinf)
 void
 dump_CM4(void)
 {
-	uint32_t  *p = (uint32_t *)0x08100000;
+//	uint32_t  *p = (uint32_t *)0x08100000;
+	uint32_t  *p = (uint32_t *)0x10040000;
 	int      i;
 
 	syslog( LOG_NOTICE, "msp=%08x", (int32_t)p );

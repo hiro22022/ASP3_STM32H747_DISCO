@@ -52,6 +52,7 @@
 #else /* USE_SYSTICK_AS_TIMETICK */
 #ifdef USE_TIM_AS_HRT
 #include <sil.h>
+#include "stm32h7xx.h"
 #include "stm32h7xx_hal_dma.h"
 #include "stm32h7xx_hal_tim.h"
 

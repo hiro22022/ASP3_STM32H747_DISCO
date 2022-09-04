@@ -71,7 +71,8 @@ SRCDIR = ..
 #
 #  オブジェクトファイル名の拡張子の設定
 #
-OBJEXT = exe
+# OBJEXT = exe
+OBJEXT = elf
 
 #
 #  カーネルライブラリ（libkernel.a）のディレクトリ名
@@ -190,7 +191,7 @@ ifdef USE_CXX
 else
 	APPL_COBJS := sample1.o
 endif
-APPL_COBJS := $(APPL_COBJS) log_output.o vasyslog.o t_perror.o strerror.o
+APPL_COBJS := $(APPL_COBJS) log_output.o vasyslog.o t_perror.o strerror.o $(TARGET_COBJS)
 APPL_CFLAGS := $(APPL_CFLAGS)
 ifdef APPLDIRS
 	INCLUDES := $(INCLUDES) $(foreach dir,$(APPLDIRS),-I$(dir))
@@ -311,14 +312,15 @@ CFG_COBJS      := $(addprefix $(OBJDIR)/, $(CFG_COBJS))
 #
 #  コンパイルのための変数の定義
 #
-APPL_OBJS = $(APPL_ASMOBJS) $(APPL_COBJS) $(APPL_CXXOBJS) 
+# APPL_OBJS = $(APPL_ASMOBJS) $(APPL_COBJS) $(APPL_CXXOBJS)
+APPL_OBJS = $(APPL_ASMOBJS) $(APPL_COBJS) $(APPL_CXXOBJS)
 #main_no_sprintf.o
 SYSSVC_OBJS = $(SYSSVC_ASMOBJS) $(SYSSVC_COBJS)
 KERNEL_LIB_OBJS = $(KERNEL_ASMOBJS) $(KERNEL_COBJS) $(KERNEL_LCOBJS)
 CFG_OBJS = $(CFG_ASMOBJS) $(CFG_COBJS)
 ALL_OBJS = $(START_OBJS) $(APPL_OBJS) $(SYSSVC_OBJS) $(CFG_OBJS) \
 											$(END_OBJS) $(HIDDEN_OBJS)
-ALL_LIBS = -lkernel $(LIBS)
+ALL_LIBS = -lkernel $(LIBS) -lkernel -lc_nano		# libc から libkernel 内のモジュールが参照されるため、もう一度読み直す
 ifdef KERNEL_LIB
 	LIBS_DEP = $(KERNEL_LIB)/libkernel.a $(filter %.a,$(LIBS))
 	OBJ_LDFLAGS := $(OBJ_LDFLAGS) -L$(KERNEL_LIB)
@@ -409,6 +411,7 @@ $(OBJFILE): $(ALL_OBJS) $(LIBS_DEP)
 	$(LINK) $(CFLAGS) $(LDFLAGS) $(OBJ_LDFLAGS) -o $(OBJFILE) \
 			$(START_OBJS) $(APPL_OBJS) $(SYSSVC_OBJS) $(CFG_OBJS) \
 			$(ALL_LIBS) $(END_OBJS) > $(OBJNAME).map
+# @objects-me2.list
 # $(OBJFILE): $(ALL_OBJS) $(LIBS_DEP)
 # 	$(LINK) $(CFLAGS) $(LDFLAGS) $(OBJ_LDFLAGS) -o $(OBJFILE) \
 # 			$(START_OBJS) $(APPL_OBJS) $(SYSSVC_OBJS) $(CFG_OBJS) \

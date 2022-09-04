@@ -44,9 +44,15 @@
 #define __HAL_TIM_UDIS_DISABLE(__HANDLE__)  ((__HANDLE__)->Instance->CR1|=TIM_CR1_UDIS)
 #define __HAL_TIM_UDIS_ENABLE(__HANDLE__)  ((__HANDLE__)->Instance->CR1&=~TIM_CR1_UDIS)
 
+#if 1
 #define TIM_CLK  TIM5
 #define TIM_CLK_IRQNO  TIM5_IRQn
 #define TIM_CLK_IRQHandler  TIM5_IRQHandler
+#else
+#define TIM_CLK  TIM1
+#define TIM_CLK_IRQNO  TIM1_UP_IRQn
+#define TIM_CLK_IRQHandler  TIM1_UP_IRQHandler
+#endif
 #define COUNT_BASE 1000
 uint32_t  tim_clk_count;
 
@@ -62,10 +68,15 @@ uint32_t  tim_clk_count;
 
 /* Private variables ---------------------------------------------------------*/
 
+#if 0
+TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim_clk;
+#else
 extern TIM_HandleTypeDef Tim2Handle;
 extern TIM_HandleTypeDef Tim5Handle;
 #define htim2 Tim2Handle
 #define htim_clk Tim5Handle
+#endif
 
 UART_HandleTypeDef huart1;
 
@@ -138,6 +149,24 @@ void led_off( uint32_t no )
 
 void led_set( int val )
 {
+#if 0   /* これを切り替えてみると IO ポートアクセスの遅さがわかる */
+    if( val & (1 << LED1) )
+      led_on( LED1 );
+    else
+      led_off( LED1 );
+    if( val & (1 << LED2) )
+      led_on( LED2 );
+    else
+      led_off( LED2 );
+    if( val & (1 << LED3) )
+      led_on( LED3 );
+    else
+      led_off( LED3 );
+    if( val & (1 << LED4) )
+      led_on( LED4 );
+    else
+      led_off( LED4 );
+#else
     /* LED が同じ GPIO で並んでいることを利用して、１回の IO アクセスでよいように効率化したバージョン */
     uint32_t rs_val = 0;
     int i;
@@ -149,6 +178,7 @@ void led_set( int val )
     }
     /* GPIO のレジスタに直接書き込む */
     led_conf[0].gpio->BSRR = rs_val;
+#endif
 }
 
 void
@@ -165,6 +195,234 @@ led_blink( int i, int j )
   }
 
 }
+/*---------------------------------------------*/
+
+/*
+ *  受信バッファに文字があるか？
+ */
+static bool_t
+usart_getready()
+{
+	return (USART1->ISR & USART_ISR_RXNE_RXFNE) != 0;
+}
+
+/*
+ *  送信バッファに空きがあるか？
+ */
+static bool_t
+usart_putready()
+{
+	return (USART1->ISR & USART_ISR_TXE_TXFNF) != 0;
+}
+
+/*
+ *  受信した文字の取出し
+ */
+static char
+usart_getchar()
+{
+	return (char)(USART1->RDR);
+}
+
+/*
+ *  送信する文字の書込み
+ */
+static void
+usart_putchar(char c)
+{
+	(USART1->TDR) = (uint32_t)(uint8_t)c;
+}
+
+static void ciSIOCBR_readyReceive();
+static void ciSIOCBR_readySend();
+
+static void
+usart_ISRHandler(void)
+{
+
+	if (usart_getready()) {
+		/*
+		 *  受信通知コールバックルーチンを呼び出す．
+		 */
+		ciSIOCBR_readyReceive();
+	}
+	if (usart_putready()) {
+		/*
+		 *  送信可能コールバックルーチンを呼び出す．
+		 */
+		ciSIOCBR_readySend();
+	}
+}
+
+static void
+usart_ena_txint(void)
+{
+	// UART_IT_TXE CR1 bit 7
+	USART1->CR1 |= USART_CR1_TXEIE_TXFNFIE;
+}
+
+static void
+usart_ena_rxint(void)
+{
+   // UART_IT_RXNE CR1 bit 5
+	USART1->CR1 |= USART_CR1_RXNEIE_RXFNEIE;
+}
+
+static void
+usart_dis_txint(void)
+{
+	// UART_IT_TXE CR1 bit 7
+	USART1->CR1 &= ~USART_CR1_TXEIE_TXFNFIE;
+}
+
+static void
+usart_dis_rxint(void)
+{
+   // UART_IT_RXNE CR1 bit 5
+	USART1->CR1 &= ~USART_CR1_RXNEIE_RXFNEIE;
+}
+
+static char
+usart_getchar_block()
+{
+  while( usart_getready() == 0 ) {}
+ 	return usart_getchar();
+}
+
+static void
+usart_puts( char *s)
+{
+  while(*s){
+    while(!usart_putready()) ;
+    usart_putchar(*s++);
+  }
+}
+
+/*---------------------------------------------*/
+#define SIO_BUF_LEN   256
+char  sio_send_buf[ SIO_BUF_LEN ];
+volatile  int  sio_send_buf_wp;
+volatile  int  sio_send_buf_rp;
+
+char  sio_receive_buf[ SIO_BUF_LEN ];
+volatile  int  sio_receive_buf_wp;
+volatile  int  sio_receive_buf_rp;
+volatile  int  sio_receive_discard;
+
+static void
+SIO_putchar( int c )
+{
+  int  next_wp;
+#if 0
+  bool_t  int_disabled = __get_PRIMASK() & 0x1 ;
+
+  if( ! int_disabled )
+    __disable_irq();
+
+  led_set( 4 );
+  // 割込みを禁止した瞬間に、送信完了割込みが入るケースを想定
+  if( sio_send_buf_wp == sio_send_buf_rp    // 未送信のデータがバッファにない
+    && usart_putready() ){                  // 送信可能
+    led_set( 5 );
+    usart_putchar(c);
+  }
+  else {
+    // ここへ来るまでに、送信完了割込みが入らないように割込みを禁止している
+#endif
+    sio_send_buf[sio_send_buf_wp] = (char)c;
+    next_wp = sio_send_buf_wp + 1;
+    if( next_wp >= SIO_BUF_LEN )
+      next_wp  = 0;
+    // 空きができるまで待つ
+    while( next_wp == sio_send_buf_rp )
+    { }
+    sio_send_buf_wp = next_wp;
+#if 0
+  }
+#endif
+
+  usart_ena_txint();      // 最初の一文字(空になっている)場合、すぐに割込みが入る
+#if 0
+  if( ! int_disabled )
+    __enable_irq();
+#endif // 0
+}
+
+static void
+SIO_puts( char *s)
+{
+#if 0
+  usart_puts( s );
+#else
+    while( *s ){
+      SIO_putchar( *s++ );
+    }
+#endif //1 
+}
+
+static char
+SIO_getchar(void)
+{
+  char c;
+  int  next_rp;
+  while( sio_receive_buf_wp == sio_receive_buf_rp ){}
+  c = sio_receive_buf[ sio_receive_buf_rp ];
+  next_rp = sio_receive_buf_rp + 1;
+  if( next_rp >= SIO_BUF_LEN )
+    next_rp = 0;
+  sio_receive_buf_rp = next_rp;
+
+  return c;
+}
+
+static void
+SIO_flush(void)
+{
+  /* すべての送信が終わるのを待つ */
+  while( sio_send_buf_rp != sio_send_buf_wp ) {}
+}
+
+
+static void
+ciSIOCBR_readyReceive()
+{
+  char c;
+  int next_wp;
+  /* 受信データがあるか? */
+  if( usart_getready() == 0 )
+    return;
+  c = usart_getchar();
+  sio_receive_buf[ sio_receive_buf_wp ] = c;
+  next_wp = sio_receive_buf_wp + 1;
+  if( next_wp >= SIO_BUF_LEN )
+    next_wp = 0;
+  if( next_wp != sio_receive_buf_rp )
+    sio_receive_buf_wp = next_wp;
+  else
+    sio_receive_discard = 1;
+}
+
+static void
+ciSIOCBR_readySend()
+{
+  int  next_rp;
+
+  if( sio_send_buf_rp == sio_send_buf_wp ){
+    /* これ以上送るものがないので、割込みを禁止して終了する */
+    usart_dis_txint();
+  }
+  else{
+    usart_putchar( sio_send_buf[sio_send_buf_rp] );
+    next_rp = sio_send_buf_rp + 1;
+    if( next_rp >= SIO_BUF_LEN )
+      next_rp = 0;
+    sio_send_buf_rp = next_rp;
+  }
+}
+
+/*---------------------------------------------*/
+
+
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -245,12 +503,26 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+
+  led_init();
+  int  i, j = 0;
+  for( j = 0; j < 16; j++ ){
+    for( i = 0; i < 100 * 1000; i++ ){
+      /* 単純なループだと消される可能性があるので、値が変わらなくても毎回呼出す */
+      /* 時間を延ばす役割もある */
+      led_set( j );
+    }
+  }
+
   MX_USART1_UART_Init();
+  led_set(2);
   MX_TIM2_Init();
   MX_TIM5_Init();
+  led_set(3);
   /* USER CODE BEGIN 2 */
 #define MSG_CM7 "hello CM7!\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_CM7, sizeof(MSG_CM7), 0xfffffff);
+  led_set(4);
 
   //-------------------------
   // print clock frequency calculated from register settings
@@ -278,8 +550,26 @@ int main(void)
   snprintf( buf, sizeof(buf), "D3PCLK1=%lu\r\n", clk_val );
   HAL_UART_Transmit(&huart1, (uint8_t*)buf, strlen(buf), 0xfffffff);
   //-------------------------
+  led_set(5);
 
-  led_init();
+#if 1
+/*
+ * タイマーが作動していることを確認するコード
+ * TIM2 から値を呼出して、0.1 秒ごとに更新する
+ * (タイマーが 1μ秒ごとにカウントする前提)
+ */
+#define MSG_LED1 "LED1!\r\n"
+  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_LED1, sizeof(MSG_LED1), 0xfffffff);
+
+  for(j=0; j<64; ){
+    if( __HAL_TIM_GET_COUNTER(&htim2) % 100000 == 0 ){
+      led_set( j );
+      j++;
+    }
+  }
+#define MSG_LED2 "LED2!\r\n"
+  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_LED2, sizeof(MSG_LED2), 0xfffffff);
+#endif /* 0 */
 
 #define MSG_TIM3 "hello CM7 Enable Interrupt!\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_TIM3, sizeof(MSG_TIM3), 0xfffffff);
@@ -291,6 +581,7 @@ int main(void)
   NVIC_EnableIRQ( TIM_CLK_IRQNO );
   NVIC_EnableIRQ( USART1_IRQn );
 
+#ifndef OnePulseF401
   /* USER CODE BEGIN TIM5_Init 2 */
   /* カウンターをスタート */
   if(HAL_TIM_Base_Start_IT(&htim_clk) != HAL_OK) {
@@ -302,6 +593,103 @@ int main(void)
 #define MSG_HAL_TIM_INIT_DONE "HAL_TIM_Base_Start Done\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_TIM_INIT_DONE, sizeof(MSG_HAL_TIM_INIT_DONE), 0xfffffff);
 
+#else // OnePulseF401
+#if 0
+  // 最初の割込みを入れる
+  __disable_irq();
+	__HAL_TIM_SET_COUNTER(&htim_clk, 0);
+	__HAL_TIM_SET_AUTORELOAD(&htim_clk, 1000);
+  	/* clear interrupt */
+	__HAL_TIM_CLEAR_FLAG(&htim_clk, TIM_SR_UIF);
+	/* enable interrupt */
+	__HAL_TIM_ENABLE_IT(&htim_clk, TIM_IT_UPDATE);
+ 	HAL_TIM_Base_Start_IT(&htim_clk);
+  __enable_irq();
+#else
+  int hrtcnt = 1000;
+	__HAL_TIM_SET_COUNTER(&Tim5Handle, 0);
+	__HAL_TIM_SET_AUTORELOAD(&Tim5Handle, hrtcnt);
+	HAL_TIM_Base_Start(&Tim5Handle);
+#define TIM_CLK_OnePuluesInitMSG "HAL_TIM_Base_Start OnePulse 1st\r\n"
+  HAL_UART_Transmit(&huart1, (uint8_t*)TIM_CLK_OnePuluesInitMSG, sizeof(TIM_CLK_OnePuluesInitMSG), 0xfffffff);
+
+#endif
+#endif // OnePulseF401
+
+  led_set(6);
+#if 0
+#define MSG_SERIAL_1 "serial_write test\r\n"
+  serial_opn_por(1);
+  serial_wri_dat(1, MSG_SERIAL_1, sizeof(MSG_SERIAL_1));
+#else
+#define MSG_USART "usart_puts test\r\n"
+  // 割込みを使わず送信する
+  usart_puts(MSG_USART);
+#endif
+
+  char c;
+  led_set( 1 );
+  usart_ena_rxint();
+  led_set( 2 );
+  SIO_puts( "> " );
+  while( (c = SIO_getchar()) != '\r' ){
+  led_set( 3 );
+    buf[ 0 ] = c;
+    buf[ 1 ] = '\0';
+    SIO_puts( buf );
+  }
+
+  led_set(7);
+  SIO_puts( "\r\n" );
+
+#if 0
+  /* USER CODE END TIM5_Init 2 */
+  for(j=0; j<64; ){
+    if( __HAL_TIM_GET_COUNTER(&htim_clk) % 1000000 == 0 ){
+      led_set( j );
+      j++;
+    }
+  }
+  /* USER CODE END 2 */
+#endif
+
+#if 0
+  led_set( 4 );
+/* SIO にたくさん流しても、問題ないことを確認する */
+#define MSG_SIO_TEST "SIO TEST Start\r\n"
+//  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_SIO_TEST, sizeof(MSG_SIO_TEST), 0xfffffff);
+  SIO_puts( MSG_SIO_TEST );
+  /* USER CODE BEGIN WHILE */
+  led_set( 5 );
+  for( i = 0; i < 32; i++ ){
+    snprintf( buf, sizeof buf, "Loop %d\r\n", i);
+    SIO_puts( buf );
+  }
+#endif // 0
+#if 0
+  led_set( 5 );
+  for (i = 0; i < 10000000; i++ )
+  {
+    led_set( 6 );
+    /* USER CODE END WHILE */
+    if( tim_clk_count % 333 == 0 ){
+      led_set( 7 );
+      snprintf( buf, sizeof(buf), "tim_clk_count=%lu i=%d\r\n", tim_clk_count/COUNT_BASE, i );
+//      led_set( tim_clk_count / COUNT_BASE );
+//      HAL_UART_Transmit(&huart1, (uint8_t*)buf, strnlen(buf, sizeof(buf)), 0xfffffff);
+//      HAL_UART_Transmit_IT(&huart1, (uint8_t*)buf, strnlen(buf, sizeof(buf)));
+      SIO_puts(buf);
+//      led_set( (tim_clk_count / COUNT_BASE) +1 );
+    }
+    /* USER CODE BEGIN 3 */
+  }
+#endif // 0
+
+  led_set( 8 );
+  snprintf( buf, sizeof(buf), "sta_ker()\r\n" );
+//  HAL_UART_Transmit(&huart1, (uint8_t*)buf, strnlen(buf, sizeof(buf)), 0xfffffff);
+  SIO_puts(buf);
+  SIO_flush();
 #if 1
   __disable_fault_irq();      // start.S で禁止するのと同様に変更
   b_sta_ker = true;
@@ -330,6 +718,11 @@ void SystemClock_Config(void)
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
+  /** Macro to configure the PLL clock source
+  */
+
+  /* なぜかこの行があったが、不要と思われる */
+  //  __HAL_RCC_PLL_PLLSOURCE_CONFIG(RCC_PLLSOURCE_HSI);
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -430,20 +823,32 @@ static void MX_TIM2_Init(void)
   TIM_MasterConfigTypeDef sMasterConfig = {0};
 
   /* USER CODE BEGIN TIM2_Init 1 */
+#if 0
+	__HAL_RCC_TIM2_CLK_ENABLE();
+#endif
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
+#if 0
+  htim2.Init.Prescaler = 0;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 4294967295;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+#else
 	htim2.Init.Period = 0xFFFFFFFF;
 //	htim2.Init.Period = 0xffff;                            // 65,535 μsec
 	htim2.Init.Prescaler = (TIMX_CLOCK_HZ/1000000);    /* 1μsec / count */
 	htim2.Init.ClockDivision = 0;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
 	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;  /* STM32H747 added */
+#endif
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
   }
 
+#if 1
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
   if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
   {
@@ -455,7 +860,12 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
+#else
+  (void)sClockSourceConfig;
+  (void)sMasterConfig;
+#endif
 
+#if 1
   /* USER CODE BEGIN TIM2_Init 2 */
   /* カウンターをスタート */
   if(HAL_TIM_Base_Start(&htim2) != HAL_OK) {
@@ -466,6 +876,7 @@ static void MX_TIM2_Init(void)
   }
 #define MSG_HAL_TIM2_INIT_DONE "HAL_TIM_Base_Start TIM2 Done\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_TIM2_INIT_DONE, sizeof(MSG_HAL_TIM2_INIT_DONE), 0xfffffff);
+#endif
   /* USER CODE END TIM2_Init 2 */
 
 }
@@ -475,6 +886,7 @@ static void MX_TIM2_Init(void)
   * @param None
   * @retval None
   */
+#ifdef  UNUSED_TIM
 static void MX_TIM5_Init(void)
 {
 
@@ -488,18 +900,105 @@ static void MX_TIM5_Init(void)
   /* USER CODE BEGIN TIM5_Init 1 */
 
   /* USER CODE END TIM5_Init 1 */
+  htim_clk.Instance = TIM5;
+  htim_clk.Init.Prescaler = 0;
+  htim_clk.Init.CounterMode = TIM_COUNTERMODE_UP;
+#if 0
+  htim_clk.Init.Period = 4294967295;
+#else
+  htim_clk.Init.Period = 100 * 1000;
+#endif
+  htim_clk.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim_clk.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim_clk) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim_clk, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_OnePulse_Init(&htim_clk, TIM_OPMODE_SINGLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim_clk, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM5_Init 2 */
+
+  /* USER CODE END TIM5_Init 2 */
+
+}
+
+#else // UNUSED_TIM
+static void MX_TIM5_Init(void)
+{
+
+  /* USER CODE BEGIN TIM5_Init 0 */
+
+  /* USER CODE END TIM5_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM5_Init 1 */
+#if 0
+	__HAL_RCC_TIM5_CLK_ENABLE();
+#endif
+
+  /* USER CODE END TIM5_Init 1 */
   htim_clk.Instance = TIM_CLK;
+#ifndef OnePulseF401
+#if 0
+  htim_clk.Init.Prescaler = 0;
+  htim_clk.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim_clk.Init.Period = 4294967295;
+  htim_clk.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim_clk.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+#else
 	htim_clk.Init.Period = 1000;                          // 1,000 μsec
 	htim_clk.Init.Prescaler = (TIMX_CLOCK_HZ/1000000);     // 1μsec/count
 	htim_clk.Init.ClockDivision = 0;
 	htim_clk.Init.CounterMode = TIM_COUNTERMODE_UP;
 	htim_clk.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;  /* STM32H747 added */
+#endif
 
   if (HAL_TIM_Base_Init(&htim_clk) != HAL_OK)
   {
     Error_Handler();
   }
 
+#else // OnePulseF401
+	/* Enable Clock. Use APB1 timer clock */
+	__HAL_RCC_TIM5_CLK_ENABLE();
+
+	htim_clk.Init.Period = 0xFF;
+	htim_clk.Init.Prescaler = (TIMX_CLOCK_HZ/1000000);
+	htim_clk.Init.ClockDivision = 0;
+	htim_clk.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim_clk.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;  /* STM32H747 added */
+
+	/* One-pulse Mode */
+	if(HAL_TIM_OnePulse_Init(&htim_clk,TIM_OPMODE_SINGLE) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+	/* clear interrupt */
+	__HAL_TIM_CLEAR_FLAG(&htim_clk, TIM_SR_UIF);
+	/* enable interrupt */
+	__HAL_TIM_ENABLE_IT(&htim_clk, TIM_IT_UPDATE);
+
+#define HALTIMOnePulseInitMSG "HAL_TIM_OnePulse_Init done\r\n"
+    HAL_UART_Transmit(&huart1, (uint8_t*)HALTIMOnePulseInitMSG, sizeof(HALTIMOnePulseInitMSG), 0xfffffff);
+
+#endif  //OnePulseF401
+
+#if 1
   sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
   if (HAL_TIM_ConfigClockSource(&htim_clk, &sClockSourceConfig) != HAL_OK)
   {
@@ -511,15 +1010,67 @@ static void MX_TIM5_Init(void)
   {
     Error_Handler();
   }
+#else
+  (void)sClockSourceConfig;
+  (void)sMasterConfig;
+#endif
 }
 
 void TIM_CLK_IRQHandler()
 {
   void target_hrt_handler(void);    /* target_timer.c */
   tim_clk_count++;
+#if 0
+  if( tim_clk_count % COUNT_BASE == 0 )
+    led_set( tim_clk_count / COUNT_BASE );
+#elif 0
+#define COUNT_BASE2 (10 *1000)
+  if( tim_clk_count % COUNT_BASE2 == 0 )
+    led_set( tim_clk_count / COUNT_BASE2 );
+#endif
 
-  target_hrt_handler();
+#ifndef OnePulseF401
+  // 動的にタイマ値を変更するテスト
+  // タイマ値 0 にセットした時、2度と割込みが入らない(一周するのかもしれない。 未確認)
+#if 0
+  __HAL_TIM_SET_AUTORELOAD(&htim_clk, (tim_clk_count%1000)+1);
+#elif 0
+  // カウント1 が期待したように動作するかのテスト
+  __HAL_TIM_SET_AUTORELOAD(&htim_clk, (tim_clk_count%2)==0?1:1000);
+#elif 0
+  __HAL_TIM_SET_AUTORELOAD(&htim_clk, 1000);
+#endif
+  if( ! b_sta_ker ){
+    __HAL_TIM_SET_AUTORELOAD(&htim_clk, 1000);
+    __disable_irq();  // ここへ来たということは割込み許可されている。
+                      // 以下の2つの間で割込みが入ると 1μ秒以下で終わることが保証できない。
+                      // タイマー時間が十分長い場合は、不要だが、ここでは最短 1μ秒となることを仮定する。
+    __HAL_TIM_SET_COUNTER(&htim_clk, 0);          // カウンタを 0にする
+    __HAL_TIM_CLEAR_FLAG(&htim_clk, TIM_SR_UIF);  // 割込みフラグをクリア
+    __enable_irq();
+  }
+  else {
+    target_hrt_handler();
+  }
+
+#else // OnePulseF401
+  if( tim_clk_count % 1000  == 0 ){
+    #define TIM_CLK_IRQHandlerMSG "TIM_CLK_IRQHandler OnePulse\r\n"
+    HAL_UART_Transmit(&huart1, (uint8_t*)TIM_CLK_IRQHandlerMSG, sizeof(TIM_CLK_IRQHandlerMSG), 0xfffffff);
+  }
+
+	/* Clear Event */
+	__HAL_TIM_CLEAR_FLAG(&Tim5Handle, TIM_SR_UIF);
+
+  int hrtcnt = 1000;
+
+	__HAL_TIM_SET_COUNTER(&Tim5Handle, 0);
+	__HAL_TIM_SET_AUTORELOAD(&Tim5Handle, hrtcnt);
+	HAL_TIM_Base_Start(&Tim5Handle);
+
+#endif // OnePulseF401
 }
+#endif // UNUSED_TIM
 
 /**
   * @brief USART1 Initialization Function
@@ -575,7 +1126,11 @@ void USART1_IRQHandler()
 {
   void   _kernel_inthdr_53(void);
 
-  if( b_sta_ker ){
+  if( !b_sta_ker ){
+  // HAL_UART_IRQHandler(&huart1);
+    usart_ISRHandler();
+  }
+  else{
     _kernel_inthdr_53();
   }
 

@@ -27,32 +27,57 @@ KERNEL_TIMER = TIM
 INCLUDES := $(INCLUDES) -I$(TARGETDIR) -I$(TARGETDIR)/stm32hcube \
 	-I$(TARGETDIR)/stm32hcube/Drivers/STM32H7xx_HAL_Driver/Inc \
 	-I$(TARGETDIR)/stm32hcube/Drivers/CMSIS/Include \
-	-I$(TARGETDIR)/stm32hcube/Drivers/CMSIS/Device/ST/STM32H7xx/Include
-CDEFS := $(CDEFS) -DSTM32H747xx -DCORE_CM7
+	-I$(TARGETDIR)/stm32hcube/Drivers/CMSIS/Device/ST/STM32H7xx/Include \
+	-I$(TARGETDIR)/stm32hcube/CM7/Core/Inc -I../syssvc -I../kernel
+CDEFS := $(CDEFS) -DSTM32H747xx -DUSE_HAL_DRIVER -DCORE_CM7
 COPTS := $(COPTS) 
-LDFLAGS := -nostdlib -nostartfiles $(LDFLAGS)
+# LDFLAGS := -nostdlib -nostartfiles $(LDFLAGS)
+# LDFLAGS := -nostdlib $(LDFLAGS)
+# LDFLAGS := -nostdlib --specs=nosys.specs \
+#		-Wl,--gc-sections -static --specs=nano.specs \
+#        -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group \
+#        -lc -lm -Wl,--end-group $(LDFLAGS)
+LDFLAGS := -nostdlib --specs=nosys.specs \
+		-static \
+        -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group \
+        -lc -lm -Wl,--end-group $(LDFLAGS)
+
+TARGET_COBJS = target_kernel_impl.o target_kernel_impl2.o \
+				system_stm32h7xx_dualcore_boot_cm4_cm7.o \
+				main.o stm32h7xx_hal_msp.o stm32h7xx_it.o \
+				syscalls.o sysmem.o \
+				 stm32h7xx_hal.o stm32h7xx_hal_cortex.o \
+				stm32h7xx_hal_dma.o stm32h7xx_hal_dma_ex.o stm32h7xx_hal_exti.o \
+				stm32h7xx_hal_flash.o stm32h7xx_hal_flash_ex.o \
+				stm32h7xx_hal_gpio.o stm32h7xx_hal_hsem.o \
+				stm32h7xx_hal_i2c.o stm32h7xx_hal_i2c_ex.o \
+				stm32h7xx_hal_mdma.o stm32h7xx_hal_pwr.o stm32h7xx_hal_pwr_ex.o \
+				stm32h7xx_hal_rcc.o stm32h7xx_hal_rcc_ex.o \
+				stm32h7xx_hal_tim.o stm32h7xx_hal_tim_ex.o \
+				stm32h7xx_hal_uart.o stm32h7xx_hal_uart_ex.o
+
+#				systemclock_config.o stm32h747_cube_mx.o
 
 #
 # ファイルサイズ削減のためのオプション
 #
+# COPTS   := $(COPTS) -O0 -ffunction-sections -fdata-sections --specs=nano.specs -fstack-usage
 COPTS   := $(COPTS) -ffunction-sections -fdata-sections
-OBJ_LDFLAGS := $(OBJ_LDFLAGS) -Wl,--gc-sections
+
+# CDEFS   := $(CDEFS) -DDEBUG
+CDEFS   := $(CDEFS)
+
 
 #
 #  カーネルに関する定義
 #
 KERNEL_DIRS := $(KERNEL_DIRS) $(TARGETDIR) $(TARGETDIR)/stm32hcube \
 				$(TARGETDIR)/stm32hcube/Drivers/STM32H7xx_HAL_Driver/Src \
-				$(TARGETDIR)/stm32hcube/Common/Src/
-KERNEL_ASMOBJS := $(KERNEL_ASMOBJS) start.o
-KERNEL_COBJS := $(KERNEL_COBJS) target_kernel_impl.o stm32h7xx_hal_hsem.o \
-				stm32h7xx_hal.o systemclock_config.o stm32h747_cube_mx.o \
-				stm32h7xx_hal_pwr_ex.o stm32h7xx_hal_rcc_ex.o \
-                stm32h7xx_hal_gpio.o stm32h7xx_hal_uart.o \
-				system_stm32h7xx_dualcore_boot_cm4_cm7.o stm32h7xx_hal_cortex.o \
-                stm32h7xx_hal_rcc.o stm32h7xx_hal_dma.o
-
-KERNEL_COBJS := $(KERNEL_COBJS) stm32h7xx_hal_tim.o
+				$(TARGETDIR)/stm32hcube/Common/Src/ $(TARGETDIR)/stm32hcube/CM7/Core/Src \
+				$(TARGETDIR)/stm32hcube/CM7/Core/Startup
+KERNEL_ASMOBJS := $(KERNEL_ASMOBJS) start.o startup_stm32h747xihx.o
+KERNEL_COBJS := $(KERNEL_COBJS)
+# KERNEL_COBJS := $(KERNEL_COBJS) $(TARGET_COBJS)
 
 #
 #  システムサービスに関する定義
@@ -97,7 +122,8 @@ check.timestamp: $(TARGETDIR)/target_check.trb
 #
 #  リンカスクリプトの定義
 #
-LDSCRIPT = $(TARGETDIR)/stm32h747_m7.ld
+# LDSCRIPT = $(TARGETDIR)/stm32h747_m7.ld
+LDSCRIPT = $(TARGETDIR)/stm32hcube/CM7/STM32H747XIHX_FLASH.ld
 
 #
 #  チップ依存部のインクルード

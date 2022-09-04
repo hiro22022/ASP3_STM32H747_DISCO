@@ -632,7 +632,7 @@ signal_time(void)
 		 */
 		while (p_last_tmevtn >= p_top_tmevtn
 							&& EVTTIM_LE(top_evttim, current_evttim)) {
-#if 1
+#if 0
 			/* 5μ秒以上ずれがあったら表示する */
 			if( EVTTIM_ADVANCE(top_evttim)-EVTTIM_ADVANCE(current_evttim) < -5 ){
 				syslog(LOG_NOTICE, "signal_time diff_time=%d",

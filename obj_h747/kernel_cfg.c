@@ -1,6 +1,16 @@
+/*
+ * このファイルは 自動生成されたものを手編集している
+ * TIM5, USART1 の割込み処理を手元で用意したものにいれかえている
+ * リセット処理は、一時変更したが、戻してある。
+ */
+
 /* kernel_cfg.c */
 #include "kernel/kernel_int.h"
 #include "kernel_cfg.h"
+
+void Reset_Handler(void);
+void USART1_IRQHandler(void);
+void TIM5_IRQHandler(void);
 
 #if !(TKERNEL_PRID == 0x0007U && (TKERNEL_PRVER & 0xf000U) == 0x3000U)
 #error The kernel does not match this configuration file.
@@ -252,7 +262,7 @@ const TERRTNB _kernel_terrtnb_table[TNUM_TERRTN] = {
 __attribute__ ((section(".vector")))
 const FP _kernel_vector_table[] = {
     (FP)(TOPPERS_ISTKPT(_kernel_istack, ROUND_STK_T(DEFAULT_ISTKSZ))),   /* 0 The initial stack pointer */
-    (FP)_kernel_start,                 /* 1 The reset handler */
+    /* (FP)Reset_Handler, */      (FP)_kernel_start,                 /* 1 The reset handler */
     (FP)(_kernel_core_exc_entry), /* 2 */
     (FP)(_kernel_core_exc_entry), /* 3 */
     (FP)(_kernel_core_exc_entry), /* 4 */
@@ -408,7 +418,7 @@ const FP _kernel_exc_tbl[] = {
    (FP)(_kernel_default_int_handler), /* 50 */
    (FP)(_kernel_default_int_handler), /* 51 */
    (FP)(_kernel_default_int_handler), /* 52 */
-   (FP)(_kernel_inthdr_53), /* 53 */
+   (FP)(USART1_IRQHandler),// (FP)(_kernel_inthdr_53), /* 53 */
    (FP)(_kernel_default_int_handler), /* 54 */
    (FP)(_kernel_default_int_handler), /* 55 */
    (FP)(_kernel_default_int_handler), /* 56 */
@@ -421,7 +431,7 @@ const FP _kernel_exc_tbl[] = {
    (FP)(_kernel_default_int_handler), /* 63 */
    (FP)(_kernel_default_int_handler), /* 64 */
    (FP)(_kernel_default_int_handler), /* 65 */
-   (FP)(target_hrt_handler), /* 66 */
+   (FP)(TIM5_IRQHandler),     // (FP)(target_hrt_handler), /* 66 */
    (FP)(_kernel_default_int_handler), /* 67 */
    (FP)(_kernel_default_int_handler), /* 68 */
    (FP)(_kernel_default_int_handler), /* 69 */

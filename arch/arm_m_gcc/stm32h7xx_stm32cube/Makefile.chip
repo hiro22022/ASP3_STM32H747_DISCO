@@ -20,8 +20,10 @@ INCLUDES := $(INCLUDES) -I$(SRCDIR)/arch/$(PRC)_$(TOOL)/$(CHIP)
 #            -I$(SRCDIR)/arch/$(PRC)_$(TOOL)/$(CHIP)/STM32F4xx_HAL_Driver/Inc \
 #            -I$(SRCDIR)/arch/$(PRC)_$(TOOL)/$(CHIP)/CMSIS/Device/ST/STM32F4xx/Include \
 #            -I$(SRCDIR)/arch/$(PRC)_$(TOOL)/$(CHIP)/CMSIS/Include
-COPTS := $(COPTS) -mlittle-endian -nostartfiles
-LDFLAGS := $(LDFLAGS) -mlittle-endian
+# COPTS := $(COPTS) -mlittle-endian -nostartfiles
+# LDFLAGS := $(LDFLAGS) -mlittle-endian
+COPTS := $(COPTS)
+LDFLAGS := $(LDFLAGS)
 LIBS := $(LIBS)
 
 #

@@ -52,7 +52,8 @@
 /*
  *  割込み数
  */
-#define TMAX_INTNO (84 + 16)
+// #define TMAX_INTNO (84 + 16)
+#define TMAX_INTNO (156)
 
 /*
  *  微少時間待ちのための定義（本来はSILのターゲット依存部）
@@ -108,5 +109,8 @@ usart_low_init(void) {
 }
 #endif /* TECSGEN */
 #endif /* TOPPERS_MACRO_ONLY */
+
+/******* HSEM ********/
+#define HSEM1_INTNO		(HSEM1_IRQn + 16)	/* 割込み番号 */
 
 #endif /* TOPPERS_NUCLEO_F401RE_H */

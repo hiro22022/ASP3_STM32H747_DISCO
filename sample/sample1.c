@@ -159,6 +159,8 @@ char	message[3];
  */
 ulong_t	task_loop;		/* タスク内でのループ回数 */
 
+#include "com_var.h"
+
 /*
  *  並行実行されるタスク
  */
@@ -172,10 +174,8 @@ task(intptr_t exinf)
 
 	while (true) {
 #if 1
-#define COM_VAR (*(uint32_t *)0x10040000)
-#define COM_VAR2 (*(uint32_t *)0x10040004)
-		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_VAR=%08x COM_VAR2=%08x",
-										tskno, ++n, graph[tskno-1], COM_VAR, COM_VAR2);
+		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNNT=%08x COM_TIM1_COUNT=%08x",
+										tskno, ++n, graph[tskno-1], COM_FREE_COUNT, COM_TIM1_COUNT);
 #else
 		syslog(LOG_NOTICE, "task%d is running (%03d).   %s",
 										tskno, ++n, graph[tskno-1]);

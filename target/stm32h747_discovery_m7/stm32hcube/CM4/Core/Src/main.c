@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "string.h"
+#include "com_var.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -131,8 +132,6 @@ static void MX_USB_OTG_HS_PCD_Init(void);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
-#define COM_VAR (*(uint32_t *)0x10040000)
-#define COM_VAR2 (*(uint32_t *)0x10040004)
 
 /**
   * @brief  The application entry point.
@@ -141,7 +140,7 @@ static void MX_USB_OTG_HS_PCD_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  COM_VAR = 0;
+  COM_FREE_COUNT = 0;
   /* USER CODE END 1 */
 
 /* USER CODE BEGIN Boot_Mode_Sequence_1 */
@@ -157,14 +156,14 @@ int main(void)
   HAL_PWREx_EnterSTOPMode(PWR_MAINREGULATOR_ON, PWR_STOPENTRY_WFE, PWR_D2_DOMAIN);
   /* Clear HSEM flag */
   __HAL_HSEM_CLEAR_FLAG(__HAL_HSEM_SEMID_TO_MASK(HSEM_ID_0));
-  COM_VAR = 1;
+  COM_FREE_COUNT = 1;
 
 /* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-  COM_VAR = 2;
+  COM_FREE_COUNT = 2;
 
   /* USER CODE BEGIN Init */
 
@@ -198,9 +197,9 @@ int main(void)
   /* USER CODE BEGIN 2 */
 #define MSG_CM4 "hello CM4!\r\n"
   HAL_UART_Transmit(&huart8, (uint8_t*)MSG_CM4, sizeof(MSG_CM4), 0xfffffff);
-  COM_VAR = 3;
+  COM_FREE_COUNT = 3;
   HAL_TIM_Base_Start(&htim8);
-  COM_VAR = 4;
+  COM_FREE_COUNT = 4;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -209,8 +208,8 @@ int main(void)
   {
     static int  val = 0;
     /* USER CODE END WHILE */
-    COM_VAR = val++;
-    COM_VAR2 = __HAL_TIM_GET_COUNTER(&htim8);
+    COM_FREE_COUNT = val++;
+    COM_TIM1_COUNT = __HAL_TIM_GET_COUNTER(&htim8);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

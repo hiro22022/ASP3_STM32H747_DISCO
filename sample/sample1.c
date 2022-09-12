@@ -174,8 +174,17 @@ task(intptr_t exinf)
 
 	while (true) {
 #if 1
+#if 0
 		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNNT=%08x COM_TIM1_COUNT=%08x",
 										tskno, ++n, graph[tskno-1], COM_FREE_COUNT, COM_TIM1_COUNT);
+#else
+		int_t locked;
+		locked = tHSEMBody_eHSEM_isLocked( 0 ) << 4;
+		locked |= tHSEMBody_eHSEM_getInterruptStatus( 0 );
+		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNNT=%08x locked=%08x",
+										tskno, ++n, graph[tskno-1], COM_FREE_COUNT, locked);
+#endif
+
 #else
 		syslog(LOG_NOTICE, "task%d is running (%03d).   %s",
 										tskno, ++n, graph[tskno-1]);
@@ -391,6 +400,10 @@ main_task(intptr_t exinf)
 	SVC_PERROR(syslog_msk_log(LOG_UPTO(LOG_INFO), LOG_UPTO(LOG_EMERG)));
 	syslog(LOG_NOTICE, "Sample program starts (exinf = %d).", (int_t) exinf);
 
+	/* HSEM 0 の割込みを許可 */
+	tHSEMBody_eHSEM_clearInterrupt(0);
+	tHSEMBody_eHSEM_enableInterrup(0);
+
 	/*
 	 *  シリアルポートの初期化
 	 *
@@ -521,6 +534,14 @@ main_task(intptr_t exinf)
 			if (ercd >= 0) {
 				syslog(LOG_NOTICE, "priority of task %d is %d", tskno, tskpri);
 			}
+			break;
+		case 'p':
+			syslog(LOG_INFO, "HSEM LOCK");
+			COM_PUSH_HSEM = 1;
+			break;
+		case 'P':
+			syslog(LOG_INFO, "HSEM UNLOCK");
+			COM_PUSH_HSEM = -1;
 			break;
 		case 'w':
 			syslog(LOG_INFO, "#wup_tsk(%d)", tskno);

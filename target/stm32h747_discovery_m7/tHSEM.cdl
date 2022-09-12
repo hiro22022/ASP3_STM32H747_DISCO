@@ -1,0 +1,46 @@
+/*
+ * tHSEM: STM32H747 のハードウェアセマフォ(HSEM) を扱うコンポーネント．
+ *
+ * HSEM は、lock 状態から unlock 状態へ遷移する際に割込みを発生させる．
+ * 2ステップにはなるが (lockしてunlockする)、コア間割込みとして用いることができる．
+ */
+signature sHSEM {
+    ER  lock( void );           // HSEM の fast take により実現
+    void  unlock( void );       // HSEM の解放
+    uint32_t isLocked( void );  // HSEM がロック状態かテストする
+
+    /*
+     * 自コア用の割込み操作を行う (他コア用の割込みを操作する関数は用意していない)
+     */
+    void  enableInterrup( void );
+    void  disableInterrupt( void );
+    ER_UINT getInterruptStatus( void );       // disable 状態のときは false が返される
+    void  clearInterrupt( void );
+};
+
+[callback, context( "non-task" )]
+signature siHSEMCallback {
+    void callback( void );
+};
+
+[singleton]
+celltype tHSEMBody {
+    entry siHandlerBody  eMain;
+    entry sHSEM          eHSEM[];
+    call  siHSEMCallback cCallback[];
+};
+
++---------------------------------------------------------------
+以下のようなハンドラコードを用意し、eHSEM、cCallback へ結合することを想定している。
+tHSEM1Hanlder は、応用ごとに振る舞いが異なるため、それぞれで用意する必要がある。
+
+    [singleton]
+    celltype tHSEM1Hanlder{
+        entry siHSEMCallback eCallback;
+        call  sHSEM    cHSEM;
+    };
+    cell tHSEM1Hanlder HSEM1Handler {
+        eCallback <= HSEMBody.cCallback[0];	/* 逆結合 */
+        cHSEM = HSEMBody.eHSEM[0];
+    };
+---------------------------------------------------------------+

@@ -75,3 +75,21 @@ cell tPutLogTarget PutLogTarget {
 	/* SIOドライバとの結合 */
 	cSIOPort = SIOPortTarget1.eSIOPort;
 };
+
+
+/*---------- HSEM -----------*/
+import( "tHSEM.cdl" );
+
+cell tHSEMBody HSEMBody{
+};
+
+cell tISR HSEM_ISR {
+    interruptNumber = C_EXP( "HSEM1_INTNO" );
+    ciISRBody = HSEMBody.eMain;
+};
+
+cell tInterruptRequest HSEM_IRQ {
+    interruptNumber = C_EXP( "HSEM1_INTNO" );
+    interruptPriority = -14;
+	attribute = C_EXP( "TA_ENAINT" );
+};

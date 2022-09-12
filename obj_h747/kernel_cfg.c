@@ -151,26 +151,37 @@ void
 _kernel_inthdr_53(void)
 {
 	LOG_ISR_ENTER(ISRID_tISR_SIOPortTarget1_ISRInstance);
-	((ISR)(tISR_start))((intptr_t)(&tISR_INIB_tab[0]));
+	((ISR)(tISR_start))((intptr_t)(&tISR_INIB_tab[1]));
 	LOG_ISR_LEAVE(ISRID_tISR_SIOPortTarget1_ISRInstance);
 }
 
-#define TNUM_DEF_INHNO	2
+void
+_kernel_inthdr_141(void)
+{
+	LOG_ISR_ENTER(ISRID_tISR_HSEM_ISR);
+	((ISR)(tISR_start))((intptr_t)(&tISR_INIB_tab[0]));
+	LOG_ISR_LEAVE(ISRID_tISR_HSEM_ISR);
+}
+
+#define TNUM_DEF_INHNO	3
 const uint_t _kernel_tnum_def_inhno = TNUM_DEF_INHNO;
 
 INTHDR_ENTRY(INHNO_TIMER, 66, target_hrt_handler)
 INTHDR_ENTRY(53, 53, _kernel_inthdr_53)
+INTHDR_ENTRY(141, 141, _kernel_inthdr_141)
 
 const INHINIB _kernel_inhinib_table[TNUM_DEF_INHNO] = {
 	{ (INHNO_TIMER), (TA_NULL), (FP)(INT_ENTRY(INHNO_TIMER, target_hrt_handler)) },
-	{ (53), (TA_NULL), (FP)(INT_ENTRY(53, _kernel_inthdr_53)) }
+	{ (53), (TA_NULL), (FP)(INT_ENTRY(53, _kernel_inthdr_53)) },
+	{ (141), (TA_NULL), (FP)(INT_ENTRY(141, _kernel_inthdr_141)) }
 };
 
-#define TNUM_CFG_INTNO	2
+#define TNUM_CFG_INTNO	3
 const uint_t _kernel_tnum_cfg_intno = TNUM_CFG_INTNO;
 
 const INTINIB _kernel_intinib_table[TNUM_CFG_INTNO] = {
 	{ (INTNO_TIMER), (TA_ENAINT|INTATR_TIMER), (INTPRI_TIMER) },
+	{ (HSEM1_INTNO), (TA_ENAINT), (-14) },
 	{ (USART_INTNO), (TA_NULL), (-2) }
 };
 
@@ -352,6 +363,62 @@ const FP _kernel_vector_table[] = {
     (FP)(_kernel_core_int_entry), /* 98 */
     (FP)(_kernel_core_int_entry), /* 99 */
     (FP)(_kernel_core_int_entry), /* 100 */
+    (FP)(_kernel_core_int_entry), /* 101 */
+    (FP)(_kernel_core_int_entry), /* 102 */
+    (FP)(_kernel_core_int_entry), /* 103 */
+    (FP)(_kernel_core_int_entry), /* 104 */
+    (FP)(_kernel_core_int_entry), /* 105 */
+    (FP)(_kernel_core_int_entry), /* 106 */
+    (FP)(_kernel_core_int_entry), /* 107 */
+    (FP)(_kernel_core_int_entry), /* 108 */
+    (FP)(_kernel_core_int_entry), /* 109 */
+    (FP)(_kernel_core_int_entry), /* 110 */
+    (FP)(_kernel_core_int_entry), /* 111 */
+    (FP)(_kernel_core_int_entry), /* 112 */
+    (FP)(_kernel_core_int_entry), /* 113 */
+    (FP)(_kernel_core_int_entry), /* 114 */
+    (FP)(_kernel_core_int_entry), /* 115 */
+    (FP)(_kernel_core_int_entry), /* 116 */
+    (FP)(_kernel_core_int_entry), /* 117 */
+    (FP)(_kernel_core_int_entry), /* 118 */
+    (FP)(_kernel_core_int_entry), /* 119 */
+    (FP)(_kernel_core_int_entry), /* 120 */
+    (FP)(_kernel_core_int_entry), /* 121 */
+    (FP)(_kernel_core_int_entry), /* 122 */
+    (FP)(_kernel_core_int_entry), /* 123 */
+    (FP)(_kernel_core_int_entry), /* 124 */
+    (FP)(_kernel_core_int_entry), /* 125 */
+    (FP)(_kernel_core_int_entry), /* 126 */
+    (FP)(_kernel_core_int_entry), /* 127 */
+    (FP)(_kernel_core_int_entry), /* 128 */
+    (FP)(_kernel_core_int_entry), /* 129 */
+    (FP)(_kernel_core_int_entry), /* 130 */
+    (FP)(_kernel_core_int_entry), /* 131 */
+    (FP)(_kernel_core_int_entry), /* 132 */
+    (FP)(_kernel_core_int_entry), /* 133 */
+    (FP)(_kernel_core_int_entry), /* 134 */
+    (FP)(_kernel_core_int_entry), /* 135 */
+    (FP)(_kernel_core_int_entry), /* 136 */
+    (FP)(_kernel_core_int_entry), /* 137 */
+    (FP)(_kernel_core_int_entry), /* 138 */
+    (FP)(_kernel_core_int_entry), /* 139 */
+    (FP)(_kernel_core_int_entry), /* 140 */
+    (FP)(_kernel_core_int_entry), /* 141 */
+    (FP)(_kernel_core_int_entry), /* 142 */
+    (FP)(_kernel_core_int_entry), /* 143 */
+    (FP)(_kernel_core_int_entry), /* 144 */
+    (FP)(_kernel_core_int_entry), /* 145 */
+    (FP)(_kernel_core_int_entry), /* 146 */
+    (FP)(_kernel_core_int_entry), /* 147 */
+    (FP)(_kernel_core_int_entry), /* 148 */
+    (FP)(_kernel_core_int_entry), /* 149 */
+    (FP)(_kernel_core_int_entry), /* 150 */
+    (FP)(_kernel_core_int_entry), /* 151 */
+    (FP)(_kernel_core_int_entry), /* 152 */
+    (FP)(_kernel_core_int_entry), /* 153 */
+    (FP)(_kernel_core_int_entry), /* 154 */
+    (FP)(_kernel_core_int_entry), /* 155 */
+    (FP)(_kernel_core_int_entry), /* 156 */
 };
 
 const FP _kernel_exc_tbl[] = {
@@ -456,13 +523,72 @@ const FP _kernel_exc_tbl[] = {
    (FP)(_kernel_default_int_handler), /* 98 */
    (FP)(_kernel_default_int_handler), /* 99 */
    (FP)(_kernel_default_int_handler), /* 100 */
+   (FP)(_kernel_default_int_handler), /* 101 */
+   (FP)(_kernel_default_int_handler), /* 102 */
+   (FP)(_kernel_default_int_handler), /* 103 */
+   (FP)(_kernel_default_int_handler), /* 104 */
+   (FP)(_kernel_default_int_handler), /* 105 */
+   (FP)(_kernel_default_int_handler), /* 106 */
+   (FP)(_kernel_default_int_handler), /* 107 */
+   (FP)(_kernel_default_int_handler), /* 108 */
+   (FP)(_kernel_default_int_handler), /* 109 */
+   (FP)(_kernel_default_int_handler), /* 110 */
+   (FP)(_kernel_default_int_handler), /* 111 */
+   (FP)(_kernel_default_int_handler), /* 112 */
+   (FP)(_kernel_default_int_handler), /* 113 */
+   (FP)(_kernel_default_int_handler), /* 114 */
+   (FP)(_kernel_default_int_handler), /* 115 */
+   (FP)(_kernel_default_int_handler), /* 116 */
+   (FP)(_kernel_default_int_handler), /* 117 */
+   (FP)(_kernel_default_int_handler), /* 118 */
+   (FP)(_kernel_default_int_handler), /* 119 */
+   (FP)(_kernel_default_int_handler), /* 120 */
+   (FP)(_kernel_default_int_handler), /* 121 */
+   (FP)(_kernel_default_int_handler), /* 122 */
+   (FP)(_kernel_default_int_handler), /* 123 */
+   (FP)(_kernel_default_int_handler), /* 124 */
+   (FP)(_kernel_default_int_handler), /* 125 */
+   (FP)(_kernel_default_int_handler), /* 126 */
+   (FP)(_kernel_default_int_handler), /* 127 */
+   (FP)(_kernel_default_int_handler), /* 128 */
+   (FP)(_kernel_default_int_handler), /* 129 */
+   (FP)(_kernel_default_int_handler), /* 130 */
+   (FP)(_kernel_default_int_handler), /* 131 */
+   (FP)(_kernel_default_int_handler), /* 132 */
+   (FP)(_kernel_default_int_handler), /* 133 */
+   (FP)(_kernel_default_int_handler), /* 134 */
+   (FP)(_kernel_default_int_handler), /* 135 */
+   (FP)(_kernel_default_int_handler), /* 136 */
+   (FP)(_kernel_default_int_handler), /* 137 */
+   (FP)(_kernel_default_int_handler), /* 138 */
+   (FP)(_kernel_default_int_handler), /* 139 */
+   (FP)(_kernel_default_int_handler), /* 140 */
+   (FP)(_kernel_inthdr_141), /* 141 */
+   (FP)(_kernel_default_int_handler), /* 142 */
+   (FP)(_kernel_default_int_handler), /* 143 */
+   (FP)(_kernel_default_int_handler), /* 144 */
+   (FP)(_kernel_default_int_handler), /* 145 */
+   (FP)(_kernel_default_int_handler), /* 146 */
+   (FP)(_kernel_default_int_handler), /* 147 */
+   (FP)(_kernel_default_int_handler), /* 148 */
+   (FP)(_kernel_default_int_handler), /* 149 */
+   (FP)(_kernel_default_int_handler), /* 150 */
+   (FP)(_kernel_default_int_handler), /* 151 */
+   (FP)(_kernel_default_int_handler), /* 152 */
+   (FP)(_kernel_default_int_handler), /* 153 */
+   (FP)(_kernel_default_int_handler), /* 154 */
+   (FP)(_kernel_default_int_handler), /* 155 */
+   (FP)(_kernel_default_int_handler), /* 156 */
 };
 
 
-const uint32_t _kernel_bitpat_cfgint[7] = {
+const uint32_t _kernel_bitpat_cfgint[10] = {
    UINT32_C(0x00000000),
    UINT32_C(0x00200000),
    UINT32_C(0x00000004),
+   UINT32_C(0x00000000),
+   UINT32_C(0x00002000),
+   UINT32_C(0x00000000),
    UINT32_C(0x00000000),
    UINT32_C(0x00000000),
    UINT32_C(0x00000000),

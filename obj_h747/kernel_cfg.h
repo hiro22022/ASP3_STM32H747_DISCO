@@ -30,8 +30,9 @@
 #define TNUM_ALMID	1
 #define ALMHDR1	1
 
-#define TNUM_ISRID	1
-#define ISRID_tISR_SIOPortTarget1_ISRInstance	1
+#define TNUM_ISRID	2
+#define ISRID_tISR_HSEM_ISR	1
+#define ISRID_tISR_SIOPortTarget1_ISRInstance	2
 
 #define TNUM_INIRTN	2
 

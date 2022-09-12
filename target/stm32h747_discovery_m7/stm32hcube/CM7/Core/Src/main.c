@@ -290,6 +290,10 @@ int main(void)
   /* TIM5 Interrupt Vector Number = TIM_CLK_IRQNO */
   NVIC_EnableIRQ( TIM_CLK_IRQNO );
   NVIC_EnableIRQ( USART1_IRQn );
+  NVIC_EnableIRQ( HSEM1_IRQn );
+  NVIC_EnableIRQ( HSEM2_IRQn );
+#define MSG_HSEM1_Enable_IRQ "MSG_HSEM1_Enable_IRQ\r\n"
+    HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HSEM1_Enable_IRQ, sizeof(MSG_HSEM1_Enable_IRQ), 0xfffffff);
 
   /* USER CODE BEGIN TIM5_Init 2 */
   /* カウンターをスタート */

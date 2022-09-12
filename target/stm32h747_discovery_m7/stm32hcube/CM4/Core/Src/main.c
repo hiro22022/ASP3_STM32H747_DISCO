@@ -202,14 +202,32 @@ int main(void)
   COM_FREE_COUNT = 4;
   /* USER CODE END 2 */
 
+  COM_PUSH_HSEM = 0;
+#define SET_FREE_COUNT( count, val )  COM_FREE_COUNT = ((count << 16) | (val & 0xffff))
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    static int  val = 0;
+    static int  count = 0;
+    static int  val, val2;
+    int  j;
     /* USER CODE END WHILE */
-    COM_FREE_COUNT = val++;
     COM_TIM1_COUNT = __HAL_TIM_GET_COUNTER(&htim8);
+
+    count++;
+    if( COM_PUSH_HSEM > 0 ){
+      COM_PUSH_HSEM = 0;
+      (void)HAL_HSEM_FastTake( 0 );
+      val2 = 0x10;
+    }
+    else if( COM_PUSH_HSEM < 0 ){
+      COM_PUSH_HSEM = 0;
+      HAL_HSEM_Release( 0, 0 );    /* リリースしたときに HSEM 割込みが Core 1 に入る */
+      val2 = 0x20;
+    }
+
+    val = HAL_HSEM_IsSemTaken( 0 ) | val2;
+    SET_FREE_COUNT( count, val );
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

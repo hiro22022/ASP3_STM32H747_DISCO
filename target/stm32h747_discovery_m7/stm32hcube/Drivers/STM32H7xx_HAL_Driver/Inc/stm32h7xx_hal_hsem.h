@@ -81,7 +81,7 @@ extern "C" {
 #if defined(DUAL_CORE)
 #define __HAL_HSEM_GET_IT(__SEM_MASK__) ((((SCB->CPUID & 0x000000F0) >> 4 )== 0x7) ? \
                                          ((__SEM_MASK__) & HSEM->C1MISR) :        \
-                                         ((__SEM_MASK__) & HSEM->C2MISR1))
+                                         ((__SEM_MASK__) & HSEM->C2MISR))
 #else
 #define __HAL_HSEM_GET_IT(__SEM_MASK__) ((__SEM_MASK__) & HSEM->MISR)
 #endif /* DUAL_CORE */

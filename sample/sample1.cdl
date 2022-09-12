@@ -120,3 +120,16 @@ cell tBanner Banner {
 	targetName      = BannerTargetName;
 	copyrightNotice = BannerCopyrightNotice;
 };
+
+/*
+ * HSEM
+ */
+[singleton]
+celltype tHSEM1Hanlder{
+	entry siHSEMCallback eCallback;
+	call  sHSEM    cHSEM;
+};
+cell tHSEM1Hanlder HSEM1Handler {
+	eCallback <= HSEMBody.cCallback[0];	/* 逆結合 */
+	cHSEM = HSEMBody.eHSEM[0];
+};

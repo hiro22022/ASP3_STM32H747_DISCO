@@ -68,6 +68,7 @@ extern TIM_HandleTypeDef Tim5Handle;
 #define htim_clk Tim5Handle
 
 UART_HandleTypeDef huart1;
+void MPU_Config(void);
 
 /*---------------------------------------*/
 int   b_sta_ker;
@@ -240,7 +241,7 @@ int main(void)
 /* USER CODE END Boot_Mode_Sequence_2 */
 
   /* USER CODE BEGIN SysInit */
-
+  MPU_Config();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -322,6 +323,8 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
 
+#define LOW_VOLTAGE
+#ifdef LOW_VOLTAGE
   /** Supply configuration update enable
   */
   HAL_PWREx_ConfigSupply(PWR_DIRECT_SMPS_SUPPLY);
@@ -330,6 +333,17 @@ void SystemClock_Config(void)
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
   while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
+
+#else
+  /** Supply configuration update enable
+  */
+  HAL_PWREx_ConfigSupply(PWR_LDO_SUPPLY);
+  /** Configure the main internal regulator output voltage
+  */
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE0);
+
+  while(!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {}
+#endif
 
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
@@ -350,6 +364,8 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 5;     /* HSE divider 25MHz/5 => 5MHz */
+#ifdef LOW_VOLTAGE
+// #if 1
   RCC_OscInitStruct.PLL.PLLN = 128;   /* VCO divider 640MHz/128 => 5MHz*/
   RCC_OscInitStruct.PLL.PLLP = 2;     /* P: 640MHz/2 => 320MHz (System Clock Source) */
   RCC_OscInitStruct.PLL.PLLQ = 8;     /* Q: 640MHz/8 => 80MHz */
@@ -357,6 +373,15 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;  /* 4-8MHz */  // RCC_PLL1VCIRANGE_1; /* 2-4MHz */
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE; 
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
+#else
+  RCC_OscInitStruct.PLL.PLLN = 160;   /* VCO divider 800MHz/160 => 5MHz*/
+  RCC_OscInitStruct.PLL.PLLP = 2;     /* P: 800MHz/2 => 400MHz (System Clock Source) */
+  RCC_OscInitStruct.PLL.PLLQ = 4;     /* Q: 800MHz/4 => 200MHz */
+  RCC_OscInitStruct.PLL.PLLR = 4;     /* R: 800MHz/4 => 200MHz */
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;  /* 4-8MHz */  // RCC_PLL1VCIRANGE_1; /* 2-4MHz */
+  RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE; 
+  RCC_OscInitStruct.PLL.PLLFRACN = 0;
+#endif
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -367,7 +392,7 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
                               |RCC_CLOCKTYPE_D3PCLK1|RCC_CLOCKTYPE_D1PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;       /* System Clock : PLL */
-  RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;   // 320MHz  /* set D1CPRE which affects Cortex M7 Clock */
+  RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;   // 420MHz  /* set D1CPRE which affects Cortex M7 Clock */
   RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV4;     // 80MHz   /* set HPRE which afects Cortex M4 clock */
   RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV2;    // 40MHz
   RCC_ClkInitStruct.APB1CLKDivider = RCC_APB1_DIV2;               /* APB1, Timer TIMX clock */
@@ -641,5 +666,87 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
+/* MPU Configuration */
+
+void MPU_Config(void)
+{
+  MPU_Region_InitTypeDef MPU_InitStruct = {0};
+
+  /* Disables the MPU */
+  HAL_MPU_Disable();
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+  MPU_InitStruct.BaseAddress = 0x24000000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_512KB;
+  MPU_InitStruct.SubRegionDisable = 0x0;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+  MPU_InitStruct.BaseAddress = 0xD0000000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_512MB;
+  MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Number = MPU_REGION_NUMBER2;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_32MB;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Number = MPU_REGION_NUMBER3;
+  MPU_InitStruct.BaseAddress = 0x90000000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_512MB;
+  MPU_InitStruct.AccessPermission = MPU_REGION_NO_ACCESS;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Number = MPU_REGION_NUMBER4;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_128MB;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Number = MPU_REGION_NUMBER5;
+  MPU_InitStruct.BaseAddress = 0x30040000;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_32KB;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Number = MPU_REGION_NUMBER6;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_256B;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_BUFFERABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+  /* Enables the MPU */
+  HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

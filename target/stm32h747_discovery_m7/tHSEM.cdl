@@ -5,17 +5,17 @@
  * 2ステップにはなるが (lockしてunlockする)、コア間割込みとして用いることができる．
  */
 signature sHSEM {
-    ER  lock( void );           // HSEM の fast take により実現
-    void  unlock( void );       // HSEM の解放
+    ER       lockPolling( void );   // HSEM の fast take により実現
+    void     unlock( void );    // HSEM の解放
     uint32_t isLocked( void );  // HSEM がロック状態かテストする
 
     /*
      * 自コア用の割込み操作を行う (他コア用の割込みを操作する関数は用意していない)
      */
-    void  enableInterrup( void );
-    void  disableInterrupt( void );
+    void    enableInterrup( void );
+    void    disableInterrupt( void );
     ER_UINT getInterruptStatus( void );       // disable 状態のときは false が返される
-    void  clearInterrupt( void );
+    void    clearInterrupt( void );
 };
 
 [callback, context( "non-task" )]
@@ -30,7 +30,7 @@ celltype tHSEMBody {
     call  siHSEMCallback cCallback[];
 };
 
-+---------------------------------------------------------------
++--------------------- BEGIN COMMENT ---------------------------
 以下のようなハンドラコードを用意し、eHSEM、cCallback へ結合することを想定している。
 tHSEM1Hanlder は、応用ごとに振る舞いが異なるため、それぞれで用意する必要がある。
 
@@ -43,4 +43,4 @@ tHSEM1Hanlder は、応用ごとに振る舞いが異なるため、それぞれ
         eCallback <= HSEMBody.cCallback[0];	/* 逆結合 */
         cHSEM = HSEMBody.eHSEM[0];
     };
----------------------------------------------------------------+
+---------------------- END COMMENT ----------------------------+

@@ -86,13 +86,13 @@ eMain_main()
  * entry port array size:  NEP_eHSEM
  * #[</ENTRY_PORT>]# */
 
-/* #[<ENTRY_FUNC>]# eHSEM_lock
- * name:         eHSEM_lock
- * global_name:  tHSEMBody_eHSEM_lock
+/* #[<ENTRY_FUNC>]# eHSEM_lockPolling
+ * name:         eHSEM_lockPolling
+ * global_name:  tHSEMBody_eHSEM_lockPolling
  * oneway:       false
  * #[</ENTRY_FUNC>]# */
 ER
-eHSEM_lock(int_t subscript)
+eHSEM_lockPolling(int_t subscript)
 {
 	/* Put statements here #_TEFB_# */
 	if( HAL_HSEM_FastTake( (subscript) ) == HAL_OK )

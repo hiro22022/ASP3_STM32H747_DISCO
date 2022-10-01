@@ -7,9 +7,9 @@ TOPPERS/ASP3 を STM32H747 Discovery にポーティングする。
 
  1. STM32F401RE のターゲット依存部、arch をベースに移植する
  2. 最低限必要なものは、以下のものである。
-   1. CPU、タイマー、シリアルのクロックの初期化
-   2. タイマー
-   3. シリアル
+   * CPU、タイマー、シリアルのクロックの初期化
+   * タイマー
+   * シリアル
 
 ## Nucleo F401RE簡易パッケージ 
 
@@ -58,14 +58,14 @@ ST-LINK error (DEV_TARGET_NOT_HALTED) となってしまった。
 
 ### Error: No STM32 target found! で Connect に失敗する
 
-二回目は、STM32CubeProgrammer の Connect ボタンを押すと Error: No STM32 target found! が発生して、Download の手前でエラーとなってしまう。
+二回目は、STM32CubeProgrammer の Connect ボタンを押すと Error: No STM32 target found! が発生して、Download の手前でエラーとなってしまった。
 エラーが発生するものの電圧情報が表示されていたり、STM32H747 Discovery 内のストレージが　USB ドライブとして見えたり、tera term で USB Serial (COM3) の設定ができたりするので、電気的に死んでいるわけではなさそう。
 
 この状態からの脱出は、STM32CubeProgrammer の Erasing & Programming で
  Full Chip Erase と Download File を automatic で実施して治ったもよう。
-これも何回か繰り返していて、途中で reset かけてみたり、USB コネクタの抜き差しを行ったりしている。
 
  「もよう」と書いたのは何度か繰り返しているうちにうまくいったからだ。
+途中で reset かけてみたり、USB コネクタの抜き差しを行ったりしているので、最終的にどうやったのがよかったかは、実はよくわかっていない。
 何日も(期間としては3週間くらい) 復活できなかったので、もうあきらめようとしたらうまくいった。
 （あきらめかけると、うまくいく、なんて経験は、よくありますね。一回目のときもそうだった）
 

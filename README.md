@@ -56,7 +56,7 @@ STM32H747_CM4.elf ができあがったら、STM32CubeProgrammer を使用して
 一回目の文鎮化は、クロック設定が動作範囲外だったようで、STM32CubeProgrammer の Download ボタンを押すと、
 ST-LINK error (DEV_TARGET_NOT_HALTED) となってしまった。
 
-これは Download ボタンを放すと同時に Reset ボタンを押すことで Download に成功し、脱出できた。
+これは Download ボタンを放すと同時に Reset ボタンを放すことで Download に成功し、脱出できた。
 これは、一回では成功していなくて、何回かタイミングずらしながら試してうまくいった状況である。
 
 ### Error: No STM32 target found! で Connect に失敗する
@@ -81,8 +81,8 @@ ST-LINK error (DEV_TARGET_NOT_HALTED) となってしまった。
 解決していなかった。試しに、ずっと安定動作していた 320MHz のものに替えて書き込んだところ
 正常にもどった。
 
-現象の現れ方が違っていたけど、根は一回目と同じだったかもしれない。
-上記の方法で脱出したが、一回目と同様の方法でも脱出できていたかもしれない。
+
+一回目は、周波数を範囲外に設定したことで発生し、二回目は、電圧を範囲外に設定したことで問題が起きたようだ。
 
 ## HSEM (Hardware Semaphore) の TECS コンポーネント
 

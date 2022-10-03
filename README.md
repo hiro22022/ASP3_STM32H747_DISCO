@@ -35,15 +35,15 @@ LED が点灯できると、どこまでコード実行したか確認しやす�
 Cortex-M4 コアでは、まだ STM32CubeMX で生成したコードを走らせておいた。
 
 ### Cortex-M7 用ビルド
- % cd obj_h747
- % make
+    % cd obj_h747
+    % make
 
 asp.elf ができあがったら STM32CubeProgrammer を使用して書き込む。
 書き込みアドレスを設定しなおす必要がないので、.bin より .elf を書き込んだ方が楽だし、安全である。
 
 ### Cortex-M4 用ビルド
- % cd target/stm32h747_discovery_m7/stm32hcube/CM4/Debug/
- % make STM32H747_CM4.elf
+    % cd target/stm32h747_discovery_m7/stm32hcube/CM4/Debug/
+    % make STM32H747_CM4.elf
 
 STM32H747_CM4.elf ができあがったら、STM32CubeProgrammer を使用して書き込む。
 
@@ -81,7 +81,6 @@ ST-LINK error (DEV_TARGET_NOT_HALTED) となってしまった。
 解決していなかった。試しに、ずっと安定動作していた 320MHz のものに替えて書き込んだところ
 正常にもどった。
 
-
 一回目は、周波数を範囲外に設定したことで発生し、二回目は、電圧を範囲外に設定したことで問題が起きたようだ。
 
 ## HSEM (Hardware Semaphore) の TECS コンポーネント
@@ -90,7 +89,7 @@ ST-LINK error (DEV_TARGET_NOT_HALTED) となってしまった。
 tHSEM.cdl を参照。
 このような資源は TECS コンポーネント化すると、きれいにいく。
 
-sample1 のコマンドに p と P を追加してある。p は Cortex-M4 に HSEM1 をロックさせ、P はリリースさせる。リリースしたときに Cortex-M7 に割込みが入るようにしてある。それに合わせたメッセージが表示される。
+sample1 のコマンドに 'p' と 'P' を追加してある。'p' は Cortex-M4 に HSEM1 をロックさせ、'P' はリリースさせる。リリースしたときに Cortex-M7 に割込みが入るようにしてある。それに合わせたメッセージが表示される。
 
 ## この先
 

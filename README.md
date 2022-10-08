@@ -35,7 +35,6 @@ LED が点灯できると、どこまでコード実行したか確認しやす�
 Cortex-M4 コアでは、まだ STM32CubeMX で生成したコードを走らせておいた。
 
 ### Cortex-M7 用ビルド
-    % sh comp.sh        # 暫定対策 (What-did.txt の linbkerne.a に関する記述参照)
     % cd obj_h747_cm7
     % make
 

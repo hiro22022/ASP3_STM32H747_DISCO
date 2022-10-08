@@ -128,7 +128,7 @@ target_hrt_set_event(HRTCNT hrtcnt)
  */
 Inline void target_hrt_raise_event(void)
 {
-#if 0
+#if 1
 	Tim5Handle.Instance->EGR = TIM_EVENTSOURCE_UPDATE;
 #endif
 }

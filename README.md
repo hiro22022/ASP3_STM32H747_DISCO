@@ -35,7 +35,7 @@ LED が点灯できると、どこまでコード実行したか確認しやす�
 Cortex-M4 コアでは、まだ STM32CubeMX で生成したコードを走らせておいた。
 
 ### Cortex-M7 用ビルド
-    % cd obj_h747
+    % cd obj_h747_cm7
     % make
 
 asp.elf ができあがったら STM32CubeProgrammer を使用して書き込む。

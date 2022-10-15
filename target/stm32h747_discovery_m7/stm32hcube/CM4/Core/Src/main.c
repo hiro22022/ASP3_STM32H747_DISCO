@@ -22,6 +22,11 @@
 #include "string.h"
 #include "com_var.h"
 
+#include "stm32h747xx.h"
+#include "stm32h7xx_hal_conf.h"
+#include "stm32h7xx_hal_gpio.h"
+#include "led_btn_joy.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -44,7 +49,7 @@
 /* USER CODE BEGIN PM */
 
 /* USER CODE END PM */
-
+#if 0
 /* Private variables ---------------------------------------------------------*/
 #if defined ( __ICCARM__ ) /*!< IAR Compiler */
 
@@ -90,6 +95,7 @@ SPDIFRX_HandleTypeDef hspdif1;
 
 SPI_HandleTypeDef hspi2;
 SPI_HandleTypeDef hspi5;
+#endif /* 0 */
 
 TIM_HandleTypeDef htim8;
 TIM_HandleTypeDef htim13;
@@ -97,16 +103,20 @@ TIM_HandleTypeDef htim13;
 UART_HandleTypeDef huart8;
 UART_HandleTypeDef huart1;
 
+#if 0
 PCD_HandleTypeDef hpcd_USB_OTG_HS;
 
 SDRAM_HandleTypeDef hsdram1;
 
 uint8_t cec_receive_buffer[16];
+#endif /* 0 */
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
+#if 0
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC3_Init(void);
@@ -120,16 +130,243 @@ static void MX_SDMMC1_SD_Init(void);
 static void MX_SPDIFRX1_Init(void);
 static void MX_SPI2_Init(void);
 static void MX_SPI5_Init(void);
+#endif /* 0 */
 static void MX_TIM8_Init(void);
 static void MX_TIM13_Init(void);
+#if 0
 static void MX_UART8_Init(void);
 static void MX_USB_OTG_HS_PCD_Init(void);
+#endif /* 0 */
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+/*---------------------------------------------*/
+
+#define LED_ENABLE     /* Cortex-M7 コアで使用する場合は、外す */
+
+/* LED 番号 LED1～LED4 */
+typedef enum  {
+    LED1 = 0, LED2, LED3, LED4
+} LED_Index;
+
+/* LED 構成構造体 */
+typedef struct {
+    GPIO_TypeDef  *gpio;
+    uint32_t      Pin;
+} LED_conf;
+
+/* LED1～LED4 の構成 */
+const LED_conf led_conf[] =
+{
+    { GPIOI, GPIO_PIN_12 },      /* LED1 */
+    { GPIOI, GPIO_PIN_13 },      /* LED2 */
+    { GPIOI, GPIO_PIN_14 },      /* LED3 */
+    { GPIOI, GPIO_PIN_15 },      /* LED4 */
+};
+
+/* LED の初期化 */
+#ifdef NEED_LED_INIT    /* CM7 側で初期化は済んでいる */
+void led_init()
+{
+    uint32_t temp;
+    int  i;
+
+    /* RCC (クロック) の設定 */
+    RCC_TypeDef  *rcc = RCC;
+    temp = rcc->AHB4ENR;
+    temp |= RCC_AHB4ENR_GPIOIEN;
+    rcc->AHB4ENR = temp;
+
+    /* GPIO コントロールレジスタの設定 */
+    GPIO_InitTypeDef gpio_init;
+    gpio_init.Mode      = GPIO_MODE_OUTPUT_OD;
+    gpio_init.Pull      = GPIO_NOPULL;
+    gpio_init.Speed     = GPIO_SPEED_FREQ_HIGH;
+    gpio_init.Alternate = 0x0;
+    for( i = LED1; i <= LED4; i++ ){
+        gpio_init.Pin   = led_conf[ i ].Pin;
+        HAL_GPIO_Init( led_conf[ i ].gpio, &gpio_init );
+    }
+}
+#endif /* NEED_LED_INIT */
+
+void led_on( uint32_t no )
+{
+#ifdef LED_ENABLE
+    if( no <= LED4 )
+        HAL_GPIO_WritePin( led_conf[no].gpio, led_conf[no].Pin, GPIO_PIN_RESET );
+#endif /* LED_ENABLE */
+}
+
+void led_off( uint32_t no )
+{
+#ifdef LED_ENABLE
+    if( no <= LED4 )
+        HAL_GPIO_WritePin( led_conf[no].gpio, led_conf[no].Pin, GPIO_PIN_SET );
+#endif /* LED_ENABLE */
+}
+
+void led_set( int val )
+{
+#ifdef LED_ENABLE
+    /* LED が同じ GPIO で並んでいることを利用して、１回の IO アクセスでよいように効率化したバージョン */
+    uint32_t rs_val = 0;
+    int i;
+    for( i = LED1; i <= LED4; i++ ){
+      if( val & ( 1 << i ) )
+        rs_val |= 1 << (i+12+16);
+      else
+        rs_val |= 1 << (i+12);
+    }
+    /* GPIO のレジスタに直接書き込む */
+    led_conf[0].gpio->BSRR = rs_val;
+#endif /* LED_ENABLE */
+}
+
+void
+led_blink( int i, int j )
+{
+  int  n;
+  while(1){
+    for( n = 0; n < 100000; n++ ){
+      led_set(i);
+    }
+    for( n = 0; n < 100000; n++ ){
+      led_set(j);
+    }
+  }
+}
+
+/*--------------------------- Joy Stick --------------------------*/
+
+/* Joystick 構成構造体 */
+typedef struct {
+    GPIO_TypeDef  *gpio;
+    uint32_t      Pin;
+} Joy_conf;
+
+/* JOY_SEL～JOY_UP の構成 */
+const Joy_conf joy_conf[] =
+{
+    { GPIOK, GPIO_PIN_2 },      /* JOY_SEL */
+    { GPIOK, GPIO_PIN_3 },      /* JOY_DOWN */
+    { GPIOK, GPIO_PIN_4 },      /* JOY_LEFT */
+    { GPIOK, GPIO_PIN_5 },      /* JOY_RIGHT */
+    { GPIOK, GPIO_PIN_6 },      /* JOY_UP */
+};
+
+#ifdef NEED_JOYSTICK_INIT    /* CM7 側で初期化は済んでいる */
+
+/* joystick の初期化 */
+void joy_init(void)
+{
+    uint32_t temp;
+    int  i;
+
+    /* RCC (クロック) の設定 */
+    RCC_TypeDef  *rcc = RCC;
+    temp = rcc->AHB4ENR;
+    temp |= RCC_AHB4ENR_GPIOKEN;    /* GPIO PK2..5 に接続される */
+    rcc->AHB4ENR = temp;
+
+    /* GPIO コントロールレジスタの設定 */
+    GPIO_InitTypeDef gpio_init;
+    gpio_init.Mode      = GPIO_MODE_INPUT;
+    gpio_init.Pull      = GPIO_PULLUP;        /* SWを押すと GND になる */
+    gpio_init.Speed     = GPIO_SPEED_FREQ_LOW;
+    gpio_init.Alternate = 0x0;
+    for( i = JOY_SEL; i <= JOY_UP; i++ ){
+        gpio_init.Pin   = joy_conf[ i ].Pin;
+        HAL_GPIO_Init( joy_conf[ i ].gpio, &gpio_init );
+    }
+}
+#endif /* NEED_JOYSTICK_INIT */
+
+
+int joy_stat(void)
+{
+    int  val = 0;
+    int  i;
+
+    /* 5回繰り返し読むので効率悪い。製品ではお勧めしないコーディング */
+    for( i = JOY_SEL; i <= JOY_UP; i++ ){
+      val |= ((int)HAL_GPIO_ReadPin( joy_conf[ i ].gpio, joy_conf[ i ].Pin ) ? 0:1) << i;
+    }
+    return val;
+}
+
+/*--------------------------- Button Stick --------------------------*/
+/* Joystick 構成構造体 */
+typedef struct {
+    GPIO_TypeDef  *gpio;
+    uint32_t      Pin;
+} Btn_conf;
+
+/* Button の構成 */
+const Btn_conf btn_conf[] =
+{
+    { GPIOC, GPIO_PIN_13 },      /* Button */
+};
+
+#ifdef NEED_BTNK_INIT    /* CM7 側で初期化は済んでいる */
+
+/* Button の初期化 */
+void btn_init(void)
+{
+    uint32_t temp;
+    int  i;
+
+    /* RCC (クロック) の設定 */
+    RCC_TypeDef  *rcc = RCC;
+    temp = rcc->AHB4ENR;
+    temp |= RCC_AHB4ENR_GPIOCEN;    /* GPIO PK2..5 に接続される */
+    rcc->AHB4ENR = temp;
+
+    /* GPIO コントロールレジスタの設定 */
+    GPIO_InitTypeDef gpio_init;
+    gpio_init.Mode      = GPIO_MODE_INPUT;
+    gpio_init.Pull      = GPIO_NOPULL;        /* 外部で Pull Down されている */
+    gpio_init.Speed     = GPIO_SPEED_FREQ_LOW;
+    gpio_init.Alternate = 0x0;
+    for( i = 0; i < 1; i++ ){
+        gpio_init.Pin   = btn_conf[ i ].Pin;
+        HAL_GPIO_Init( btn_conf[ i ].gpio, &gpio_init );
+    }
+}
+#endif /* NEED_BTN_INIT  */
+
+int btn_stat(void)
+{
+    int  val = 0;
+    int  i;
+
+    /* 5回繰り返し読むので効率悪い。製品ではお勧めしないコーディング */
+    for( i = 0; i < 1; i++ ){
+      val |= ((int)HAL_GPIO_ReadPin( btn_conf[ i ].gpio, btn_conf[ i ].Pin ) ? 1:0) << i;
+    }
+    return val;
+}
+
+/* 0⇒1 になると戻る */
+void btn_pos_edge()
+{
+  while(btn_stat())         /* 0 になるのを待つ */
+  {}
+  while(btn_stat()==0)      /* 1 になるのを待つ */
+  {}
+}
+
+/* 1⇒0 になると戻る */
+void btn_neg_edge()
+{
+  while(btn_stat()==0)      /* 1 になるのを待つ */
+  {}
+  while(btn_stat())         /* 0 になるのを待つ */
+  {}
+}
 
 /* USER CODE END 0 */
 
@@ -189,8 +426,8 @@ int main(void)
   MX_SPI5_Init();
 #endif
   MX_TIM8_Init();
-#if 0
   MX_TIM13_Init();
+#if 0
   MX_UART8_Init();
   MX_USB_OTG_HS_PCD_Init();
 #endif // 0
@@ -198,23 +435,39 @@ int main(void)
 #define MSG_CM4 "hello CM4!\r\n"
   HAL_UART_Transmit(&huart8, (uint8_t*)MSG_CM4, sizeof(MSG_CM4), 0xfffffff);
   COM_FREE_COUNT = 3;
-  HAL_TIM_Base_Start(&htim8);
+#ifdef INIT_TIM_IN_MAIN
+  HAL_TIM_Base_Start_IT(&htim8);
+  HAL_TIM_Base_Start(&htim13);
+#endif
   COM_FREE_COUNT = 4;
   /* USER CODE END 2 */
+
+//  NVIC_EnableIRQ(TIM8_UP_TIM13_IRQn);
+//  __enable_fault_irq();   // start.S で cpsid f で禁止されてくる
+
 
   COM_PUSH_HSEM = 0;
 #define SET_FREE_COUNT( count, val )  COM_FREE_COUNT = ((count << 16) | (val & 0xffff))
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  int  j = 0;
+    (void)j;
   while (1)
   {
     static int  count = 0;
     static int  val, val2;
-    int  j;
     /* USER CODE END WHILE */
     COM_TIM1_COUNT = __HAL_TIM_GET_COUNTER(&htim8);
 
     count++;
+    if( count % 100000 == 0 ){
+#if 0
+      led_set( count / 100000 );
+      if(j++ == (16*3))
+        break;
+#endif
+    }
+
     if( COM_PUSH_HSEM > 0 ){
       COM_PUSH_HSEM = 0;
       (void)HAL_HSEM_FastTake( 0 );
@@ -231,8 +484,11 @@ int main(void)
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
+  btn_pos_edge();       /******** ボタン待ち **********/
+  sta_ker();
 }
 
+#if 0
 /**
   * @brief ADC1 Initialization Function
   * @param None
@@ -757,6 +1013,8 @@ static void MX_SPI5_Init(void)
   /* USER CODE END SPI5_Init 2 */
 
 }
+#endif /* 0 */
+#define TIMX_CLOCK_HZ (40 * 1000 * 1000 * 2)   // APB1 クロック(40MHz) の 2倍
 
 /**
   * @brief TIM8 Initialization Function
@@ -778,7 +1036,7 @@ static void MX_TIM8_Init(void)
 
   /* USER CODE END TIM8_Init 1 */
   htim8.Instance = TIM8;
-  htim8.Init.Prescaler = 0;
+  htim8.Init.Prescaler = (TIMX_CLOCK_HZ/1000000);
   htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim8.Init.Period = 65535;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -846,7 +1104,7 @@ static void MX_TIM13_Init(void)
 
   /* USER CODE END TIM13_Init 1 */
   htim13.Instance = TIM13;
-  htim13.Init.Prescaler = 0;
+  htim13.Init.Prescaler = TIMX_CLOCK_HZ/1000000;
   htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim13.Init.Period = 65535;
   htim13.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -873,6 +1131,7 @@ static void MX_TIM13_Init(void)
 
 }
 
+#if 0
 /**
   * @brief UART8 Initialization Function
   * @param None
@@ -1074,6 +1333,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOJ_CLK_ENABLE();
 
 }
+#endif /* 0 */
 
 /* USER CODE BEGIN 4 */
 
@@ -1110,5 +1370,16 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
+#define COUNT  10000000
+void
+Tim8_Handler(void)
+{
+  static int count;
+  for( count = 0; ; count++ ){
+    if( count % COUNT == 0 )
+      led_set( count / COUNT );
+  }
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

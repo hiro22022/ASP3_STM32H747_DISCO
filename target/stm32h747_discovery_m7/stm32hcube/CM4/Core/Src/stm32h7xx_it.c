@@ -56,7 +56,9 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+#ifdef HAL_CEC_MODULE_ENABLED
 extern CEC_HandleTypeDef hcec;
+#endif /* HAL_CEC_MODULE_ENABLED */
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -204,6 +206,7 @@ void SysTick_Handler(void)
   */
 void CEC_IRQHandler(void)
 {
+#ifdef HAL_CEC_MODULE_ENABLED
   /* USER CODE BEGIN CEC_IRQn 0 */
 
   /* USER CODE END CEC_IRQn 0 */
@@ -211,6 +214,7 @@ void CEC_IRQHandler(void)
   /* USER CODE BEGIN CEC_IRQn 1 */
 
   /* USER CODE END CEC_IRQn 1 */
+#endif /* HAL_CEC_MODULE_ENABLED */
 }
 
 /* USER CODE BEGIN 1 */

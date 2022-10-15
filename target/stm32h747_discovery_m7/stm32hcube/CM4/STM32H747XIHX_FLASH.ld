@@ -41,6 +41,9 @@ _estack = 0x10048000;    /* end of RAM */
 _Min_Heap_Size = 0x200 ;      /* required amount of heap  */
 _Min_Stack_Size = 0x400 ; /* required amount of stack */
 
+/* start.S で印付け */
+software_init_hook = 0;   /* start.S */
+
 /* Specify the memory areas */
 MEMORY
 {
@@ -52,6 +55,12 @@ RAM (xrw)      : ORIGIN = 0x10000000, LENGTH = 288K
 SECTIONS
 {
   /* The startup code goes first into FLASH */
+  .vector :       /* kernel_cfg.c のベクトルテーブルを使用する場合、こちらを前にする */
+  {
+    . = ALIGN(4);
+    KEEP(*(.vector)) /* Startup code */
+    . = ALIGN(4);
+  } >FLASH
   .isr_vector :
   {
     . = ALIGN(4);
@@ -116,11 +125,15 @@ SECTIONS
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
+  __idata_start =	_sidata;      /* start.S ********************/
+  __idata_end   = _sidata + SIZEOF( .data );
+
   /* Initialized data sections goes into RAM, load LMA copy after code */
   .data :
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
+    __data_start = _sdata;    /* start.S ********************/
     *(.data)           /* .data sections */
     *(.data*)          /* .data* sections */
 
@@ -136,6 +149,7 @@ SECTIONS
     /* This is used by the startup in order to initialize the .bss secion */
     _sbss = .;         /* define a global symbol at bss start */
     __bss_start__ = _sbss;
+    __bss_start = _sbss;    /* start.S */
     *(.bss)
     *(.bss*)
     *(COMMON)
@@ -143,6 +157,7 @@ SECTIONS
     . = ALIGN(4);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
+    __bss_end = __bss_end__;    /* start.S */
   } >RAM
 
   /* User_heap_stack section, used to check that there is enough RAM left */

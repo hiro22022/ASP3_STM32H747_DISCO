@@ -284,6 +284,7 @@ void HAL_ETH_MspDeInit(ETH_HandleTypeDef* heth)
 
 }
 
+#ifdef HAL_CEC_MspInit
 /**
 * @brief CEC MSP Initialization
 * This function configures the hardware resources used in this example
@@ -351,6 +352,7 @@ void HAL_CEC_MspDeInit(CEC_HandleTypeDef* hcec)
   }
 
 }
+#endif /* HAL_CEC_MspInit */
 
 /**
 * @brief QSPI MSP Initialization

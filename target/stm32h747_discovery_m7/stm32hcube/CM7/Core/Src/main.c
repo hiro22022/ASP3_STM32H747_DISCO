@@ -22,6 +22,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "serial.h"
+#include "led_btn_joy.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -78,8 +79,11 @@ int   b_sta_ker;
 /* USER CODE END PV */
 
 /*---------------------------------------------*/
+#include "com_var.h"
 #include "stm32h747xx.h"
 #include "stm32h7xx_hal_gpio.h"
+
+// #define LED_ENABLE     /* Cortex-M4 コアで使用する場合は、外す */
 
 /* LED 番号 LED1～LED4 */
 typedef enum  {
@@ -127,18 +131,24 @@ void led_init()
 
 void led_on( uint32_t no )
 {
+#ifdef LED_ENABLE
     if( no <= LED4 )
         HAL_GPIO_WritePin( led_conf[no].gpio, led_conf[no].Pin, GPIO_PIN_RESET );
+#endif /* LED_ENABLE */
 }
 
 void led_off( uint32_t no )
 {
+#ifdef LED_ENABLE
     if( no <= LED4 )
         HAL_GPIO_WritePin( led_conf[no].gpio, led_conf[no].Pin, GPIO_PIN_SET );
+#endif /* LED_ENABLE */
 }
 
 void led_set( int val )
 {
+#ifdef LED_ENABLE
+    /* 4回繰り返し書くので効率悪い。製品ではお勧めしないコーディング */
     /* LED が同じ GPIO で並んでいることを利用して、１回の IO アクセスでよいように効率化したバージョン */
     uint32_t rs_val = 0;
     int i;
@@ -150,6 +160,7 @@ void led_set( int val )
     }
     /* GPIO のレジスタに直接書き込む */
     led_conf[0].gpio->BSRR = rs_val;
+#endif /* LED_ENABLE */
 }
 
 void
@@ -165,6 +176,129 @@ led_blink( int i, int j )
     }
   }
 
+}
+
+/*--------------------------- Joy Stick --------------------------*/
+
+/* Joystick 構成構造体 */
+typedef struct {
+    GPIO_TypeDef  *gpio;
+    uint32_t      Pin;
+} Joy_conf;
+
+/* JOY_SEL～JOY_UP の構成 */
+const Joy_conf joy_conf[] =
+{
+    { GPIOK, GPIO_PIN_2 },      /* JOY_SEL */
+    { GPIOK, GPIO_PIN_3 },      /* JOY_DOWN */
+    { GPIOK, GPIO_PIN_4 },      /* JOY_LEFT */
+    { GPIOK, GPIO_PIN_5 },      /* JOY_RIGHT */
+    { GPIOK, GPIO_PIN_6 },      /* JOY_UP */
+};
+
+
+/* joystick の初期化 */
+void joy_init(void)
+{
+    uint32_t temp;
+    int  i;
+
+    /* RCC (クロック) の設定 */
+    RCC_TypeDef  *rcc = RCC;
+    temp = rcc->AHB4ENR;
+    temp |= RCC_AHB4ENR_GPIOKEN;    /* GPIO PK2..5 に接続される */
+    rcc->AHB4ENR = temp;
+
+    /* GPIO コントロールレジスタの設定 */
+    GPIO_InitTypeDef gpio_init;
+    gpio_init.Mode      = GPIO_MODE_INPUT;
+    gpio_init.Pull      = GPIO_PULLUP;        /* SWを押すと GND になる */
+    gpio_init.Speed     = GPIO_SPEED_FREQ_LOW;
+    gpio_init.Alternate = 0x0;
+    for( i = JOY_SEL; i <= JOY_UP; i++ ){
+        gpio_init.Pin   = joy_conf[ i ].Pin;
+        HAL_GPIO_Init( joy_conf[ i ].gpio, &gpio_init );
+    }
+}
+
+int joy_stat(void)
+{
+    int  val = 0;
+    int  i;
+
+    /* 5回繰り返し読むので効率悪い。製品ではお勧めしないコーディング */
+    for( i = JOY_SEL; i <= JOY_UP; i++ ){
+      val |= ((int)HAL_GPIO_ReadPin( joy_conf[ i ].gpio, joy_conf[ i ].Pin ) ? 0:1) << i;
+    }
+    return val;
+}
+
+/*--------------------------- Button Stick --------------------------*/
+/* Joystick 構成構造体 */
+typedef struct {
+    GPIO_TypeDef  *gpio;
+    uint32_t      Pin;
+} Btn_conf;
+
+/* Button の構成 */
+const Btn_conf btn_conf[] =
+{
+    { GPIOC, GPIO_PIN_13 },      /* Button */
+};
+
+
+/* Button の初期化 */
+void btn_init(void)
+{
+    uint32_t temp;
+    int  i;
+
+    /* RCC (クロック) の設定 */
+    RCC_TypeDef  *rcc = RCC;
+    temp = rcc->AHB4ENR;
+    temp |= RCC_AHB4ENR_GPIOCEN;    /* GPIO PK2..5 に接続される */
+    rcc->AHB4ENR = temp;
+
+    /* GPIO コントロールレジスタの設定 */
+    GPIO_InitTypeDef gpio_init;
+    gpio_init.Mode      = GPIO_MODE_INPUT;
+    gpio_init.Pull      = GPIO_NOPULL;        /* 外部で Pull Down されている */
+    gpio_init.Speed     = GPIO_SPEED_FREQ_LOW;
+    gpio_init.Alternate = 0x0;
+    for( i = 0; i < 1; i++ ){
+        gpio_init.Pin   = btn_conf[ i ].Pin;
+        HAL_GPIO_Init( btn_conf[ i ].gpio, &gpio_init );
+    }
+}
+
+int btn_stat(void)
+{
+    int  val = 0;
+    int  i;
+
+    /* 5回繰り返し読むので効率悪い。製品ではお勧めしないコーディング */
+    for( i = 0; i < 1; i++ ){
+      val |= ((int)HAL_GPIO_ReadPin( btn_conf[ i ].gpio, btn_conf[ i ].Pin ) ? 1:0) << i;
+    }
+    return val;
+}
+
+/* 0⇒1 になると戻る */
+void btn_pos_edge()
+{
+  while(btn_stat())         /* 0 になるのを待つ */
+  {}
+  while(btn_stat()==0)      /* 1 になるのを待つ */
+  {}
+}
+
+/* 1⇒0 になると戻る */
+void btn_neg_edge()
+{
+  while(btn_stat()==0)      /* 1 になるのを待つ */
+  {}
+  while(btn_stat())         /* 0 になるのを待つ */
+  {}
 }
 
 /* Private function prototypes -----------------------------------------------*/
@@ -209,6 +343,7 @@ int main(void)
   volatile int k;
   for( k = 0; k < 5 * 1000 * 1000; k++ ){}
 #endif
+  COM_INIT();
 
 /* USER CODE END Boot_Mode_Sequence_1 */
   /* MCU Configuration--------------------------------------------------------*/
@@ -281,6 +416,8 @@ int main(void)
   //-------------------------
 
   led_init();
+  joy_init();
+  btn_init();
 
 #define MSG_TIM3 "hello CM7 Enable Interrupt!\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_TIM3, sizeof(MSG_TIM3), 0xfffffff);
@@ -302,6 +439,39 @@ int main(void)
   }
 #define MSG_HAL_TIM_INIT_DONE "HAL_TIM_Base_Start Done\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_TIM_INIT_DONE, sizeof(MSG_HAL_TIM_INIT_DONE), 0xfffffff);
+
+#ifdef WAIT_JOYSTICK
+  #define MSG_HAL_WAIT_FOR_JOY "Wait for pushing Joystick\r\n"
+  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_WAIT_FOR_JOY, sizeof(MSG_HAL_WAIT_FOR_JOY), 0xfffffff);
+  while( 1 ){
+    int stat = joy_stat();
+
+#if 0
+    snprintf( buf, sizeof(buf), "JOY STICK=%x\r\n", stat );
+    HAL_UART_Transmit(&huart1, (uint8_t*)buf, strlen(buf), 0xfffffff);
+#endif
+
+    if( stat )
+      break;
+  }
+#endif /* WAIT_JOYSTICK */
+  #define MSG_HAL_WAIT_FOR_BTN "Wait for pushing button\r\n"
+  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_WAIT_FOR_BTN, sizeof(MSG_HAL_WAIT_FOR_BTN), 0xfffffff);
+#if 0
+  while( 1 ){
+    int stat = btn_stat();
+
+#if 0
+    snprintf( buf, sizeof(buf), "BUTTON=%x\r\n", stat );
+    HAL_UART_Transmit(&huart1, (uint8_t*)buf, strlen(buf), 0xfffffff);
+#endif
+
+    if( stat )
+      break;
+  }
+#else
+  btn_pos_edge();   /* 押されるまで待つ */
+#endif
 
 #if 1
   __disable_fault_irq();      // start.S で禁止するのと同様に変更

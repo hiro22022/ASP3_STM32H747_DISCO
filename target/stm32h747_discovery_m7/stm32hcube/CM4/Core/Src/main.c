@@ -519,7 +519,6 @@ int main(void)
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
-  btn_neg_edge();       /******** ボタン待ち **********/
   sta_ker();
 }
 

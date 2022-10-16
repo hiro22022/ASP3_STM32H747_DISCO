@@ -160,6 +160,8 @@ char	message[3];
 ulong_t	task_loop;		/* タスク内でのループ回数 */
 
 #include "com_var.h"
+#define TOPPERS_CB_TYPE_ONLY
+#include "tHSEMBody_tecsgen.h"
 
 /*
  *  並行実行されるタスク

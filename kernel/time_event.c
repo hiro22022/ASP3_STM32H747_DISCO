@@ -585,15 +585,6 @@ tmevt_lefttim(TMEVTB *p_tmevtb)
  */
 #ifdef TOPPERS_sigtim
 
-#define LED_SET_ON_SIGNAL_TIME
-#ifdef LED_SET_ON_SIGNAL_TIME
-void led_set(int);
-#ifdef CORE_CM4
-static int signal_count;
-#endif
-#define SIGNAL_COUNT  1000
-#endif
-
 void
 signal_time(void)
 {
@@ -602,15 +593,6 @@ signal_time(void)
 #ifndef TOPPERS_OMIT_SYSLOG
 	uint_t	nocall = 0;
 #endif /* TOPPERS_OMIT_SYSLOG */
-
-#ifdef LED_SET_ON_SIGNAL_TIME
-#ifdef CORE_CM4
-	if( signal_count++ % SIGNAL_COUNT == 0 ){
-		led_set(signal_count/SIGNAL_COUNT);
-		// syslog( LOG_NOTICE, "signal_time current_evttim=%d", current_evttim );
-	}
-#endif /* CORE_CM4 */
-#endif
 
 	assert(sense_context());
 	assert(!sense_lock());

@@ -41,7 +41,6 @@ eCallback_callback()
 {
     SYSLOG  log;
     int     res = 0;
-    syslog( LOG_NOTICE, "HSEM Handler Called" );
     COM_LOGBUF_GET( &log, &res );
     while( res ){
         cSysLog_write_(LOG_NOTICE, &log);

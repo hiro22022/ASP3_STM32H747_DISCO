@@ -38,7 +38,7 @@
 void
 eCallback_callback()
 {
-    syslog( LOG_NOTICE, "HSEM Handler Called" );
+    syslog( LOG_NOTICE, "HSEM Handler Called in CM4" );
 }
 
 /* #[<POSTAMBLE>]#

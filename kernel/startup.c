@@ -87,20 +87,17 @@ sta_ker(void)
 
 	/********************************************/
 // #ifdef FORCE_REF_VECTOR_TABLE
-led_set(1);
 	/*
 	 *  TECSの初期化
 	 */
 #ifndef TOPPERS_OMIT_TECS
 	initialize_tecs();
 #endif /* TOPPERS_OMIT_TECS */
-led_set(2);
 
 	/*
 	 *  ターゲット依存の初期化
 	 */
 	target_initialize();
-led_set(3);
 
 	/*
 	 *  各モジュールの初期化
@@ -109,9 +106,7 @@ led_set(3);
 	 *  する必要がある．
 	 */
 	initialize_tmevt();								/*［ASPD1061］*/
-led_set(4);
 	initialize_object();
-led_set(5);
 
 	/*
 	 *  初期化ルーチンの実行
@@ -119,14 +114,11 @@ led_set(5);
 	for (i = 0; i < tnum_inirtn; i++) {
 		(*(inirtnb_table[i].inirtn))(inirtnb_table[i].exinf);
 	}
-led_set(6);
 	/*
 	 *  高分解能タイマの設定
 	 */
 	current_hrtcnt = target_hrt_get_current();		/*［ASPD1063］*/
-led_set(7);
 	set_hrt_event();								/*［ASPD1064］*/
-led_set(8);
 	/*
 	 *  カーネル動作の開始
 	 */
@@ -134,7 +126,6 @@ led_set(8);
 	LOG_KER_ENTER();
 	start_dispatch();
 
-led_set(9);
 	assert(0);
 }
 

@@ -166,11 +166,9 @@ eSysLog_write(uint_t priority, const SYSLOG *p_syslog)
 
 	SIL_UNL_INT();
 #else
-led_set(11);
 	if ((VAR_logMask & LOG_MASK(priority)) != 0U) {
 		COM_LOGBUF_PUT( p_syslog );
 	}
-led_set(12);
 #endif /* NON_CM4 */
 	return(E_OK);
 }

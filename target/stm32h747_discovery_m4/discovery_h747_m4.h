@@ -2,9 +2,7 @@
  *  TOPPERS Software
  *      Toyohashi Open Platform for Embedded Real-Time Systems
  * 
- *  Copyright (C) 2015 by Ushio Laboratory
- *              Graduate School of Engineering Science, Osaka Univ., JAPAN
- *  Copyright (C) 2015,2016 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2006-2016 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -36,78 +34,83 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: tSysLog.cdl 837 2017-10-17 00:34:30Z ertl-hiro $
+ *  $Id: nucleo_f401re.h 648 2016-02-20 00:50:56Z ertl-honda $
  */
 
 /*
- *		システムログ機能のコンポーネント記述ファイル
+ *		NUCLEO F401RE サポートモジュール
  */
+
+#ifndef TOPPERS_NUCLEO_F401RE_H
+#define TOPPERS_NUCLEO_F401RE_H
 
 /*
- *  システムログ機能に関する定義
+ *  コアのクロック周波数
  */
-import_C("syssvc/syslog.h");
+#define CPU_CLOCK_HZ	84000000
 
 /*
- *  低レベル出力のシグニチャ
+ *  割込み数
  */
-signature sPutLog {
-	void	putChar([in] char c);
-};
+// #define TMAX_INTNO (84 + 16)
+#define TMAX_INTNO (156)
 
 /*
- *  システムログ機能のシグニチャ
+ *  微少時間待ちのための定義（本来はSILのターゲット依存部）
  */
-signature sSysLog {
-	/*
-	 *  ログ情報の出力
-	 */
-	ER		write([in] uint_t priority, [in] const SYSLOG *p_syslog);
-	ER		write_([in] uint_t priority, [in] const SYSLOG *p_syslog);		/* proc_char を設定しない */
+#define SIL_DLY_TIM1    162
+#define SIL_DLY_TIM2    100
 
-	/*
-	 *  ログバッファからのログ情報の読出し
-	 */
-	ER_UINT	read([out] SYSLOG *p_syslog);
-
-	/*
-	 *  出力すべきログ情報の重要度の設定
-	 */
-	ER		mask([in] uint_t logMask, [in] uint_t lowMask);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		refer([out] T_SYSLOG_RLOG *pk_rlog);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		flush(void);
-};
+#ifndef TOPPERS_MACRO_ONLY
+#include "stm32h747xx.h"
+#endif /* TOPPERS_MACRO_ONLY */
 
 /*
- *  システムログ機能のセルタイプ
+ *  USART関連の定義
  */
-[singleton]
-celltype tSysLog {
-	entry	sSysLog		eSysLog;
-	call	sPutLog		cPutLog;		/* 低レベル出力との接続 */
+#define USART_INTNO (UART8_IRQn + 16)
+#define USART_NAME  UART8
+#define USART_BASE  UART8_BASE 
 
-	attr {
-		uint_t	logBufferSize;			/* ログバッファサイズ */
-		uint_t	initLogMask = C_EXP("LOG_UPTO(LOG_DEBUG)");
-										/* ログバッファに記録すべき重要度 */
-		uint_t	initLowMask = C_EXP("LOG_UPTO(LOG_EMERG)");
-									   	/* 低レベル出力すべき重要度 */
-	};
-	var {
-		[size_is(logBufferSize)] SYSLOG	*logBuffer;	/* ログバッファ */
-		uint_t	count = 0;				/* ログバッファ中のログの数 */
-		uint_t	head = 0;				/* 先頭のログの格納位置 */
-		uint_t	tail = 0;				/* 次のログの格納位置 */
-		uint_t	lost = 0;				/* 失われたログの数 */
-		uint_t	logMask = initLogMask;	/* ログバッファに記録すべき重要度 */
-		uint_t	lowMask = initLowMask;	/* 低レベル出力すべき重要度 */
-	};
-};
+/*
+ *  ボーレート
+ */
+#define BPS_SETTING  (115200)
+
+#ifndef TOPPERS_MACRO_ONLY
+#ifndef TECSGEN
+/*
+ *  UsartのクロックとIOの初期化
+ */
+Inline void
+usart_low_init(void) {
+#ifdef f401
+	GPIO_InitTypeDef  GPIO_InitStruct;
+
+	/* Enable Clock */
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_USART2_CLK_ENABLE();
+  
+	/* UART TX GPIO pin configuration  */
+	GPIO_InitStruct.Pin       = GPIO_PIN_2;
+	GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull      = GPIO_PULLUP;
+	GPIO_InitStruct.Speed     = GPIO_SPEED_FAST;
+	GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    
+	/* UART RX GPIO pin configuration  */
+	GPIO_InitStruct.Pin = GPIO_PIN_3;
+	GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
+    
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+#endif // f401
+}
+#endif /* TECSGEN */
+#endif /* TOPPERS_MACRO_ONLY */
+
+/******* HSEM ********/
+#define HSEM1_INTNO		(HSEM1_IRQn + 16)	/* 割込み番号 */
+
+#endif /* TOPPERS_NUCLEO_F401RE_H */

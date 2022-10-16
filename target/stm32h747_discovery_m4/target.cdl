@@ -1,6 +1,7 @@
 /*
- *  TOPPERS Software
- *      Toyohashi Open Platform for Embedded Real-Time Systems
+ *  TOPPERS/ASP Kernel
+ *      Toyohashi Open Platform for Embedded Real-Time Systems/
+ *      Advanced Standard Profile Kernel
  * 
  *  Copyright (C) 2015 by Ushio Laboratory
  *              Graduate School of Engineering Science, Osaka Univ., JAPAN
@@ -36,78 +37,59 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: tSysLog.cdl 837 2017-10-17 00:34:30Z ertl-hiro $
+ *  $Id: target.cdl 648 2016-02-20 00:50:56Z ertl-honda $
  */
 
 /*
- *		システムログ機能のコンポーネント記述ファイル
+ *  タスクのスタックサイズのデフォルト
  */
+const size_t DefaultTaskStackSize = 4096;		/* スタックサイズ（4KB）*/
 
 /*
- *  システムログ機能に関する定義
+ *  システムログタスクのスタックサイズの定義
  */
-import_C("syssvc/syslog.h");
+const size_t LogTaskStackSize = DefaultTaskStackSize;
 
 /*
- *  低レベル出力のシグニチャ
+ *  カーネル起動メッセージに関する定義
  */
-signature sPutLog {
-	void	putChar([in] char c);
+const char *const BannerTargetName = "NUCLEO(STM32H747XI:ARM Cortex-M4)";	/* ターゲット名 */
+const char *const BannerCopyrightNotice = "";			/* 著作権表示 */
+
+/*
+ *  ターゲット依存のセルタイプの定義
+ */
+import("tPutLogTarget.cdl");
+import("tSIOPortTarget.cdl");
+
+/*
+ *  シリアルインタフェースドライバのターゲット依存部の組み上げ記述
+ */
+cell tSIOPortTarget SIOPortTarget1 {
 };
 
 /*
- *  システムログ機能のシグニチャ
+ *  低レベル出力の組み上げ記述
  */
-signature sSysLog {
-	/*
-	 *  ログ情報の出力
-	 */
-	ER		write([in] uint_t priority, [in] const SYSLOG *p_syslog);
-	ER		write_([in] uint_t priority, [in] const SYSLOG *p_syslog);		/* proc_char を設定しない */
-
-	/*
-	 *  ログバッファからのログ情報の読出し
-	 */
-	ER_UINT	read([out] SYSLOG *p_syslog);
-
-	/*
-	 *  出力すべきログ情報の重要度の設定
-	 */
-	ER		mask([in] uint_t logMask, [in] uint_t lowMask);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		refer([out] T_SYSLOG_RLOG *pk_rlog);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		flush(void);
+cell tPutLogTarget PutLogTarget {
+	/* SIOドライバとの結合 */
+	cSIOPort = SIOPortTarget1.eSIOPort;
 };
 
-/*
- *  システムログ機能のセルタイプ
- */
-[singleton]
-celltype tSysLog {
-	entry	sSysLog		eSysLog;
-	call	sPutLog		cPutLog;		/* 低レベル出力との接続 */
 
-	attr {
-		uint_t	logBufferSize;			/* ログバッファサイズ */
-		uint_t	initLogMask = C_EXP("LOG_UPTO(LOG_DEBUG)");
-										/* ログバッファに記録すべき重要度 */
-		uint_t	initLowMask = C_EXP("LOG_UPTO(LOG_EMERG)");
-									   	/* 低レベル出力すべき重要度 */
-	};
-	var {
-		[size_is(logBufferSize)] SYSLOG	*logBuffer;	/* ログバッファ */
-		uint_t	count = 0;				/* ログバッファ中のログの数 */
-		uint_t	head = 0;				/* 先頭のログの格納位置 */
-		uint_t	tail = 0;				/* 次のログの格納位置 */
-		uint_t	lost = 0;				/* 失われたログの数 */
-		uint_t	logMask = initLogMask;	/* ログバッファに記録すべき重要度 */
-		uint_t	lowMask = initLowMask;	/* 低レベル出力すべき重要度 */
-	};
+/*---------- HSEM -----------*/
+import( "tHSEM.cdl" );
+
+cell tHSEMBody HSEMBody{
+};
+
+cell tISR HSEM_ISR {
+    interruptNumber = C_EXP( "HSEM1_INTNO" );
+    ciISRBody = HSEMBody.eMain;
+};
+
+cell tInterruptRequest HSEM_IRQ {
+    interruptNumber = C_EXP( "HSEM1_INTNO" );
+    interruptPriority = -14;
+	attribute = C_EXP( "TA_ENAINT" );
 };

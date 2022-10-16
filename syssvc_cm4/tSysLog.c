@@ -108,6 +108,17 @@ int  dummy_count;
 ER
 eSysLog_write(uint_t priority, const SYSLOG *p_syslog)
 {
+	/*
+	 * コア文字設定
+	 */
+#ifdef CORE_CM4
+	((SYSLOG *)p_syslog)->proc_char = '4';
+#elif defined( CORE_CM7 )
+	((SYSLOG *)p_syslog)->proc_char = '7';
+#else
+	((SYSLOG *)p_syslog)->proc_char = '?';
+#endif /* CORE_CM4 */
+
 #ifdef NON_CM4
 	SIL_PRE_LOC;
 
@@ -156,16 +167,9 @@ eSysLog_write(uint_t priority, const SYSLOG *p_syslog)
 	SIL_UNL_INT();
 #else
 led_set(11);
-#if 0
-	{
-		for( dummy_count=0; dummy_count< 1000000000; dummy_count++){
-			led_set(11);
-		}
-	}
 	if ((VAR_logMask & LOG_MASK(priority)) != 0U) {
 		COM_LOGBUF_PUT( p_syslog );
 	}
-#endif
 led_set(12);
 #endif /* NON_CM4 */
 	return(E_OK);

@@ -5,7 +5,7 @@
  * 
  *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
  *                              Toyohashi Univ. of Technology, JAPAN
- *  Copyright (C) 2005-2018 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2005-2015 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -37,167 +37,117 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: startup.c 1136 2018-12-31 16:32:45Z ertl-hiro $
+ *  $Id: tSIOPortTargetMain_inline.h 648 2016-02-20 00:50:56Z ertl-honda $
  */
 
 /*
- *		カーネルの初期化と終了処理
+ *		シリアルインタフェースドライバのターゲット依存部
  */
-
-#include "kernel_impl.h"
-#include "time_event.h"
-#include <sil.h>
 
 /*
- *  トレースログマクロのデフォルト定義
+ *  SIOポートのオープン
  */
-#ifndef LOG_KER_ENTER
-#define LOG_KER_ENTER()
-#endif /* LOG_KER_ENTER */
-
-#ifndef LOG_KER_LEAVE
-#define LOG_KER_LEAVE()
-#endif /* LOG_KER_LEAVE */
-
-#ifndef LOG_EXT_KER_ENTER
-#define LOG_EXT_KER_ENTER()
-#endif /* LOG_EXT_KER_ENTER */
-
-#ifndef LOG_EXT_KER_LEAVE
-#define LOG_EXT_KER_LEAVE(ercd)
-#endif /* LOG_EXT_KER_LEAVE */
-
-#ifdef TOPPERS_sta_ker
-
-/*
- *  カーネル動作状態フラグ
- *
- *  スタートアップルーチンで，false（＝0）に初期化されることを期待して
- *  いる．
- */
-bool_t	kerflg = false;
-
-/*
- *  カーネルの起動
- */
-void
-sta_ker(void)
+Inline void
+eSIOPort_open(CELLIDX idx)
 {
-	uint_t	i;
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
 
-	/********************************************/
-// #ifdef FORCE_REF_VECTOR_TABLE
-led_set(1);
 	/*
-	 *  TECSの初期化
+	 *  デバイス依存のオープン処理
 	 */
-#ifndef TOPPERS_OMIT_TECS
-	initialize_tecs();
-#endif /* TOPPERS_OMIT_TECS */
-led_set(2);
+	cSIOPort_open();
 
 	/*
-	 *  ターゲット依存の初期化
+	 *  SIOの割込みマスクを解除する．
 	 */
-	target_initialize();
-led_set(3);
+	cInterruptRequest_enable();
+}
+
+/*
+ *  SIOポートのクローズ
+ */
+Inline void
+eSIOPort_close(CELLIDX idx)
+{
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
 
 	/*
-	 *  各モジュールの初期化
-	 *
-	 *  タイムイベント管理モジュールは他のモジュールより先に初期化
-	 *  する必要がある．
+	 *  デバイス依存のクローズ処理
 	 */
-	initialize_tmevt();								/*［ASPD1061］*/
-led_set(4);
-	initialize_object();
-led_set(5);
+	cSIOPort_close();
 
 	/*
-	 *  初期化ルーチンの実行
-	 */ 
-	for (i = 0; i < tnum_inirtn; i++) {
-		(*(inirtnb_table[i].inirtn))(inirtnb_table[i].exinf);
+	 *  SIOの割込みをマスクする．
+	 */
+	cInterruptRequest_disable();
+}
+
+/*
+ *  SIOポートへの文字送信
+ */
+Inline bool_t
+eSIOPort_putChar(CELLIDX idx, char c)
+{
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
+
+	return(cSIOPort_putChar(c));
+}
+
+/*
+ *  SIOポートからの文字受信
+ */
+Inline int_t
+eSIOPort_getChar(CELLIDX idx)
+{
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
+
+	return(cSIOPort_getChar());
+}
+
+/*
+ *  SIOポートからのコールバックの許可
+ */
+Inline void
+eSIOPort_enableCBR(CELLIDX idx, uint_t cbrtn)
+{
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
+
+	cSIOPort_enableCBR(cbrtn);
+}
+
+/*
+ *  SIOポートからのコールバックの禁止
+ */
+Inline void
+eSIOPort_disableCBR(CELLIDX idx, uint_t cbrtn)
+{
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
+
+	cSIOPort_disableCBR(cbrtn);
+}
+
+/*
+ *  SIOポートからの送信可能コールバック
+ */
+Inline void
+eiSIOCBR_readySend(CELLIDX idx)
+{
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
+
+	if (is_ciSIOCBR_joined()) {
+		ciSIOCBR_readySend();
 	}
-led_set(6);
-	/*
-	 *  高分解能タイマの設定
-	 */
-	current_hrtcnt = target_hrt_get_current();		/*［ASPD1063］*/
-led_set(7);
-	set_hrt_event();								/*［ASPD1064］*/
-led_set(8);
-	/*
-	 *  カーネル動作の開始
-	 */
-	kerflg = true;
-	LOG_KER_ENTER();
-	start_dispatch();
-
-led_set(9);
-	assert(0);
-}
-
-#endif /* TOPPERS_sta_ker */
-
-/*
- *  カーネルの終了
- */
-#ifdef TOPPERS_ext_ker
-
-ER
-ext_ker(void)
-{
-	SIL_PRE_LOC;
-
-	LOG_EXT_KER_ENTER();
-
-	/*
-	 *  割込みロック状態に移行
-	 */
-	SIL_LOC_INT();
-
-	/*
-	 *  カーネル動作の終了
-	 */
-	LOG_KER_LEAVE();
-	kerflg = false;
-
-	/*
-	 *  カーネルの終了処理の呼出し
-	 *
-	 *  非タスクコンテキストに切り換えて，exit_kernelを呼び出す．
-	 */
-	call_exit_kernel();
-
-	/*
-	 *  コンパイラの警告対策（ここへ来ることはないはず）
-	 */
-	SIL_UNL_INT();
-	LOG_EXT_KER_LEAVE(E_SYS);
-	return(E_SYS);
 }
 
 /*
- *  カーネルの終了処理
+ *  SIOポートからの受信通知コールバック
  */
-void
-exit_kernel(void)
+Inline void
+eiSIOCBR_readyReceive(CELLIDX idx)
 {
-	uint_t	i;
-
-	/*
-	 *  終了処理ルーチンの実行
-	 */
-	for (i = 0; i < tnum_terrtn; i++) {
-		(*(terrtnb_table[i].terrtn))(terrtnb_table[i].exinf);
+	CELLCB	*p_cellcb = GET_CELLCB(idx);
+	
+	if (is_ciSIOCBR_joined()) {
+		ciSIOCBR_readyReceive();
 	}
-
-	/*
-	 *  ターゲット依存の終了処理
-	 */
-	target_exit();
-	assert(0);
 }
-
-#endif /* TOPPERS_ext_ker */

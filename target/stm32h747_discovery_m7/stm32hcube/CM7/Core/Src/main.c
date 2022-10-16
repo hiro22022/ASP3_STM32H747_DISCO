@@ -233,7 +233,7 @@ int joy_stat(void)
     return val;
 }
 
-/*--------------------------- Button Stick --------------------------*/
+/*--------------------------- Button --------------------------*/
 /* Joystick 構成構造体 */
 typedef struct {
     GPIO_TypeDef  *gpio;
@@ -455,6 +455,8 @@ int main(void)
       break;
   }
 #endif /* WAIT_JOYSTICK */
+
+#ifdef NEED_PUSH
   #define MSG_HAL_WAIT_FOR_BTN "Wait for pushing button\r\n"
   HAL_UART_Transmit(&huart1, (uint8_t*)MSG_HAL_WAIT_FOR_BTN, sizeof(MSG_HAL_WAIT_FOR_BTN), 0xfffffff);
 #if 0
@@ -472,6 +474,7 @@ int main(void)
 #else
   btn_pos_edge();   /* 押されるまで待つ */
 #endif
+#endif /* NEED_PUSH */
 
 #if 1
   __disable_fault_irq();      // start.S で禁止するのと同様に変更

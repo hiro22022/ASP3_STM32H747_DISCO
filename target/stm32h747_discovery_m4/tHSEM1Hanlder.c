@@ -17,7 +17,6 @@
 /* Put prototype declaration and/or variale definition here #_PAC_# */
 #include "tHSEM1Hanlder_tecsgen.h"
 #include "syslog.h"
-#include "com_var.h"
 
 #ifndef E_OK
 #define	E_OK	0		/* success */
@@ -39,14 +38,7 @@
 void
 eCallback_callback()
 {
-    SYSLOG  log;
-    int     res = 0;
     syslog( LOG_NOTICE, "HSEM Handler Called" );
-    COM_LOGBUF_GET( &log, &res );
-    while( res ){
-        cSysLog_write_(LOG_NOTICE, &log);
-        COM_LOGBUF_GET( &log, &res );
-    }
 }
 
 /* #[<POSTAMBLE>]#

@@ -240,6 +240,41 @@ led_blink( int i, int j )
   }
 }
 
+int
+btn_check_neg_edge()
+{
+  static int stat;
+  int   tmp, res;
+  tmp = btn_stat();
+  if( stat && tmp == 0 )
+    res = 1;
+  else
+    res = 0;
+  stat = tmp;
+  return res;
+}
+
+void
+led_blink_btn( int i, int j )
+{
+  int  n;
+  while(1){
+    for( n = 0; n < 100000; n++ ){
+      led_set(i);
+      if( btn_check_neg_edge() ){
+        led_set(j);
+        return;
+      }
+    }
+    for( n = 0; n < 100000; n++ ){
+      led_set(j);
+      if( btn_check_neg_edge() ){
+        return;
+      }
+    }
+  }
+}
+
 /*--------------------------- Joy Stick --------------------------*/
 
 /* Joystick 構成構造体 */
@@ -285,7 +320,6 @@ void joy_init(void)
 }
 #endif /* NEED_JOYSTICK_INIT */
 
-
 int joy_stat(void)
 {
     int  val = 0;
@@ -298,7 +332,7 @@ int joy_stat(void)
     return val;
 }
 
-/*--------------------------- Button Stick --------------------------*/
+/*--------------------------- Button --------------------------*/
 /* Joystick 構成構造体 */
 typedef struct {
     GPIO_TypeDef  *gpio;
@@ -377,6 +411,7 @@ void btn_neg_edge()
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+  COM_INIT();
   COM_FREE_COUNT = 0;
   /* USER CODE END 1 */
 
@@ -461,9 +496,9 @@ int main(void)
 
     count++;
     if( count % 100000 == 0 ){
-#if 0
+#if 1
       led_set( count / 100000 );
-      if(j++ == (16*3))
+      if(j++ == (16*1))
         break;
 #endif
     }
@@ -484,7 +519,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
-  btn_pos_edge();       /******** ボタン待ち **********/
+  btn_neg_edge();       /******** ボタン待ち **********/
   sta_ker();
 }
 

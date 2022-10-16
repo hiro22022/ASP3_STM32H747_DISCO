@@ -117,6 +117,7 @@
 #include "sample1.h"
 
 #include "cmsis_gcc.h"
+#include "led_btn_joy.h"
 
 /*
  *  サービスコールのエラーのログ出力
@@ -173,16 +174,23 @@ task(intptr_t exinf)
 	char		c;
 
 	while (true) {
+led_set(1);
 #if 1
 #if 0
 		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNNT=%08x COM_TIM1_COUNT=%08x",
 										tskno, ++n, graph[tskno-1], COM_FREE_COUNT, COM_TIM1_COUNT);
 #else
-		int_t locked;
+// led_blink_btn( 1, 2 );
+#ifdef CORE_CM7
+		int_t locked = 0;
 		locked = tHSEMBody_eHSEM_isLocked( 0 ) << 4;
 		locked |= tHSEMBody_eHSEM_getInterruptStatus( 0 );
 		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNNT=%08x locked=%08x",
 										tskno, ++n, graph[tskno-1], COM_FREE_COUNT, locked);
+#else
+		syslog(LOG_NOTICE, "task%d is running (%03d).   %s", tskno, ++n, graph[tskno-1]);
+#endif /* CORE_CM7 */
+// led_blink_btn( 1, 3 );
 #endif
 
 #else
@@ -190,8 +198,10 @@ task(intptr_t exinf)
 										tskno, ++n, graph[tskno-1]);
 #endif
 		consume_time(task_loop);
+//led_blink_btn( 1, 4 );
 		c = message[tskno-1];
 		message[tskno-1] = 0;
+//led_blink_btn( 1, 5 );
 		switch (c) {
 		case 'e':
 			syslog(LOG_INFO, "#%d#ext_tsk()", tskno);
@@ -232,6 +242,7 @@ task(intptr_t exinf)
 		default:
 			break;
 		}
+//led_blink_btn( 1, 6 );
 	}
 }
 
@@ -265,6 +276,7 @@ void
 cpuexc_handler(void *p_excinf)
 {
 	int	   i;
+led_blink( 0, 15 );
 	syslog(LOG_NOTICE, "CPU exception handler (p_excinf = %08p).", p_excinf);
 
 /****************************************************************/
@@ -397,12 +409,16 @@ main_task(intptr_t exinf)
 #endif /* TASK_LOOP */
 	HRTCNT	hrtcnt1, hrtcnt2;
 
+led_blink_btn( 0, 1 );
 	SVC_PERROR(syslog_msk_log(LOG_UPTO(LOG_INFO), LOG_UPTO(LOG_EMERG)));
 	syslog(LOG_NOTICE, "Sample program starts (exinf = %d).", (int_t) exinf);
 
+led_blink_btn( 0, 2 );
 	/* HSEM 0 の割込みを許可 */
 	tHSEMBody_eHSEM_clearInterrupt(0);
+led_blink_btn( 0, 3 );
 	tHSEMBody_eHSEM_enableInterrup(0);
+led_blink_btn( 0, 4 );
 
 	/*
 	 *  シリアルポートの初期化
@@ -412,12 +428,14 @@ main_task(intptr_t exinf)
 	 *  ない．
 	 */
 	ercd = serial_opn_por(TASK_PORTID);
+led_blink_btn( 0, 5 );
 	if (ercd < 0 && MERCD(ercd) != E_OBJ) {
 		syslog(LOG_ERROR, "%s (%d) reported by `serial_opn_por'.",
 									itron_strerror(ercd), SERCD(ercd));
 	}
 	SVC_PERROR(serial_ctl_por(TASK_PORTID,
 							(IOCTL_CRLF | IOCTL_FCSND | IOCTL_FCRCV)));
+led_blink_btn( 0, 6 );
 
 	/*
  	 *  ループ回数の設定
@@ -459,6 +477,7 @@ main_task(intptr_t exinf)
 	consume_time(LOOP_REF);
 	SVC_PERROR(get_tim(&stime2));
 	task_loop = LOOP_REF * 400LU / (ulong_t)(stime2 - stime1) * 1000LU;
+led_blink_btn( 0, 7 );
 
 #if 1
 	syslog( LOG_NOTICE, "LOOP_REF=%d stime1=%08x stime2=%08x diff=%08x task_loop=%08x",
@@ -472,12 +491,14 @@ main_task(intptr_t exinf)
 	SVC_PERROR(act_tsk(TASK1));
 	SVC_PERROR(act_tsk(TASK2));
 	SVC_PERROR(act_tsk(TASK3));
+led_blink_btn( 0, 8 );
 
 	/*
  	 *  メインループ
 	 */
 	do {
 		SVC_PERROR(serial_rea_dat(TASK_PORTID, &c, 1));
+led_blink_btn( 0, 9 );
 		switch (c) {
 		case 'e':
 		case 's':

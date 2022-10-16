@@ -1,10 +1,9 @@
 /*
- *  TOPPERS Software
- *      Toyohashi Open Platform for Embedded Real-Time Systems
+ *  TOPPERS/ASP Kernel
+ *      Toyohashi Open Platform for Embedded Real-Time Systems/
+ *      Advanced Standard Profile Kernel
  * 
- *  Copyright (C) 2015 by Ushio Laboratory
- *              Graduate School of Engineering Science, Osaka Univ., JAPAN
- *  Copyright (C) 2015,2016 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2016 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
@@ -36,78 +35,115 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: tSysLog.cdl 837 2017-10-17 00:34:30Z ertl-hiro $
+ *  $Id: target_timer.c 648 2016-02-20 00:50:56Z ertl-honda $
  */
 
 /*
- *		システムログ機能のコンポーネント記述ファイル
+ *		タイマドライバ（TIM用）
+ *		 TIM2をフリーランニング，TIM5を割込み通知用に使用する．
  */
+
+#include "kernel_impl.h"
+#include "time_event.h"
+#include "target_timer.h"
+#include <sil.h>
+
+#include "led_btn_joy.h"
 
 /*
- *  システムログ機能に関する定義
+ *  STM32CubeのTIMのハンドル
  */
-import_C("syssvc/syslog.h");
+#ifdef f401
+#else
+extern TIM_HandleTypeDef htim8;
+extern TIM_HandleTypeDef htim13;
+#endif /* f401 */
 
 /*
- *  低レベル出力のシグニチャ
+ *  タイマの起動処理
  */
-signature sPutLog {
-	void	putChar([in] char c);
-};
+void
+target_hrt_initialize(intptr_t exinf)
+{
+	/* main.c (STM32CubeMX生成) で初期化 */
+#ifdef f401
+	/*
+	 * フリーランニングタイマ
+	 */
+	/* Enable Clock. Use APB1 timer clock */
+	__HAL_RCC_TIM2_CLK_ENABLE();
+
+	htim8.Instance = TIM2;
+	htim8.Init.Period = 0xFFFFFFFF;
+	htim8.Init.Prescaler = (CPU_CLOCK_HZ/1000000);
+	htim8.Init.ClockDivision = 0;
+	htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	if(HAL_TIM_Base_Init(&htim8) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+
+	if(HAL_TIM_Base_Start(&htim8) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+
+	/*
+	 *  割込み通知用タイマ
+	 */
+	/* Enable Clock. Use APB1 timer clock */
+	__HAL_RCC_TIM5_CLK_ENABLE();
+
+	htim13.Instance = TIM5;
+	htim13.Init.Period = 0xFF;
+	htim13.Init.Prescaler = (CPU_CLOCK_HZ/1000000);
+	htim13.Init.ClockDivision = 0;
+	htim13.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+	/* One-pulse Mode */
+	if(HAL_TIM_OnePulse_Init(&htim13,TIM_OPMODE_SINGLE) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+	/* clear interrupt */
+	__HAL_TIM_CLEAR_FLAG(&htim13, TIM_SR_UIF);
+	/* enable interrupt */
+	__HAL_TIM_ENABLE_IT(&htim13, TIM_IT_UPDATE);
+#else // f401
+  HAL_TIM_Base_Start_IT(&htim8);
+  HAL_TIM_Base_Start(&htim13);
+#endif // f401
+}
 
 /*
- *  システムログ機能のシグニチャ
+ *  タイマの停止処理
  */
-signature sSysLog {
-	/*
-	 *  ログ情報の出力
-	 */
-	ER		write([in] uint_t priority, [in] const SYSLOG *p_syslog);
-	ER		write_([in] uint_t priority, [in] const SYSLOG *p_syslog);		/* proc_char を設定しない */
-
-	/*
-	 *  ログバッファからのログ情報の読出し
-	 */
-	ER_UINT	read([out] SYSLOG *p_syslog);
-
-	/*
-	 *  出力すべきログ情報の重要度の設定
-	 */
-	ER		mask([in] uint_t logMask, [in] uint_t lowMask);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		refer([out] T_SYSLOG_RLOG *pk_rlog);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		flush(void);
-};
+void
+target_hrt_terminate(intptr_t exinf)
+{
+	if(HAL_TIM_Base_Stop(&htim8) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+	if(HAL_TIM_Base_Stop(&htim13) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+}
 
 /*
- *  システムログ機能のセルタイプ
+ *  タイマ割込みハンドラ
  */
-[singleton]
-celltype tSysLog {
-	entry	sSysLog		eSysLog;
-	call	sPutLog		cPutLog;		/* 低レベル出力との接続 */
-
-	attr {
-		uint_t	logBufferSize;			/* ログバッファサイズ */
-		uint_t	initLogMask = C_EXP("LOG_UPTO(LOG_DEBUG)");
-										/* ログバッファに記録すべき重要度 */
-		uint_t	initLowMask = C_EXP("LOG_UPTO(LOG_EMERG)");
-									   	/* 低レベル出力すべき重要度 */
-	};
-	var {
-		[size_is(logBufferSize)] SYSLOG	*logBuffer;	/* ログバッファ */
-		uint_t	count = 0;				/* ログバッファ中のログの数 */
-		uint_t	head = 0;				/* 先頭のログの格納位置 */
-		uint_t	tail = 0;				/* 次のログの格納位置 */
-		uint_t	lost = 0;				/* 失われたログの数 */
-		uint_t	logMask = initLogMask;	/* ログバッファに記録すべき重要度 */
-		uint_t	lowMask = initLowMask;	/* 低レベル出力すべき重要度 */
-	};
-};
+void
+target_hrt_handler(void)
+{
+#if 0
+	/* Clear Event */
+	__HAL_TIM_CLEAR_FLAG(&htim13, TIM_SR_UIF);
+#endif
+	/*
+	 *  高分解能タイマ割込みを処理する．
+	 */
+	signal_time();
+}

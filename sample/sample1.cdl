@@ -128,8 +128,10 @@ cell tBanner Banner {
 celltype tHSEM1Hanlder{
 	entry siHSEMCallback eCallback;
 	call  sHSEM    cHSEM;
+	call  sSysLog  cSysLog;
 };
 cell tHSEM1Hanlder HSEM1Handler {
 	eCallback <= HSEMBody.cCallback[0];	/* 逆結合 */
 	cHSEM = HSEMBody.eHSEM[0];
+	cSysLog = SysLog.eSysLog;
 };

@@ -588,7 +588,9 @@ tmevt_lefttim(TMEVTB *p_tmevtb)
 #define LED_SET_ON_SIGNAL_TIME
 #ifdef LED_SET_ON_SIGNAL_TIME
 void led_set(int);
+#ifdef CORE_CM4
 static int signal_count;
+#endif
 #define SIGNAL_COUNT  1000
 #endif
 
@@ -654,7 +656,7 @@ signal_time(void)
 	/*
 	 *  タイムイベントが処理されなかった場合．
 	 */
-// #define IGNORE_NO_TIME_EVENT_PROCESSED
+#define IGNORE_NO_TIME_EVENT_PROCESSED
 #ifndef IGNORE_NO_TIME_EVENT_PROCESSED
 	if (nocall == 0) {
 		syslog_0(LOG_NOTICE, "no time event is processed in hrt interrupt.");

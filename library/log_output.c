@@ -169,6 +169,12 @@ syslog_printf(const char *format, const LOGPAR *p_args, void (*putc)(char))
 void
 syslog_print(const SYSLOG *p_syslog, void (*putc)(char))
 {
+	/* コア文字を出力 */
+	(*putc)('[');
+	(*putc)(p_syslog->proc_char);
+	(*putc)(']');
+	(*putc)(' ');
+
 	switch (p_syslog->logtype) {
 	case LOG_TYPE_COMMENT:
 		syslog_printf((const char *)(p_syslog->logpar[0]),

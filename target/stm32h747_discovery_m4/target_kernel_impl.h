@@ -1,13 +1,14 @@
 /*
- *  TOPPERS Software
- *      Toyohashi Open Platform for Embedded Real-Time Systems
+ *  TOPPERS/ASP Kernel
+ *      Toyohashi Open Platform for Embedded Real-Time Systems/
+ *      Advanced Standard Profile Kernel
  * 
- *  Copyright (C) 2015 by Ushio Laboratory
- *              Graduate School of Engineering Science, Osaka Univ., JAPAN
- *  Copyright (C) 2015,2016 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2000-2003 by Embedded and Real-Time Systems Laboratory
+ *                              Toyohashi Univ. of Technology, JAPAN
+ *  Copyright (C) 2005-2016 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
- *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
+ *  上記著作権者は，以下の(1)～(4)の条件を満たす場合に限り，本ソフトウェ
  *  ア（本ソフトウェアを改変したものを含む．以下同じ）を使用・複製・改
  *  変・再配布（以下，利用と呼ぶ）することを無償で許諾する．
  *  (1) 本ソフトウェアをソースコードの形で利用する場合には，上記の著作
@@ -36,78 +37,63 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: tSysLog.cdl 837 2017-10-17 00:34:30Z ertl-hiro $
  */
+#ifndef TOPPERS_TARGET_KERNEL_IMPL_H
+#define TOPPERS_TARGET_KERNEL_IMPL_H
 
 /*
- *		システムログ機能のコンポーネント記述ファイル
+ * ターゲット依存部モジュール（STM32H747 Discovery用）
+ *
+ * カーネルのターゲット依存部のインクルードファイル．kernel_impl.hのター
+ * ゲット依存部の位置付けとなす．
  */
+#include "discovery_h747_m4.h"
 
 /*
- *  システムログ機能に関する定義
+ *  TBITW_IPRI の定義のため読み込み
  */
-import_C("syssvc/syslog.h");
+#include <sil.h>
 
 /*
- *  低レベル出力のシグニチャ
+ *  デフォルトの非タスクコンテキスト用のスタック領域の定義
  */
-signature sPutLog {
-	void	putChar([in] char c);
-};
+#define DEFAULT_ISTKSZ			(0x1000)		/* 4KByte */
 
 /*
- *  システムログ機能のシグニチャ
+ * IDLE処理の定義
+ *
+ * サスペンド時にOpenOCDデバッグツールが使えなくなる問題の対応
+ * WFI等でサスペンドしているプログラムに対して，フラッシュROM
+ * 書き込みも出来なくなるため，IDEL処理変更．
  */
-signature sSysLog {
-	/*
-	 *  ログ情報の出力
-	 */
-	ER		write([in] uint_t priority, [in] const SYSLOG *p_syslog);
-	ER		write_([in] uint_t priority, [in] const SYSLOG *p_syslog);		/* proc_char を設定しない */
+#define TOPPERS_CUSTOM_IDEL
+#define toppers_asm_custom_idle		\
+	msr		basepri, r0;			\
+	msr		basepri, r1;
 
-	/*
-	 *  ログバッファからのログ情報の読出し
-	 */
-	ER_UINT	read([out] SYSLOG *p_syslog);
-
-	/*
-	 *  出力すべきログ情報の重要度の設定
-	 */
-	ER		mask([in] uint_t logMask, [in] uint_t lowMask);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		refer([out] T_SYSLOG_RLOG *pk_rlog);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		flush(void);
-};
+#ifndef TOPPERS_MACRO_ONLY
 
 /*
- *  システムログ機能のセルタイプ
+ *  ターゲットシステム依存の初期化
  */
-[singleton]
-celltype tSysLog {
-	entry	sSysLog		eSysLog;
-	call	sPutLog		cPutLog;		/* 低レベル出力との接続 */
+extern void	target_initialize(void);
 
-	attr {
-		uint_t	logBufferSize;			/* ログバッファサイズ */
-		uint_t	initLogMask = C_EXP("LOG_UPTO(LOG_DEBUG)");
-										/* ログバッファに記録すべき重要度 */
-		uint_t	initLowMask = C_EXP("LOG_UPTO(LOG_EMERG)");
-									   	/* 低レベル出力すべき重要度 */
-	};
-	var {
-		[size_is(logBufferSize)] SYSLOG	*logBuffer;	/* ログバッファ */
-		uint_t	count = 0;				/* ログバッファ中のログの数 */
-		uint_t	head = 0;				/* 先頭のログの格納位置 */
-		uint_t	tail = 0;				/* 次のログの格納位置 */
-		uint_t	lost = 0;				/* 失われたログの数 */
-		uint_t	logMask = initLogMask;	/* ログバッファに記録すべき重要度 */
-		uint_t	lowMask = initLowMask;	/* 低レベル出力すべき重要度 */
-	};
-};
+/*
+ *  ターゲットシステムの終了
+ *
+ *  システムを終了する時に使う．
+ */
+extern void	target_exit(void) NoReturn;
+
+/*
+ *  エラー発生時の処理
+ */
+extern void Error_Handler(void);
+#endif /* TOPPERS_MACRO_ONLY */
+
+/*
+ *  チップ依存モジュール
+ */
+#include <chip_kernel_impl.h>
+
+#endif /* TOPPERS_TARGET_KERNEL_IMPL_H */

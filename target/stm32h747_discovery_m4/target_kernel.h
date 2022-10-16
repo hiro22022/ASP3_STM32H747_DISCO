@@ -1,13 +1,12 @@
 /*
- *  TOPPERS Software
- *      Toyohashi Open Platform for Embedded Real-Time Systems
+ *  TOPPERS/ASP Kernel
+ *      Toyohashi Open Platform for Embedded Real-Time Systems/
+ *      Advanced Standard Profile Kernel
  * 
- *  Copyright (C) 2015 by Ushio Laboratory
- *              Graduate School of Engineering Science, Osaka Univ., JAPAN
- *  Copyright (C) 2015,2016 by Embedded and Real-Time Systems Laboratory
+ *  Copyright (C) 2016 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
  * 
- *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
+ *  上記著作権者は，以下の(1)～(4)の条件を満たす場合に限り，本ソフトウェ
  *  ア（本ソフトウェアを改変したものを含む．以下同じ）を使用・複製・改
  *  変・再配布（以下，利用と呼ぶ）することを無償で許諾する．
  *  (1) 本ソフトウェアをソースコードの形で利用する場合には，上記の著作
@@ -36,78 +35,39 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: tSysLog.cdl 837 2017-10-17 00:34:30Z ertl-hiro $
  */
 
 /*
- *		システムログ機能のコンポーネント記述ファイル
+ *  kernel.hのターゲット依存部（NUCLEO_F401RE用）
+ *
+ *  このインクルードファイルは，kernel.hでインクルードされる．他のファ
+ *  イルから直接インクルードすることはない．このファイルをインクルード
+ *  する前に，t_stddef.hがインクルードされるので，それらに依存してもよ
+ *  い．
  */
+
+#ifndef TOPPERS_TARGET_KERNEL_H
+#define TOPPERS_TARGET_KERNEL_H
+
+#ifdef USE_TIM_AS_HRT
 
 /*
- *  システムログ機能に関する定義
+ *  高分解能タイマのタイマ周期
+ *
+ *  タイマ周期が2^32の場合には，このマクロを定義しない．
  */
-import_C("syssvc/syslog.h");
+#undef TCYC_HRTCNT
 
 /*
- *  低レベル出力のシグニチャ
+ *  高分解能タイマのカウント値の進み幅
  */
-signature sPutLog {
-	void	putChar([in] char c);
-};
+#define TSTEP_HRTCNT	1U
+
+#endif /* USE_TIM_AS_HRT */
 
 /*
- *  システムログ機能のシグニチャ
+ *  チップで共通な定義
  */
-signature sSysLog {
-	/*
-	 *  ログ情報の出力
-	 */
-	ER		write([in] uint_t priority, [in] const SYSLOG *p_syslog);
-	ER		write_([in] uint_t priority, [in] const SYSLOG *p_syslog);		/* proc_char を設定しない */
+#include "chip_kernel.h"
 
-	/*
-	 *  ログバッファからのログ情報の読出し
-	 */
-	ER_UINT	read([out] SYSLOG *p_syslog);
-
-	/*
-	 *  出力すべきログ情報の重要度の設定
-	 */
-	ER		mask([in] uint_t logMask, [in] uint_t lowMask);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		refer([out] T_SYSLOG_RLOG *pk_rlog);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		flush(void);
-};
-
-/*
- *  システムログ機能のセルタイプ
- */
-[singleton]
-celltype tSysLog {
-	entry	sSysLog		eSysLog;
-	call	sPutLog		cPutLog;		/* 低レベル出力との接続 */
-
-	attr {
-		uint_t	logBufferSize;			/* ログバッファサイズ */
-		uint_t	initLogMask = C_EXP("LOG_UPTO(LOG_DEBUG)");
-										/* ログバッファに記録すべき重要度 */
-		uint_t	initLowMask = C_EXP("LOG_UPTO(LOG_EMERG)");
-									   	/* 低レベル出力すべき重要度 */
-	};
-	var {
-		[size_is(logBufferSize)] SYSLOG	*logBuffer;	/* ログバッファ */
-		uint_t	count = 0;				/* ログバッファ中のログの数 */
-		uint_t	head = 0;				/* 先頭のログの格納位置 */
-		uint_t	tail = 0;				/* 次のログの格納位置 */
-		uint_t	lost = 0;				/* 失われたログの数 */
-		uint_t	logMask = initLogMask;	/* ログバッファに記録すべき重要度 */
-		uint_t	lowMask = initLowMask;	/* 低レベル出力すべき重要度 */
-	};
-};
+#endif /* TOPPERS_TARGET_KERNEL_H */

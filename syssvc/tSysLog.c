@@ -102,6 +102,22 @@ low_putchar(char c)
 ER
 eSysLog_write(uint_t priority, const SYSLOG *p_syslog)
 {
+	/*
+	 * コア文字設定
+	 */
+#ifdef CORE_CM4
+	((SYSLOG *)p_syslog)->proc_char = '4';
+#elif defined( CORE_CM7 )
+	((SYSLOG *)p_syslog)->proc_char = '7';
+#else
+	((SYSLOG *)p_syslog)->proc_char = '?';
+#endif /* CORE_CM4 */
+   return eSysLog_write_( priority, p_syslog);
+}
+
+ER
+eSysLog_write_(uint_t priority, const SYSLOG *p_syslog)
+{
 	SIL_PRE_LOC;
 
 	LOG_TSYSLOG_ESYSLOG_WRITE_ENTER(priority, p_syslog);

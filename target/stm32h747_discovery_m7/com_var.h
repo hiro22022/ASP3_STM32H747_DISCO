@@ -25,13 +25,13 @@ struct  com_var{
 #define HSEM_CM4_to_CM7_CLK_IT      0
 #define HSEM_CM4_to_CM7_SYSLOG_IT   1
 
-#define COM_LOGBUF_PUT( plogbuf )   COM_FREE_COUNT++;
+#define COM_LOGBUF_PUT__( plogbuf )   COM_FREE_COUNT++;
 
-#define COM_LOGBUF_PUT__( plogbuf )                                   \
+#define COM_LOGBUF_PUT_( plogbuf )                                   \
             (void)HAL_HSEM_FastTake( 0 );  /* コア間割込みをかける */\
             HAL_HSEM_Release( 0, 0 );
 
-#define COM_LOGBUF_PUT_( plogbuf )                                   \
+#define COM_LOGBUF_PUT( plogbuf )                                   \
     do{                                                             \
         uint16_t   next_wp;                                         \
         next_wp = COM_AREA->logbuf_wp + 1;                          \
@@ -47,15 +47,18 @@ struct  com_var{
         }                                                           \
     } while(0)
 
-#define COM_LOGBUF_GET( plogbuf )                                   \
+#define COM_LOGBUF_GET( plogbuf, pres )                             \
     do{                                                             \
         uint16_t next_rp;                                           \
         if( COM_AREA->logbuf_rp == COM_AREA->logbuf_wp )    /* 等しければ、バッファは空 */ \
-            return 0;                                               \
-        *plogbuf = (COM_AREA->logbuf[COM_AREA->logbuf_wp]);         \
-        next_rp = COM_AREA->logbuf_rp + 1;                          \
-        if( next_rp >= N_LOGBUF )                                   \
-            next_rp = 0;                                            \
-        COM_AREA->logbuf_rp = next_rp; /* 最後に更新する */          \
+            *pres = 0;                                              \
+        else{                                                       \
+            *plogbuf = (COM_AREA->logbuf[COM_AREA->logbuf_rp]);     \
+            next_rp = COM_AREA->logbuf_rp + 1;                      \
+            if( next_rp >= N_LOGBUF )                               \
+                next_rp = 0;                                        \
+            COM_AREA->logbuf_rp = next_rp; /* 最後に更新する */      \
+            *pres = 1;                                              \
+        }                                                           \
     } while(0)
 

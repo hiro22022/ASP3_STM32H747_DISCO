@@ -121,6 +121,7 @@ extern "C" {
 
 typedef struct {
 	uint_t	logtype;				/* ログ情報の種別 */
+	char    proc_char;				/* プロセッサを表す文字 */
 	LOGTIM	logtim;					/* ログ時刻 */
 	LOGPAR	logpar[TNUM_LOGPAR];	/* ログパラメータ */
 } SYSLOG;

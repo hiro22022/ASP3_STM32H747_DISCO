@@ -1,6 +1,7 @@
 /*
- *  TOPPERS Software
- *      Toyohashi Open Platform for Embedded Real-Time Systems
+ *  TOPPERS/ASP Kernel
+ *      Toyohashi Open Platform for Embedded Real-Time Systems/
+ *      Advanced Standard Profile Kernel
  * 
  *  Copyright (C) 2015 by Ushio Laboratory
  *              Graduate School of Engineering Science, Osaka Univ., JAPAN
@@ -36,78 +37,109 @@
  *  アの利用により直接的または間接的に生じたいかなる損害に関しても，そ
  *  の責任を負わない．
  * 
- *  $Id: tSysLog.cdl 837 2017-10-17 00:34:30Z ertl-hiro $
+ *  $Id: tSIOPortTarget.cdl 648 2016-02-20 00:50:56Z ertl-honda $
  */
 
 /*
- *		システムログ機能のコンポーネント記述ファイル
+ *		シリアルインタフェースドライバのターゲット依存部
+ *		のコンポーネント記述
  */
 
 /*
- *  システムログ機能に関する定義
+ *  ボードに関する定義
  */
-import_C("syssvc/syslog.h");
+import_C("discovery_h747_m4.h");
 
 /*
- *  低レベル出力のシグニチャ
+ *  USART用 簡易SIOドライバ
  */
-signature sPutLog {
-	void	putChar([in] char c);
+import("tUsart.cdl");
+
+/*
+ *  シリアルインタフェースドライバのターゲット依存部の本体（シリアルイ
+ *  ンタフェースドライバとSIOドライバを接続する部分）のセルタイプ
+ */
+celltype tSIOPortTargetMain {
+	/*
+	 *  シリアルインタフェースドライバとの結合
+	 */
+	[inline] entry		sSIOPort	eSIOPort;
+	[optional] call		siSIOCBR	ciSIOCBR;
+
+	/*
+	 *  SIOドライバとの結合
+	 */
+	call			sSIOPort	cSIOPort;
+	[inline] entry	siSIOCBR	eiSIOCBR;
+
+	/*
+	 *  割込み要求ライン操作のための結合
+	 */
+	call	sInterruptRequest	cInterruptRequest;
 };
 
 /*
- *  システムログ機能のシグニチャ
+ *  シリアルインタフェースドライバのターゲット依存部（複合コンポーネン
+ *  ト）のセルタイプ
  */
-signature sSysLog {
+[active]
+composite tSIOPortTarget {
 	/*
-	 *  ログ情報の出力
+	 *  シリアルインタフェースドライバとの結合
 	 */
-	ER		write([in] uint_t priority, [in] const SYSLOG *p_syslog);
-	ER		write_([in] uint_t priority, [in] const SYSLOG *p_syslog);		/* proc_char を設定しない */
-
-	/*
-	 *  ログバッファからのログ情報の読出し
-	 */
-	ER_UINT	read([out] SYSLOG *p_syslog);
+	entry				sSIOPort	eSIOPort;
+	[optional] call		siSIOCBR	ciSIOCBR;
 
 	/*
-	 *  出力すべきログ情報の重要度の設定
+	 *  属性の定義
 	 */
-	ER		mask([in] uint_t logMask, [in] uint_t lowMask);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		refer([out] T_SYSLOG_RLOG *pk_rlog);
-
-	/*
-	 *  低レベル出力によるすべてのログ情報の出力
-	 */
-	ER		flush(void);
-};
-
-/*
- *  システムログ機能のセルタイプ
- */
-[singleton]
-celltype tSysLog {
-	entry	sSysLog		eSysLog;
-	call	sPutLog		cPutLog;		/* 低レベル出力との接続 */
-
 	attr {
-		uint_t	logBufferSize;			/* ログバッファサイズ */
-		uint_t	initLogMask = C_EXP("LOG_UPTO(LOG_DEBUG)");
-										/* ログバッファに記録すべき重要度 */
-		uint_t	initLowMask = C_EXP("LOG_UPTO(LOG_EMERG)");
-									   	/* 低レベル出力すべき重要度 */
+		uintptr_t	baseAddress;				/* ベースアドレス */
+		INTNO		interruptNumber;			/* 割込み番号 */
+		PRI			isrPriority = 1;			/* ISR優先度 */
+		PRI			interruptPriority = -2;		/* 割込み優先度 */
+		uint32_t	bps = C_EXP("BPS_SETTING");	/* ボーレート設定 */
 	};
-	var {
-		[size_is(logBufferSize)] SYSLOG	*logBuffer;	/* ログバッファ */
-		uint_t	count = 0;				/* ログバッファ中のログの数 */
-		uint_t	head = 0;				/* 先頭のログの格納位置 */
-		uint_t	tail = 0;				/* 次のログの格納位置 */
-		uint_t	lost = 0;				/* 失われたログの数 */
-		uint_t	logMask = initLogMask;	/* ログバッファに記録すべき重要度 */
-		uint_t	lowMask = initLowMask;	/* 低レベル出力すべき重要度 */
+
+	/*
+	 *  SIOドライバ
+	 */
+	cell tUsart Usart {
+		baseAddress = composite.baseAddress;
+		bps         = composite.bps;
+		ciSIOCBR    = SIOPortMain.eiSIOCBR;
 	};
+
+	/*
+	 *  シリアルインタフェースドライバのターゲット依存部の本体
+	 */
+	cell tSIOPortTargetMain SIOPortMain {
+		ciSIOCBR          => composite.ciSIOCBR;
+		cSIOPort          = Usart.eSIOPort;
+		cInterruptRequest = InterruptRequest.eInterruptRequest;
+	};
+	composite.eSIOPort => SIOPortMain.eSIOPort;
+
+	/*
+	 *  SIOの割込みサービスルーチンと割込み要求ライン
+	 */
+	cell tISR ISRInstance {
+		interruptNumber = composite.interruptNumber;
+		isrPriority     = composite.isrPriority;
+		ciISRBody       = Usart.eiISR;
+	};
+	cell tInterruptRequest InterruptRequest {
+		interruptNumber   = composite.interruptNumber;
+		interruptPriority = composite.interruptPriority;
+	};
+};
+
+/*
+ *  シリアルインタフェースドライバのターゲット依存部のプロトタイプ
+ */
+[prototype]
+cell tSIOPortTarget SIOPortTarget1 {
+	/* 属性の設定 */
+	baseAddress     = C_EXP("USART_BASE");
+	interruptNumber = C_EXP("USART_INTNO");
 };

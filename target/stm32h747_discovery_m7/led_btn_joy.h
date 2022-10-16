@@ -5,6 +5,7 @@ void led_on( uint32_t no );
 void led_off( uint32_t no );
 void led_set( int val );
 void led_blink( int i, int j );
+void led_blink_btn( int i, int j );     /* ボタンが押されるのを待つ */
 
 /* ボタン */
 int   btn_stat(void);

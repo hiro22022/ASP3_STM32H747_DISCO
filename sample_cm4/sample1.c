@@ -160,6 +160,8 @@ char	message[3];
 ulong_t	task_loop;		/* タスク内でのループ回数 */
 
 #include "com_var.h"
+#define TOPPERS_CB_TYPE_ONLY
+#include "tHSEMBody_tecsgen.h"
 
 /*
  *  並行実行されるタスク
@@ -173,8 +175,12 @@ task(intptr_t exinf)
 	char		c;
 
 	while (true) {
-		syslog(LOG_NOTICE, "task%d is running (%03d).   %s",
-										tskno, ++n, graph[tskno-1]);
+		int_t locked;
+		locked = tHSEMBody_eHSEM_isLocked( 0 ) << 4;
+		locked |= tHSEMBody_eHSEM_getInterruptStatus( 0 );
+		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNNT=%08x locked=%08x",
+										tskno, ++n, graph[tskno-1], COM_FREE_COUNT, locked);
+
 		consume_time(task_loop);
 		c = message[tskno-1];
 		message[tskno-1] = 0;

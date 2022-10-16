@@ -481,6 +481,7 @@ int main(void)
 //  __enable_fault_irq();   // start.S で cpsid f で禁止されてくる
 
 
+#if 0
   COM_PUSH_HSEM = 0;
 #define SET_FREE_COUNT( count, val )  COM_FREE_COUNT = ((count << 16) | (val & 0xffff))
   /* Infinite loop */
@@ -518,6 +519,7 @@ int main(void)
     SET_FREE_COUNT( count, val );
     /* USER CODE BEGIN 3 */
   }
+#endif
   /* USER CODE END 3 */
   sta_ker();
 }

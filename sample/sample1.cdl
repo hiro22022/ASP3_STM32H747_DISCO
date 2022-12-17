@@ -122,7 +122,12 @@ cell tBanner Banner {
 };
 
 /*
- * HSEM
+ * HSEM handler
+ * 　Cortex-M4 コアの syslog 出力用 HSEM1Handler のセルタイプ
+ *   セルタイプ名、記述場所ともに、再考の余地あり
+ *   Cortex-M４ コアが Cortex-M7 コアに、コア間割込みをかけるが、
+ *   この割込みハンドラは、Cortex-M4 コアが com_var 上に設定した syslog を
+ *   Cortex-M7 側の SysLog のバッファに積みなおす
  */
 [singleton]
 celltype tHSEM1Hanlder{
@@ -130,6 +135,11 @@ celltype tHSEM1Hanlder{
 	call  sHSEM    cHSEM;
 	call  sSysLog  cSysLog;
 };
+
+/*
+ * Cortex-M4 コアの syslog 出力用 HSEM1Handler
+ * 配列添数 0 (HSEM の bit 0) を使用
+ */
 cell tHSEM1Hanlder HSEM1Handler {
 	eCallback <= HSEMBody.cCallback[0];	/* 逆結合 */
 	cHSEM = HSEMBody.eHSEM[0];

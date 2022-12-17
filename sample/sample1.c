@@ -402,7 +402,7 @@ main_task(intptr_t exinf)
 	SVC_PERROR(syslog_msk_log(LOG_UPTO(LOG_INFO), LOG_UPTO(LOG_EMERG)));
 	syslog(LOG_NOTICE, "Sample program starts (exinf = %d).", (int_t) exinf);
 
-	/* HSEM 0 の割込みを許可 */
+	/* HSEM bit 0 (CM4 の SysLog ハンドラ) の割込みを許可 */
 	tHSEMBody_eHSEM_clearInterrupt(0);
 	tHSEMBody_eHSEM_enableInterrup(0);
 

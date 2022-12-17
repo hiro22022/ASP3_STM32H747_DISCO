@@ -32,6 +32,7 @@ LED が点灯できると、どこまでコード実行したか確認しやす�
 ## 現在のポーティング状態
 
 Cortex-M7, Cortex-M4 の両方のコアとも、TOPPERS/ASP3 の移植が完了している。
+しかしながら、キャッシュ設定をしていない、コード整理が十分でない、などの課題を残している。
 
 ### Cortex-M7 用ビルド
     % cd obj_h747_cm7
@@ -44,7 +45,7 @@ asp.elf ができあがったら STM32CubeProgrammer を使用して書き込む
     % cd obj_h747_cm4
     % make
 
-STM32H747_CM4.elf ができあがったら、STM32CubeProgrammer を使用して書き込む。
+asp_cm4.elf ができあがったら、STM32CubeProgrammer を使用して書き込む。
 
 Cortex-M4 側も gcc に -mcpu=cortex-m7 を指定してある。
 将来的にはコード共用するつもりなので、この指定で問題ないことを確認する意図。

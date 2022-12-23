@@ -1,3 +1,6 @@
+#ifndef COM_VAR_H
+#define COM_VAR_H
+
 #include "syslog.h"
 
 #define N_LOGBUF  64
@@ -12,15 +15,19 @@ struct  com_var{
     uint16_t        logbuf_wp;
     uint16_t        logbuf_rp;
     uint16_t        logbuf_lost;
+    /* */
+
+    uint32_t        RawSpinLock;    /* RawSpinLock セル */
 };
 
 
-#define COM_AREA ((struct com_var*)0x10040000)
-#define COM_INIT()       memset( COM_AREA, 0, sizeof( struct com_var ))
+#define COM_AREA ((volatile struct com_var*)0x10040000)
+#define COM_INIT()       memset( (void *)COM_AREA, 0, sizeof( struct com_var ))
 
 #define COM_FREE_COUNT  (COM_AREA->free_count)
 #define COM_TIM1_COUNT  (COM_AREA->tim1_count)
 #define COM_PUSH_HSEM   (COM_AREA->push_hsem)
+#define COM_RawSpinLock (COM_AREA->RawSpinLock)
 
 #define HSEM_CM4_to_CM7_CLK_IT      0
 #define HSEM_CM4_to_CM7_SYSLOG_IT   1
@@ -62,3 +69,4 @@ struct  com_var{
         }                                                           \
     } while(0)
 
+#endif /* COM_VAR_H */

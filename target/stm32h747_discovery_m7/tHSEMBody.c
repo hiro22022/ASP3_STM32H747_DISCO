@@ -3,7 +3,8 @@
  * These comment are used by tecsmerege when merging.
  *
  * call port function #_TCPF_#
- * call port: cCallback signature: siHSEMCallback context:non-task
+ * call port: cCallback signature: siHSEMCallback context:non-task optional:true
+ *   bool_t     is_cCallback_joined(int subscript)        check if joined
  *   void           cCallback_callback( subscript );
  *       subscript:  0...(NCP_cCallback-1)
  *
@@ -76,7 +77,8 @@ eMain_main()
 	eHSEM_clearInterrupt( num );	/* 割込み要求をクリア */
 	if( num >= N_CP_cCallback )
 		return;			/* 範囲外の番号 */
-	cCallback_callback( num );
+	if( is_cCallback_joined(num))
+		cCallback_callback( num );
 }
 
 /* #[<ENTRY_PORT>]# eHSEM

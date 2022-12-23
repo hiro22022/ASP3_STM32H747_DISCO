@@ -30,7 +30,8 @@ signature siHSEMCallback {
 celltype tHSEMBody {
     entry siHandlerBody  eMain;
     entry sHSEM          eHSEM[];
-    call  siHSEMCallback cCallback[];
+    [optional]
+        call  siHSEMCallback cCallback[];
 };
 
 +--------------------- BEGIN COMMENT ---------------------------

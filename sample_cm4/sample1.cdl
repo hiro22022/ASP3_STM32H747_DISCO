@@ -22,6 +22,7 @@ import("syssvc/tBanner.cdl");
  *  ターゲット依存部の取り込み
  */
 import("target.cdl");
+import_C( "com_var.h" );	/* Cortex-M7 コアと Cortex-M4 コアの共有メモリ定義 */
 
 /*
  *  「セルの組上げ記述」とは，"cell"で始まる行から，それに対応する"};"
@@ -135,4 +136,9 @@ celltype tHSEM1Hanlder{
 cell tHSEM1Hanlder HSEM1Handler {
 	eCallback <= HSEMBody.cCallback[0];	/* 逆結合 */
 	cHSEM = HSEMBody.eHSEM[0];
+};
+
+/* スピンロック実験用 */
+cell tRawSpinLock RawSpinLock {
+	pLockVar = C_EXP( "&COM_RawSpinLock" );
 };

@@ -22,6 +22,7 @@ import("syssvc/tBanner.cdl");
  *  ターゲット依存部の取り込み
  */
 import("target.cdl");
+import_C( "com_var.h" );	/* Cortex-M7 コアと Cortex-M4 コアの共有メモリ定義 */
 
 /*
  *  「セルの組上げ記述」とは，"cell"で始まる行から，それに対応する"};"
@@ -127,7 +128,7 @@ cell tBanner Banner {
  *   セルタイプ名、記述場所ともに、再考の余地あり
  *   Cortex-M４ コアが Cortex-M7 コアに、コア間割込みをかけるが、
  *   この割込みハンドラは、Cortex-M4 コアが com_var 上に設定した syslog を
- *   Cortex-M7 側の SysLog のバッファに積みなおす
+ *   Cortex-M7 側の syslog のバッファに積みなおす
  */
 [singleton]
 celltype tHSEM1Hanlder{
@@ -144,4 +145,9 @@ cell tHSEM1Hanlder HSEM1Handler {
 	eCallback <= HSEMBody.cCallback[0];	/* 逆結合 */
 	cHSEM = HSEMBody.eHSEM[0];
 	cSysLog = SysLog.eSysLog;
+};
+
+/* スピンロック実験用 */
+cell tRawSpinLock RawSpinLock {
+	pLockVar = C_EXP( "&COM_RawSpinLock" );
 };

@@ -61,6 +61,7 @@ const char *const BannerCopyrightNotice = "";			/* 著作権表示 */
  */
 import("tPutLogTarget.cdl");
 import("tSIOPortTarget.cdl");
+import("tRawSpinLock.cdl");
 
 /*
  *  シリアルインタフェースドライバのターゲット依存部の組み上げ記述

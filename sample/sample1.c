@@ -117,6 +117,7 @@
 #include "sample1.h"
 
 #include "cmsis_gcc.h"
+#include "tRawSpinLock_factory.h"
 
 /*
  *  サービスコールのエラーのログ出力
@@ -177,13 +178,13 @@ task(intptr_t exinf)
 	while (true) {
 #if 1
 #if 0
-		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNNT=%08x COM_TIM1_COUNT=%08x",
+		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNT=%08x COM_TIM1_COUNT=%08x",
 										tskno, ++n, graph[tskno-1], COM_FREE_COUNT, COM_TIM1_COUNT);
 #else
 		int_t locked;
 		locked = tHSEMBody_eHSEM_isLocked( 0 ) << 4;
 		locked |= tHSEMBody_eHSEM_getInterruptStatus( 0 );
-		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNNT=%08x locked=%08x",
+		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNT=%08x locked=%08x",
 										tskno, ++n, graph[tskno-1], COM_FREE_COUNT, locked);
 #endif
 
@@ -618,6 +619,35 @@ main_task(intptr_t exinf)
 
 		case 'D':
 			dump_CM4();
+			break;
+		
+		case 'f':
+			COM_FREE_COUNT = 0xffffffff;
+
+			/* Cortex-M4 が COM_FREE_COUNT を更新するまで待つ */
+			syslog( LOG_NOTICE, "FREE_COUNT= %x. waiting for changing", COM_FREE_COUNT );
+			while( COM_FREE_COUNT == 0xffffffff )
+				;
+
+			/* スピンロックを獲得しながらインクリメントを続ける。競合がうまく解決できているなら 2,000,0000カウントになるハズ */
+			{
+				int  j;
+				// dly_tsk( 3000000 );		/* 3秒待ち。Cortex-M7 の方が先に終わるのを待つ */
+				syslog( LOG_NOTICE, "FREE_COUNT= %x. Go!!!", COM_FREE_COUNT );
+				for( j = 0; j < 1000000; j++ ){
+					/* spinlock を取ってカウントアップ */
+					// RawSpinLock_lock();
+					while( tHSEMBody_eHSEM_lockPolling( 1 ) != E_OK )
+						;
+					COM_FREE_COUNT++;
+					// RawSpinLock_unlock();
+					tHSEMBody_eHSEM_unlock( 1 );
+				}
+				/* ここへは M7 の方が先に到達するハズ */
+				syslog( LOG_NOTICE, "FREE_COUNT= %d (after counting FREE_COUNT in racing condtion)", COM_FREE_COUNT );
+				dly_tsk( 3000000 );		/* 3秒待ち。Cortex-M7 の方が先に終わるのを待つ */
+				syslog( LOG_NOTICE, "FREE_COUNT= %d (finally)", COM_FREE_COUNT );
+			}
 			break;
 
 		default:

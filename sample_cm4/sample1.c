@@ -117,6 +117,7 @@
 #include "sample1.h"
 
 #include "cmsis_gcc.h"
+#include "tRawSpinLock_factory.h"
 
 /*
  *  サービスコールのエラーのログ出力
@@ -178,7 +179,7 @@ task(intptr_t exinf)
 		int_t locked;
 		locked = tHSEMBody_eHSEM_isLocked( 0 ) << 4;
 		locked |= tHSEMBody_eHSEM_getInterruptStatus( 0 );
-		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNNT=%08x locked=%08x",
+		syslog(LOG_NOTICE, "task%d is running (%03d).   %s   COM_FREE_COUNT=%08x locked=%08x",
 										tskno, ++n, graph[tskno-1], COM_FREE_COUNT, locked);
 
 		consume_time(task_loop);
@@ -223,6 +224,26 @@ task(intptr_t exinf)
 #endif /* CPUEXC1 */
 		default:
 			break;
+		}
+
+		/* 
+		 * RawSpinLock のテスト
+		 *   Cortex-M7 との競合テスト
+		 *   COM_FREE_COUNT が 1000 になったら 10000 からカウントアップ
+		 */
+		if( COM_FREE_COUNT == 0xffffffff ){
+			int  j;
+			COM_FREE_COUNT = 0;
+			for( j = 0; j < 1000000; j++ ){
+				/* spinlock を取ってカウントアップ */
+				// RawSpinLock_lock();
+				while( tHSEMBody_eHSEM_lockPolling( 1 ) != E_OK )
+						;
+				COM_FREE_COUNT++;
+				// RawSpinLock_unlock();
+				tHSEMBody_eHSEM_unlock( 1 );
+			}
+			syslog( LOG_NOTICE, "FREE_COUNT= %d (after counting FREE_COUNT in racing condtion)", COM_FREE_COUNT );
 		}
 	}
 }

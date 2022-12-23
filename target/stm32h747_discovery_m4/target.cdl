@@ -40,6 +40,8 @@
  *  $Id: target.cdl 648 2016-02-20 00:50:56Z ertl-honda $
  */
 
+ import("tRawSpinLock.cdl");
+
 /*
  *  タスクのスタックサイズのデフォルト
  */

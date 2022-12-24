@@ -229,19 +229,32 @@ task(intptr_t exinf)
 		/* 
 		 * RawSpinLock のテスト
 		 *   Cortex-M7 との競合テスト
-		 *   COM_FREE_COUNT が 1000 になったら 10000 からカウントアップ
+		 *   COM_FREE_COUNT が 0xffffffff になったら 0 からカウントアップ．
+		 *   Cortex-M7 は COM_FREE_COUNT != 0xffffffff になったらカウントアップ開始する．
 		 */
 		if( COM_FREE_COUNT == 0xffffffff ){
 			int  j;
 			COM_FREE_COUNT = 0;
 			for( j = 0; j < 1000000; j++ ){
+/**** 以下のマクロ定義は sample/sample1.c と合わせる必要がある ****/
+// #define USE_RAW_SPINLOCK			// LDREX, STREX によるスピンロック
+// #define USE_HSEM_SPINLOCK		// HSEM によるスピンロック
+/***/
+#if defined( USE_RAW_SPINLOCK )
 				/* spinlock を取ってカウントアップ */
-				// RawSpinLock_lock();
-				while( tHSEMBody_eHSEM_lockPolling( 1 ) != E_OK )
-						;
-				COM_FREE_COUNT++;
-				// RawSpinLock_unlock();
-				tHSEMBody_eHSEM_unlock( 1 );
+				RawSpinLock_lock();			// ロック
+				COM_FREE_COUNT++;			// カウントアップ
+				RawSpinLock_unlock();		// アンロック
+#elif defined( USE_HSEM_SPINLOCK )
+				/* spinlock を取ってカウントアップ */
+				while( tHSEMBody_eHSEM_lockPolling( 1 ) != E_OK )	// ロック
+					;
+				COM_FREE_COUNT++;				// カウントアップ
+				tHSEMBody_eHSEM_unlock( 1 );	// アンロック
+#else
+				/* スピンロックなし */
+				COM_FREE_COUNT++;				// カウントアップ
+#endif
 			}
 			syslog( LOG_NOTICE, "FREE_COUNT= %d (after counting FREE_COUNT in racing condtion)", COM_FREE_COUNT );
 		}

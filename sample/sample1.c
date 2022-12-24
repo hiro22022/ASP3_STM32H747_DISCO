@@ -622,8 +622,17 @@ main_task(intptr_t exinf)
 			break;
 		
 		case 'f':
-			COM_FREE_COUNT = 0xffffffff;
+			/*
+			 * 'f' は、Cortex-M4 と Cortex-M7 が COM_FREE_COUNT を同時に、
+			 * それぞれ 1000,000回インクリメントするテスト．
+			 * 
+			 * USE_RAW_SPINLOCK または USE_HSEM_SPINLOCK を定義してテストする．
+			 * (両方とも定義しなければ、排他制御無しとなる)
+			 * sample_cm4/sample1.c の定義と一致させること！！！
+			 * 不一致の場合、結果的に排他制御無しとなる．
+			 */
 
+			COM_FREE_COUNT = 0xffffffff;
 			/* Cortex-M4 が COM_FREE_COUNT を更新するまで待つ */
 			syslog( LOG_NOTICE, "FREE_COUNT= %x. waiting for changing", COM_FREE_COUNT );
 			while( COM_FREE_COUNT == 0xffffffff )
@@ -635,13 +644,25 @@ main_task(intptr_t exinf)
 				// dly_tsk( 3000000 );		/* 3秒待ち。Cortex-M7 の方が先に終わるのを待つ */
 				syslog( LOG_NOTICE, "FREE_COUNT= %x. Go!!!", COM_FREE_COUNT );
 				for( j = 0; j < 1000000; j++ ){
+/**** 以下のマクロ定義は sample_cm4/sample1.c と合わせる必要がある ****/
+// #define USE_RAW_SPINLOCK			// LDREX, STREX によるスピンロック
+// #define USE_HSEM_SPINLOCK		// HSEM によるスピンロック
+/***/
+#if defined( USE_RAW_SPINLOCK )
 					/* spinlock を取ってカウントアップ */
-					// RawSpinLock_lock();
-					while( tHSEMBody_eHSEM_lockPolling( 1 ) != E_OK )
+					RawSpinLock_lock();			// ロック
+					COM_FREE_COUNT++;			// カウントアップ
+					RawSpinLock_unlock();		// アンロック
+#elif defined( USE_HSEM_SPINLOCK )
+					/* spinlock を取ってカウントアップ */
+					while( tHSEMBody_eHSEM_lockPolling( 1 ) != E_OK )	// ロック
 						;
-					COM_FREE_COUNT++;
-					// RawSpinLock_unlock();
-					tHSEMBody_eHSEM_unlock( 1 );
+					COM_FREE_COUNT++;				// カウントアップ
+					tHSEMBody_eHSEM_unlock( 1 );	// アンロック
+#else
+				/* スピンロックなし */
+				COM_FREE_COUNT++;				// カウントアップ
+#endif
 				}
 				/* ここへは M7 の方が先に到達するハズ */
 				syslog( LOG_NOTICE, "FREE_COUNT= %d (after counting FREE_COUNT in racing condtion)", COM_FREE_COUNT );

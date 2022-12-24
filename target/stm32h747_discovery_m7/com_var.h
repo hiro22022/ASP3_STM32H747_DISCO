@@ -32,12 +32,6 @@ struct  com_var{
 #define HSEM_CM4_to_CM7_CLK_IT      0
 #define HSEM_CM4_to_CM7_SYSLOG_IT   1
 
-#define COM_LOGBUF_PUT__( plogbuf )   COM_FREE_COUNT++;
-
-#define COM_LOGBUF_PUT_( plogbuf )                                   \
-            (void)HAL_HSEM_FastTake( 0 );  /* コア間割込みをかける */\
-            HAL_HSEM_Release( 0, 0 );
-
 #define COM_LOGBUF_PUT( plogbuf )                                   \
     do{                                                             \
         uint16_t   next_wp;                                         \

@@ -1,5 +1,40 @@
 # TOPPERS/ASP3 on STM32H747 Discovery
 
+## test-spinlock ブランチ
+
+FMP3 を実装する前に、コア間のスピンロックをテストする目的で作成したブランチ。
+
+### 1) LDREX, STREX 命令による排他制御
+
+Cortex-M7 M4 には LDREX, STREX 命令による排他制御機構がある。
+STM32H747 は、これらのコアを持つが、コア間の排他制御に、この命令が使えるかを確認する。
+
+### 2) ハードウェアセマフォ (HSEM) による排他制御
+
+STM32H747 は、ハードウェアセマフォ (HSEM) を持つ。これによりコア間の排他制御ができるかも確認する。
+
+### 切替方法
+1\) と 2) は、sample1.c 内にあるマクロ定義を変更することで、切り替えることができる。
+
+* USE_RAW_SPINLOCK … LDREX, STREX 命令を使用したスピンロック
+* USE_HSEM_SPINLOCK … HSEM を使用したスピンロック
+
+**(注意) sample1.c は Cortex-M7 用と Cortex-M4 用の2つがあるが、この両方の定義を合わせる必要がある。両方ともビルドして、両方とも STM32H747 Discovery に書き込むこと。**
+
+## tRawSpinLock セルタイプ
+
+tRawSpinLock は、LDREX, STREX 命令を使用して作成したスピンロックである。
+セルには、共有メモリ上の変数を指定する。
+
+tRawSpinLock のセルは Cortex-M7, Cortex-M4 の sample1.cdl に、それぞれ定義しており別のものであるが、
+先に書いた通り、共有メモリ上の同じ変数を指定することで、共通のスピンロック変数が操作される。
+
+tRawSpinLock セルタイプでは、ファクトリーを使用して、
+(非TECSの) C 言語から直接呼び出すためのインタフェースマクロを生成する。
+これにより sample1.c から TECS コンポーネントとして生成したスピンロックを操作することができる。
+
+--------------------
+以下は、以前からの TOPPERS/ASP3 を STM32H747 Discovery の説明．
 ## 概要
 
 TOPPERS/ASP3 を STM32H747 Discovery にポーティングする。

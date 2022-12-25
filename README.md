@@ -33,6 +33,8 @@ tRawSpinLock セルタイプでは、ファクトリーを使用して、
 (非TECSの) C 言語から直接呼び出すためのインタフェースマクロを生成する。
 これにより sample1.c から TECS コンポーネントとして生成したスピンロックを操作することができる。
 
+tHSEM については、以下の 「HSEM (Hardware Semaphore) の TECS コンポーネント」の項を参照。
+
 --------------------
 以下は、以前からの TOPPERS/ASP3 を STM32H747 Discovery の説明．
 ## 概要

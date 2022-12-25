@@ -25,7 +25,8 @@ signature siHSEMCallback {
 
 /* 注意事項
  *  __HAL_RCC_HSEM_CLK_ENABLE() は、STM32CubeMX 生成コードで既に呼び出されているため
- *  このセルタイプで呼出していない。本来なら tHSEM の初期化処理で実施するのが妥当 */
+ *  このセルタイプで呼出していない。本来なら tHSEM の初期化処理で実施するのが妥当
+ */
 [singleton]
 celltype tHSEMBody {
     entry siHandlerBody  eMain;
@@ -37,6 +38,9 @@ celltype tHSEMBody {
 +--------------------- BEGIN COMMENT ---------------------------
 以下のようなハンドラコードを用意し、eHSEM、cCallback へ結合することを想定している。
 tHSEM1Hanlder は、応用ごとに振る舞いが異なるため、それぞれで用意する必要がある。
+cCallback （逆結合）は、必須ではない (optionalのため)。
+しかし、同じ番号を重複使用されないために、不要(割込みを使用しない)であっても、
+ダミーのハンドラーを設けて結合することを強くお勧めする。
 
     [singleton]
     celltype tHSEM1Hanlder{

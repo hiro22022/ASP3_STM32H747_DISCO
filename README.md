@@ -4,6 +4,11 @@
 
 FMP3 を実装する前に、コア間のスピンロックをテストする目的で作成したブランチ。
 
+TOPPERS/FMP3 の Raspberry Pi Pico 版 (Cortex-M4 デュアルコア CPU) では LDREX, STREX 命令による排他制御が使われていなかった。
+一方で、ハードウェアによるセマフォを実現する手段が提供されている。
+これからすると、LDREX, STREX 命令による排他制御は、Cortex-M 系のプロセッサでは機能しないのだろうと推測できる。
+STM32H747 の Cortex-M7, Cortex-M4 デュアルコアにおいてもそうか、確認してみる。
+
 ### 1) LDREX, STREX 命令による排他制御
 
 Cortex-M7, Cortex-M4 には LDREX, STREX 命令による排他制御機構がある。

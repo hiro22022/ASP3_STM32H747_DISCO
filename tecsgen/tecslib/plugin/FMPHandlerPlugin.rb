@@ -78,6 +78,10 @@ class FMPHandlerPlugin < CelltypePlugin
     root = cell.get_owner.get_class_root
     if root then
       class_type = root.get_class_type
+      if class_type == nil then
+        cdl_error2( cell.get_locale, "FMH9999 $1: is placed in root region. Handlers must be placed in CLS_PRC1, CLS_ALL_PRC1 specified region. Processos number can be varied.", cell.get_name )
+        return
+      end
       dbgPrint "FMPHandlerPlugin: new_cell #{cell.get_name} #{class_type.get_option} #{@@handler_list[@class_name][0]}\n"
       if class_type == nil then
         # このエラーは起きないハズ
@@ -123,7 +127,7 @@ class FMPHandlerPlugin < CelltypePlugin
     # $xxx$ の置換
     cfg_str3 = celltype.subst_name( cfg_str2, name_array )
 
-    file.print cfg_str3, "\n"
+    file.print cfg_str3, ";\n"
   end
 
   def val attr
@@ -153,11 +157,11 @@ class FMPHandlerPlugin < CelltypePlugin
       end
       if option != option_prev then
         if option_prev != nil then
-          if option_prev != "global" then
+          if option_prev != :root then
             f.print "}\n"
           end
         end
-        if option != "global" then
+        if option != :root then
           f.print "CLASS(#{option}){#{comment}\n"
           indent = "  "
         else
@@ -168,7 +172,7 @@ class FMPHandlerPlugin < CelltypePlugin
       print_cfg_cre f, cell, indent
     }
     if option_prev != nil then  # 実際のところ nil になることはないハズ
-      if option_prev != "global" then
+      if option_prev != :root then
         f.print "}\n"
       end
     end

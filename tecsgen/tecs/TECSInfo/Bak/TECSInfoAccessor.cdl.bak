@@ -1,0 +1,126 @@
+import( <cygwin_kernel.cdl> );
+import( <TECSInfo.cdl> );
+
+//namespace nTECSInfo {
+    signature sAccessor{
+        ER   selectNamespaceInfoByName( [in,string]const char_t *namespacePath );
+        ER   selectCelltypeInfoByName(  [in,string]const char_t *namespacePath );
+        ER   selectSignatureInfoByName( [in,string]const char_t *namespacePath );
+        ER   selectRegionInfoByName(    [in,string]const char_t *regionPath );
+        ER   selectCellInfoByName(      [in,string]const char_t *cellPath );
+
+        // namespace
+        ER   getSelectedNamespaceInfo( [out,string(max_len)]char_t *name, [in]int_t max_len, [out]int_t *num_namespace, [out]int_t *num_celltype, [out]int_t *num_signature );
+        ER   selectCelltypeInfo( [in]int_t ith );
+        ER   selectSignatureInfo( [in]int_t ith );
+
+        // celltype
+        ER   getSelectedCelltypeInfo( [out,string(max_len)]char_t *name, [in]int_t max_len,
+                                      [out]int_t *num_attr, [out]int_t *num_var, [out]int_t *num_call, [out]int_t *num_entry );
+        ER   selectCallInfo( [in]int_t ith );
+        ER   selectEntryInfo( [in]int_t ith );
+        ER   selectAttrInfo( [in]int_t ith );
+        ER   selectVarInfo( [in]int_t ith );
+
+        // attr
+        ER   getSelectedAttrInfo( [out,string(max_len)]char_t *name, [in]int_t max_len );
+        ER   getSizeIsExprOfAttr( [out,string(max_len)]char_t *expr_str, [in]int32_t max_len );
+        ER   selectTypeInfoOfAttr(void);
+
+        // var
+        ER   getSelectedVarInfo( [out,string(max_len)]char_t *name, [in]int_t max_len );
+        ER   getSizeIsExprOfVar( [out,string(max_len)]char_t *expr_str, [in]int32_t max_len );
+        ER   selectTypeInfoOfVar(void);
+
+        // call
+        ER   getSelectedCallInfo( [out,string(max_len)]char_t *name, [in]int_t max_len, [out]int_t *array_size );
+        ER   selectSignatureOfCall(void);
+        ER   getSelectedCallSpecifierInfo( [out]bool_t   *b_optional,  [out]bool_t   *b_dynamic,
+                                           [out]bool_t   *b_ref_desc,  [out]bool_t   *b_omit );
+        ER   getSelectedCallInternalInfo(  [out]bool_t   *b_allocator_port, [out]bool_t   *b_require_port );
+        ER   getSelectedCallLocationInfo(  [out]uint32_t *offset,             // offset in CALL_PLACE_*
+                                           [out]int8_t   *place );            // CALL_PLACE_*
+        ER   getSelectedCallOptimizeInfo(  [out]bool_t   *b_VMT_useless,      // VMT (関数テーブル) 不要最適化 (関数直接呼出し)
+                                           [out]bool_t   *b_skelton_useless,  // スケルトン関数不要 (
+                                           [out]bool_t   *b_cell_unique );    // 単一のセル
+
+        // entry
+        ER   getSelectedEntryInfo( [out,string(max_len)]char_t *name, [in]int_t max_len, [out]int_t *array_size );
+        ER   selectSignatureOfEntry(void);
+        ER   getSelectedEntryInlineInfo([out]bool_t *b_inline);
+
+        // signature
+        ER   getSelectedSignatureInfo( [out,string(max_len)]char_t *name, [in]int_t max_len, [out]int_t *num_function );
+        ER   selectFunctionInfoByIndex( [in]int_t ith );
+
+        // function
+        ER   getSelectedFunctionInfo( [out,string(max_len)]char_t *name, [in]int_t max_len, [out]int_t *num_args );
+        ER   selectTypeInfoOfReturn(void);
+
+        // parameter of function
+        ER   getSelectedParamInfo( [out,string(max_len)]char_t *name, [in]int_t max_len, [out]int8_t *dir );
+        ER   selectParamInfo( [in]int_t ith );
+        ER   selectTypeInfoOfParam(void);
+
+        // type of function return and parameter, celltype attr and var
+        ER   getSelectedTypeInfo( [out,string(max_len)]char_t *name, [in]int_t max_len, [out]int8_t *kind );
+        ER   selectTypeInfoOfType(void);
+
+        // region
+        ER   getSelectedRegionInfo( [out,string(max_len)]char_t *name, [in]int_t max_len, [out]int_t *num_cell );
+        ER   selectCellInfo( [in]int_t ith );
+
+        // cell
+        ER   getSelecteCellInfo( [out,string(max_len)]char_t *name, [in]int_t max_len);
+        ER   selectCelltypeInfoOfCell(void); // 選択中セルのセルタイプを選択 (セルタイプの関数を使用できる)
+        ER   getAttrValueInStr([out,string(max_len)]char_t *buf, [in]int_t max_len);  // 事前に、セル、セルタイプ、属性を選択しておくこと．cTypeInfo が変更される
+        ER   getAttrSizeIsValue(void);       // 事前に、セル、セルタイプ、属性を選択しておくこと．cTypeInfo が変更される
+        ER   getVarValueInStr([out,string(max_len)]char_t *buf, [in]int_t max_len);   // 事前に、セル、セルタイプ、変数を選択しておくこと．cTypeInfo が変更される
+        ER   getVarSizeIsValue(void);        // 事前に、セル、セルタイプ、変数を選択しておくこと．cTypeInfo が変更される
+    };
+
+    celltype tTECSInfoAccessor {
+
+        entry sAccessor eSelector;
+
+        call  nTECSInfo::sTECSInfo cTECSInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sNamespaceInfo cNSInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sCelltypeInfo  cCelltypeInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sSignatureInfo cSignatureInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sFunctionInfo  cFunctionInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sParamInfo     cParamInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sCallInfo      cCallInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sEntryInfo     cEntryInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sVarDeclInfo   cAttrInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sVarDeclInfo   cVarInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sTypeInfo      cTypeInfo;
+
+        [dynamic,optional]
+            call  nTECSInfo::sRegionInfo    cRegionInfo;
+        [dynamic,optional]
+            call  nTECSInfo::sCellInfo      cCellInfo;
+
+        attr{
+            int16_t NAME_LEN = 256;
+        };
+        var{
+            [size_is(NAME_LEN)]
+                char_t  *name;
+            [size_is(NAME_LEN)]
+                char_t  *name2;
+            int8_t      *selectedCbp;
+            int8_t      *selectedInibp;
+        };
+    };
+//};
+

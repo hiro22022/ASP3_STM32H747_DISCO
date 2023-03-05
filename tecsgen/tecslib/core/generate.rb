@@ -3073,7 +3073,6 @@ EOT
 
   end
 
-
   def gen_ph_inline f
     # inline ポートが一つでもあれば、inline.h の include
     if @n_entry_port_inline > 0 then
@@ -3100,10 +3099,21 @@ EOT
 
     f = AppFile.open("#{$gen}/#{@global_name}_factory.#{$h_suffix}")
 
+=begin
     plugin_obj = get_celltype_plugin
     if plugin_obj
+      p "gen_factory: #{plugin_obj.class.name} #{plugin_obj}"
       plugin_obj.gen_factory f
     end
+=end
+
+    # generate 文指定によるプラグイン適用
+    @generate_list.each{ |generate|
+      if generate[2] then 
+        # p "gen_factory2: #{generate[2].class.name} #{generate[2]}"
+        generate[2].gen_factory f
+      end
+    }
 
     f.print("#endif /* #{@name}_FACTORY_H */\n")
     f.close
@@ -3879,7 +3889,7 @@ EOT
     elsif has_INIB? then
       cell_CBP = "&#{cell_INIB_name}"
     else
-      cell_CBP = "NULL"    # CB も INIB もなければ NULL に置換
+      cell_CBP = "((#{@global_name}_IDX)0)"    # CB も INIB もなければ 0 に置換 (警告が出ることがあったので "NULL" から変更)
     end
 
     if @idx_is_id_act then
@@ -4820,16 +4830,11 @@ EOT
               ret_cd = nil
             end
             f.print <<EOT
-	#{nCELLCB}	*p_cellcb;
-	if (#{nVALID_IDX}(idx)) {
-		p_cellcb = #{nGET_CELLCB}(idx);
-	}
-	else {
-		#{er_cd}
-	} /* end if #{nVALID_IDX}(idx) */
+	#{nCELLCB}	*p_cellcb = #{nGET_CELLCB}(idx);
 
 EOT
             f.printf( TECSMsg.get( :TEFB_comment ), "#_TEFB_#" )
+            f.printf( "#warning \"'#{p.get_name}_#{fun.get_name}' needs to be edited.\"   /* delete this line after edit */\n")
             f.printf( "\n" )
 
             if ret_cd then
@@ -5279,11 +5284,7 @@ class AppFile
     end
 
 #2.0
-    if $b_no_kcode then 
-      mode = ":" + $Ruby19_File_Encode
-    else
-      mode = ""
-    end
+    mode = ":" + $Ruby19_File_Encode
 
     # 既に開いているか？
     if @@file_name_list[ name ] then

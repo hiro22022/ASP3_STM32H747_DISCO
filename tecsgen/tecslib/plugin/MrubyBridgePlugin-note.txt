@@ -1,0 +1,2 @@
+同じ VM に異なる includes, excludes を指定した signature を登録したい
+celltype_name を指定するオプション

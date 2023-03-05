@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="GUI_Tool">
+
+    <xsd:element     name="signature"     type="signatureType" />
+
+    <xsd:complexType name="signatureType">
+      <xsd:sequence>
+        <xsd:element name="name" type="xsd:string" />
+        <xsd:element name="func" type="funcType" minOccurs=1 />
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="funcType">
+      <xsd:sequence>
+        <xsd:element name="name"    type="xsd:string" />
+        <xsd:element name="rettype" type="xsd:string" />
+        <xsd:element name="param"   type="paramType" minOccurs=0 />
+      </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="paramType">
+      <xsd:sequence>
+        <xsd:element name="name"    type="xsd:string" />
+        <xsd:element name="type"    type="xsd:string" />
+      </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>

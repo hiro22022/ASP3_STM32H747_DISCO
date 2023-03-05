@@ -1,0 +1,41 @@
+
+/*
+ * Pointer celltypes
+ *  these are predefined pointer celltypes.
+ *
+ *  struct celltypes are not predefined. they are custom-made, not ready-made.
+ */
+namespace nMruby {
+
+	/*
+     * These celltypes are automatically instantiate and joined to
+     * initialize by MrubyBridgePlugin.  These celltypes are found
+     * under 'TECS' module on mruby VM. Prefix 't' is suppressed as
+     * the class name.
+	 */
+
+	[singleton]	celltype tBoolPointer		{ entry sInitializeTECSBridge eInitialize; };
+
+	[singleton]	celltype tInt8Pointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tInt16Pointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tInt32Pointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tInt64Pointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tUInt64Pointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tUInt8Pointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tUInt16Pointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tUInt32Pointer		{ entry sInitializeTECSBridge eInitialize; };
+
+	[singleton]	celltype tCharPointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tSCharPointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tUCharPointer		{ entry sInitializeTECSBridge eInitialize; };
+
+	[singleton]	celltype tFloat32Pointer	{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tDouble64Pointer	{ entry sInitializeTECSBridge eInitialize; };
+
+	[singleton]	celltype tIntPointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tShortPointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tLongPointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tUIntPointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tUShortPointer		{ entry sInitializeTECSBridge eInitialize; };
+	[singleton]	celltype tULongPointer		{ entry sInitializeTECSBridge eInitialize; };
+};

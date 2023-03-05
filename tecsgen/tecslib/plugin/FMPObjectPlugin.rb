@@ -175,11 +175,11 @@ class FMPObjectPlugin < CelltypePlugin
       dbgPrint "FMPObjectPlugin#gen_factory: option=#{cls_tecs} class_in_kernel=#{cls_kernel} cell=#{cell.get_name}\n"
       if cls_kernel != cls_kernel_prev then
         if cls_kernel_prev != nil then
-          if cls_kernel_prev != "global" then
+          if cls_kernel_prev != :root then
             f.print "}\n"
           end
         end
-        if cls_kernel != "global" then
+        if cls_kernel != :root then
           f.print "CLASS(#{cls_kernel}){\n"
           indent = "  "
         else
@@ -190,7 +190,7 @@ class FMPObjectPlugin < CelltypePlugin
       print_cfg_cre f, cell, indent
     }
     if cls_kernel_prev != nil then  # 実際のところ nil になることはないハズ
-      if cls_kernel_prev != "global" then
+      if cls_kernel_prev != :root then
         f.print "}\n"
       end
     end

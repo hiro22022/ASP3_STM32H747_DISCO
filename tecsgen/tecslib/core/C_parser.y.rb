@@ -308,6 +308,10 @@ type_specifier
 	      { set_no_type_name true; result = CIntType.new( -2 ) }
         | INT
 	      { set_no_type_name true; result = CIntType.new( -3 ) }
+        | INT64                     # MS 拡張
+	      { set_no_type_name true; result = CIntType.new( 64 ) }
+        | BOOL                      # MS 拡張
+	      { set_no_type_name true; result = CIntType.new( -3 ) }
         | LONG
 	      { set_no_type_name true; result = CIntType.new( -4 ) }
         | SIGNED
@@ -810,7 +814,10 @@ end
     'register' => :REGISTER,
     'auto'    => :AUTO,
     '__extension__'    => :EXTENSION,
-    '__asm__' => :_ASM
+    '__asm__' => :_ASM,
+
+    '__int64' => :INT64,         # MS extension. unsigned __int64_t も使用できる
+    '_Bool' => :BOOL             # MS extension
 
   }
 
@@ -863,9 +870,6 @@ end
 
     comment = false
 #    b_asm   = false
-
-    # euc のコメントを utf8 として扱うと、コメントの終わりを誤る問題の対策
-    TECS_LANG::set_kcode_binary
 
     # 800U, 0xffLL など (整数リテラルに共通の修飾子)
     integer_qualifier = "([Uu][Ll][Ll]|[Uu][Ll]|[Uu]|[Ll][Ll]|[Ll])?"
@@ -960,7 +964,6 @@ end
 
    ensure
     @@generator_nest -= 1
-    TECS_LANG::reset_kcode
    end
 
   end

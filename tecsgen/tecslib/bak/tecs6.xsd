@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+     attributeFormDefault="unqualified"
+     elementFormDefault="qualified"
+     xmlns="http://www.toppers.jp/tecs.html"
+     targetNamespace="http://www.toppers.jp/tecs.html"
+     xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="GUI_Tool">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="signature">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" type="xs:string" />
+              <xs:element maxOccurs="unbounded" name="func">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="name" type="xs:string" />
+                    <xs:element name="rettype" type="xs:string" />
+                    <xs:element minOccurs="0" maxOccurs="unbounded" name="param">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="name" type="xs:string" />
+                          <xs:element name="type" type="xs:string" />
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="celltype">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:choice maxOccurs="unbounded">
+                <xs:element name="name" type="xs:string" />
+                <xs:element maxOccurs="unbounded" name="attr">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="name" type="xs:string" />
+                      <xs:element name="type" type="xs:string" />
+                      <xs:element minOccurs="0" name="initializer" type="xs:string" />
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element maxOccurs="unbounded" name="call">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="name" type="xs:string" />
+                      <xs:element name="signame" type="xs:string" />
+                      <xs:element minOccurs="0" name="subscript" type="xs:string" />
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+                <xs:element maxOccurs="unbounded" name="entry">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element name="name" type="xs:string" />
+                      <xs:element name="signame" type="xs:string" />
+                      <xs:element minOccurs="0" name="subscript" type="xs:string" />
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" ref="region"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+              <xs:element name="cell">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:choice maxOccurs="unbounded">
+                      <xs:element name="name" type="xs:string" />
+                      <xs:element maxOccurs="unbounded" name="attr_join">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="name" type="xs:string" />
+                            <xs:element name="rhs" type="xs:string" />
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                      <xs:element maxOccurs="unbounded" name="call_join">
+                        <xs:complexType>
+                          <xs:sequence>
+                            <xs:element name="name" type="xs:string" />
+                            <xs:element name="rhs" type="xs:string" />
+                          </xs:sequence>
+                        </xs:complexType>
+                      </xs:element>
+                    </xs:choice>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+
+        <xs:element name="region">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" type="xs:string" />
+              <xs:element maxOccurs="unbounded" ref="cell"/>
+              <xs:element maxOccurs="unbounded" name="region">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="name" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" ref="cell" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+
+</xs:schema>

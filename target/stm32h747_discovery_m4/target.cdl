@@ -7,6 +7,7 @@
  *              Graduate School of Engineering Science, Osaka Univ., JAPAN
  *  Copyright (C) 2015,2016 by Embedded and Real-Time Systems Laboratory
  *              Graduate School of Information Science, Nagoya Univ., JAPAN
+ *  Copyright (C) 2023 by hiro22022
  * 
  *  上記著作権者は，以下の(1)〜(4)の条件を満たす場合に限り，本ソフトウェ
  *  ア（本ソフトウェアを改変したものを含む．以下同じ）を使用・複製・改
@@ -39,8 +40,6 @@
  * 
  *  $Id: target.cdl 648 2016-02-20 00:50:56Z ertl-honda $
  */
-
- import("tRawSpinLock.cdl");
 
 /*
  *  タスクのスタックサイズのデフォルト
@@ -78,20 +77,5 @@ cell tPutLogTarget PutLogTarget {
 	cSIOPort = SIOPortTarget1.eSIOPort;
 };
 
-
-/*---------- HSEM -----------*/
-import( "tHSEM.cdl" );
-
-cell tHSEMBody HSEMBody{
-};
-
-cell tISR HSEM_ISR {
-    interruptNumber = C_EXP( "HSEM1_INTNO" );
-    ciISRBody = HSEMBody.eMain;
-};
-
-cell tInterruptRequest HSEM_IRQ {
-    interruptNumber = C_EXP( "HSEM1_INTNO" );
-    interruptPriority = -14;
-	attribute = C_EXP( "TA_ENAINT" );
-};
+import( "target_hsem.cdl" );
+import( "target_ipi.cdl" );

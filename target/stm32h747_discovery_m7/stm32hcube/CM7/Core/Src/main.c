@@ -23,6 +23,7 @@
 #include "string.h"
 #include "serial.h"
 #include "led_btn_joy.h"
+#include "tHSEMBody_cif.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -418,9 +419,6 @@ int main(void)
   led_init();
   joy_init();
   btn_init();
-
-#define MSG_TIM3 "hello CM7 Enable Interrupt!\r\n"
-  HAL_UART_Transmit(&huart1, (uint8_t*)MSG_TIM3, sizeof(MSG_TIM3), 0xfffffff);
 
   /* 割込み許可 */
   // __enable_irq();

@@ -92,6 +92,7 @@ signature sSysLog {
 celltype tSysLog {
 	entry	sSysLog		eSysLog;
 	call	sPutLog		cPutLog;		/* 低レベル出力との接続 */
+	call    sIPISend    cIPISend;		/* 割込みをかける */
 
 	attr {
 		uint_t	logBufferSize;			/* ログバッファサイズ */

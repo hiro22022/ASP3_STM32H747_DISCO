@@ -117,7 +117,12 @@
 #include "sample1.h"
 
 #include "cmsis_gcc.h"
-#include "tRawSpinLock_factory.h"
+
+/*** HSEM ***/
+#include "stm32h7xx_hal.h"
+#include "stm32h7xx_hal_hsem.h"
+/*** HSEM ***/
+
 
 /*
  *  サービスコールのエラーのログ出力

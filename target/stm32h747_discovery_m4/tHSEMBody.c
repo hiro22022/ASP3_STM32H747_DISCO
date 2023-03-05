@@ -3,7 +3,8 @@
  * These comment are used by tecsmerege when merging.
  *
  * call port function #_TCPF_#
- * call port: cCallback signature: siHSEMCallback context:non-task
+ * call port: cCallback signature: siHSEMCallback context:non-task optional:true
+ *   bool_t     is_cCallback_joined(int subscript)        check if joined
  *   void           cCallback_callback( subscript );
  *       subscript:  0...(NCP_cCallback-1)
  *
@@ -59,6 +60,7 @@ eMain_main()
 	/* Put statements here #_TEFB_# */
 	uint32_t isr;
 	int_t	num;
+
 	if(((SCB->CPUID & 0x000000F0) >> 4 )== 0x7)
 		isr = HSEM->C1MISR;
 	else
@@ -76,7 +78,13 @@ eMain_main()
 	eHSEM_clearInterrupt( num );	/* 割込み要求をクリア */
 	if( num >= N_CP_cCallback )
 		return;			/* 範囲外の番号 */
-	cCallback_callback( num );
+
+#if 0
+	syslog( LOG_NOTICE, "HSEM interrupt no=%d joined=%d", num, is_cCallback_joined(num) );
+#endif
+
+	if( is_cCallback_joined(num))
+		cCallback_callback( num );
 }
 
 /* #[<ENTRY_PORT>]# eHSEM
@@ -138,7 +146,7 @@ eHSEM_enableInterrup(int_t subscript)
 #if 0
 	syslog( LOG_NOTICE, "HSEM C1IER=%08x before", HSEM->C1IER );
 #endif
-#if 1
+#if 0
 	__HAL_HSEM_ENABLE_IT( __HAL_HSEM_SEMID_TO_MASK(subscript) );
 #else
 	__HAL_HSEM_ENABLE_IT( 0xffffffff );
@@ -157,7 +165,7 @@ void
 eHSEM_disableInterrupt(int_t subscript)
 {
 	/* Put statements here #_TEFB_# */
-#if 1
+#if 0
 	__HAL_HSEM_DISABLE_IT( __HAL_HSEM_SEMID_TO_MASK(subscript) );
 #else
 	__HAL_HSEM_DISABLE_IT( 0xffffffff );

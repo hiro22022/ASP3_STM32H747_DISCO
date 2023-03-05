@@ -12,11 +12,11 @@ import(<kernel.cdl>);
 /*
  *  ターゲット非依存のセルタイプの定義
  */
-import("syssvc/tSerialPort.cdl");
-import("syssvc/tSysLog.cdl");
-import("syssvc/tSysLogAdapter.cdl");
-import("syssvc/tLogTask.cdl");
-import("syssvc/tBanner.cdl");
+import("syssvc_cm4/tSerialPort.cdl");
+import("syssvc_cm4/tSysLog.cdl");
+import("syssvc_cm4/tSysLogAdapter.cdl");
+import("syssvc_cm4/tLogTask.cdl");
+import("syssvc_cm4/tBanner.cdl");
 
 /*
  *  ターゲット依存部の取り込み

@@ -117,7 +117,6 @@
 #include "sample1.h"
 
 #include "cmsis_gcc.h"
-#include "tRawSpinLock_factory.h"
 
 /*
  *  サービスコールのエラーのログ出力

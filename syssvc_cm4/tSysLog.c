@@ -168,6 +168,7 @@ eSysLog_write(uint_t priority, const SYSLOG *p_syslog)
 #else
 	if ((VAR_logMask & LOG_MASK(priority)) != 0U) {
 		COM_LOGBUF_PUT( p_syslog );
+		cIPISend_sendIPI( IPI_SysLog_4to7_NO );
 	}
 #endif /* NON_CM4 */
 	return(E_OK);

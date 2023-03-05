@@ -8,15 +8,19 @@
  */
 import(<kernel.cdl>);
 
+/* 直接 ターゲットの定義を呼ぶのはよくないかもしれないが、まずはこうする */
+import( "target_hsem.cdl" );
+import( "target_ipi.cdl" );
+
 /*
  *  ターゲット非依存のセルタイプの定義
  */
-import("syssvc/tSerialPort.cdl");
-import("syssvc/tSerialAdapter.cdl");
-import("syssvc/tSysLog.cdl");
-import("syssvc/tSysLogAdapter.cdl");
-import("syssvc/tLogTask.cdl");
-import("syssvc/tBanner.cdl");
+import("syssvc_cm4/tSerialPort.cdl");
+import("syssvc_cm4/tSerialAdapter.cdl");
+import("syssvc_cm4/tSysLog.cdl");
+import("syssvc_cm4/tSysLogAdapter.cdl");
+import("syssvc_cm4/tLogTask.cdl");
+import("syssvc_cm4/tBanner.cdl");
 
 /*
  *  ターゲット依存部の取り込み
@@ -70,6 +74,7 @@ cell tSysLog SysLog {
 									   	/* 低レベル出力すべき重要度 */
 	/* 低レベル出力との結合 */
 	cPutLog = PutLogTarget.ePutLog;
+	cIPISend = IPISender4to7.eIPISend;
 };
 
 /*
@@ -123,22 +128,4 @@ cell tBanner Banner {
 	/* 属性の設定 */
 	targetName      = BannerTargetName;
 	copyrightNotice = BannerCopyrightNotice;
-};
-
-/*
- * HSEM
- */
-[singleton]
-celltype tHSEM1Hanlder{
-	entry siHSEMCallback eCallback;
-	call  sHSEM    cHSEM;
-};
-cell tHSEM1Hanlder HSEM1Handler {
-	eCallback <= HSEMBody.cCallback[0];	/* 逆結合 */
-	cHSEM = HSEMBody.eHSEM[0];
-};
-
-/* スピンロック実験用 */
-cell tRawSpinLock RawSpinLock {
-	pLockVar = C_EXP( "&COM_RawSpinLock" );
 };

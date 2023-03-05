@@ -111,6 +111,6 @@ usart_low_init(void) {
 #endif /* TOPPERS_MACRO_ONLY */
 
 /******* HSEM ********/
-#define HSEM1_INTNO		(HSEM1_IRQn + 16)	/* 割込み番号 */
+#define HSEM2_INTNO		(HSEM2_IRQn + 16)	/* 割込み番号 */
 
 #endif /* TOPPERS_NUCLEO_F401RE_H */

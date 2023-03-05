@@ -32,7 +32,7 @@ INCLUDES := $(INCLUDES) -I$(TARGETDIR) \
 	-I$(TARGETDIR_CM7)/stm32hcube/Drivers/CMSIS/Include \
 	-I$(TARGETDIR_CM7)/stm32hcube/Drivers/CMSIS/Device/ST/STM32H7xx/Include \
 	-I$(TARGETDIR_CM7)/stm32hcube/CM4/Core/Inc \
-	-I$(TARGETDIR_CM7)/stm32hcube -I../syssvc -I../kernel \
+	-I$(TARGETDIR_CM7)/stm32hcube -I../syssvc_cm4 -I../kernel \
 	-I$(TARGETDIR_CM7)
 CDEFS := $(CDEFS) -DSTM32H747xx -DUSE_HAL_DRIVER -DCORE_CM4
 COPTS := $(COPTS) 

@@ -121,3 +121,16 @@ cell tBanner Banner {
 	targetName      = BannerTargetName;
 	copyrightNotice = BannerCopyrightNotice;
 };
+
+/*
+ * HSEM [3]: FREE_COUNT 用
+ */
+[singleton]
+celltype tHSEM3Hanlder{
+	entry siHSEMCallback eCallback;
+	call  sHSEM    cHSEM;
+};
+cell tHSEM3Hanlder HSEM3Handler {
+	eCallback <= HSEMBody.cCallback[3];	/* 逆結合 */
+	cHSEM = HSEMBody.eHSEM[3];
+};

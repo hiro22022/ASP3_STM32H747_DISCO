@@ -146,11 +146,7 @@ eHSEM_enableInterrup(int_t subscript)
 #if 0
 	syslog( LOG_NOTICE, "HSEM C1IER=%08x before", HSEM->C1IER );
 #endif
-#if 0
 	__HAL_HSEM_ENABLE_IT( __HAL_HSEM_SEMID_TO_MASK(subscript) );
-#else
-	__HAL_HSEM_ENABLE_IT( 0xffffffff );
-#endif
 #if 0
 	syslog( LOG_NOTICE, "HSEM C1IER=%08x after", HSEM->C1IER );
 #endif
@@ -165,11 +161,7 @@ void
 eHSEM_disableInterrupt(int_t subscript)
 {
 	/* Put statements here #_TEFB_# */
-#if 0
 	__HAL_HSEM_DISABLE_IT( __HAL_HSEM_SEMID_TO_MASK(subscript) );
-#else
-	__HAL_HSEM_DISABLE_IT( 0xffffffff );
-#endif
 }
 
 /* #[<ENTRY_FUNC>]# eHSEM_getInterruptStatus

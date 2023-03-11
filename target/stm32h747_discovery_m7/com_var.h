@@ -21,8 +21,8 @@ struct  com_var{
 };
 
 
-#define COM_AREA ((struct com_var*)0x10040000)
-#define COM_INIT()       memset( COM_AREA, 0, sizeof( struct com_var ))
+#define COM_AREA ((volatile struct com_var*)0x10040000)
+#define COM_INIT()       memset( (void*)COM_AREA, 0, sizeof( struct com_var ))
 
 #define COM_FREE_COUNT  (COM_AREA->free_count)
 #define COM_TIM1_COUNT  (COM_AREA->tim1_count)

@@ -24,7 +24,7 @@ celltype tIPISenderUsingHSEM {
     call  sHSEM             cHSEMGiantLock; /* HSEM を使用してGiantLock */
 
     attr {
-        uint32_t           *ipi_bit_flag;   /* com_var.h の変数へのポインタ */
+        volatile uint32_t   *ipi_bit_flag;   /* com_var.h の変数へのポインタ */
     };
 };
 
@@ -43,6 +43,6 @@ celltype tIPIReceiverUsingHSEM {
     entry siHSEMCallback    eCallback;      /* HSEM の割込みコールバック */
 
     attr {
-        uint32_t           *ipi_bit_flag;   /* com_var.h の変数へのポインタ */
+        volatile uint32_t   *ipi_bit_flag;   /* com_var.h の変数へのポインタ */
     };
 };

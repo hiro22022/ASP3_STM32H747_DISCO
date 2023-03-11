@@ -56,10 +56,10 @@ cell tIPISenderUsingHSEM IPISender4to7 {
 };
 
 /* Cortex M7 コアで割込みを受ける */
-cell tIPIReceiverUsingHSEM IPIReceiver4to7 {
+cell tIPIReceiverUsingHSEM IPIReceiver7to4 {
     /* HSEM との結合 */
-    eCallback <= HSEMBody.cCallback[HSEM_InterCoreInt_CM4_to_CM7];	/* 逆結合 */
+    eCallback <= HSEMBody.cCallback[HSEM_InterCoreInt_CM7_to_CM4];	/* 逆結合 */
     cHSEMGiantLock = HSEMBody.eHSEM[HSEM_GiantLock];
 
-    ipi_bit_flag = C_EXP( "&COM_IPI_4to7" );        /* com_var.h の変数へのポインタ */
+    ipi_bit_flag = C_EXP( "&COM_IPI_7to4" );        /* com_var.h の変数へのポインタ */
 };

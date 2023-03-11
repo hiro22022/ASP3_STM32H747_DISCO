@@ -400,6 +400,7 @@ main_task(intptr_t exinf)
 	int_t	tskno = 1;
 	ER_UINT	ercd;
 	PRI		tskpri;
+	int_t	prcno = 0;		/* 0=Cortex-M7, 1=Cortex-M4 */
 #ifndef TASK_LOOP
 	SYSTIM	stime1, stime2;
 #endif /* TASK_LOOP */
@@ -486,6 +487,9 @@ main_task(intptr_t exinf)
 	 */
 	do {
 		SVC_PERROR(serial_rea_dat(TASK_PORTID, &c, 1));
+		if( c != '8' ){
+			
+		}
 		switch (c) {
 		case 'e':
 		case 's':
@@ -508,6 +512,12 @@ main_task(intptr_t exinf)
 		case '3':
 			tskno = 3;
 			tskid = TASK3;
+			break;
+		case '8':
+			prcno = 0;		/* Cortex-M7 */
+			break;
+		case '9':
+			prcno = 1;		/* Cortex-M4 */
 			break;
 		case 'a':
 			syslog(LOG_INFO, "#act_tsk(%d)", tskno);
@@ -651,7 +661,7 @@ main_task(intptr_t exinf)
 				for( j = 0; j < 1000000; j++ ){
 /**** 以下のマクロ定義は sample_cm4/sample1.c と合わせる必要がある ****/
 // #define USE_RAW_SPINLOCK			// LDREX, STREX によるスピンロック
-// #define USE_HSEM_SPINLOCK		// HSEM によるスピンロック
+#define USE_HSEM_SPINLOCK		// HSEM によるスピンロック
 /***/
 #if defined( USE_RAW_SPINLOCK )
 					/* spinlock を取ってカウントアップ */
@@ -660,10 +670,10 @@ main_task(intptr_t exinf)
 					RawSpinLock_unlock();		// アンロック
 #elif defined( USE_HSEM_SPINLOCK )
 					/* spinlock を取ってカウントアップ */
-					while( tHSEMBody_eHSEM_lockPolling( 1 ) != E_OK )	// ロック
+					while( tHSEMBody_eHSEM_lockPolling( 3 ) != E_OK )	// ロック
 						;
 					COM_FREE_COUNT++;				// カウントアップ
-					tHSEMBody_eHSEM_unlock( 1 );	// アンロック
+					tHSEMBody_eHSEM_unlock( 3 );	// アンロック
 #else
 				/* スピンロックなし */
 				COM_FREE_COUNT++;				// カウントアップ

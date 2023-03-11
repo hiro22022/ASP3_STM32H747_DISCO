@@ -237,7 +237,7 @@ task(intptr_t exinf)
 			for( j = 0; j < 1000000; j++ ){
 /**** 以下のマクロ定義は sample/sample1.c と合わせる必要がある ****/
 // #define USE_RAW_SPINLOCK			// LDREX, STREX によるスピンロック
-// #define USE_HSEM_SPINLOCK		// HSEM によるスピンロック
+#define USE_HSEM_SPINLOCK		// HSEM によるスピンロック
 /***/
 #if defined( USE_RAW_SPINLOCK )
 				/* spinlock を取ってカウントアップ */
@@ -246,10 +246,10 @@ task(intptr_t exinf)
 				RawSpinLock_unlock();		// アンロック
 #elif defined( USE_HSEM_SPINLOCK )
 				/* spinlock を取ってカウントアップ */
-				while( tHSEMBody_eHSEM_lockPolling( 1 ) != E_OK )	// ロック
+				while( tHSEMBody_eHSEM_lockPolling( 3 ) != E_OK )	// ロック
 					;
 				COM_FREE_COUNT++;				// カウントアップ
-				tHSEMBody_eHSEM_unlock( 1 );	// アンロック
+				tHSEMBody_eHSEM_unlock( 3 );	// アンロック
 #else
 				/* スピンロックなし */
 				COM_FREE_COUNT++;				// カウントアップ

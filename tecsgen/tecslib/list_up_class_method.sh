@@ -1,2 +1,0 @@
-# grep "[^a-zA-Z_][A-Z]\w*\." *.rb | grep -v TECSMsg  | grep -v Type.new | grep -v Val.new | grep -v "File\." | grep -v Generator. | grep -v Token.new | grep -v Expression.new | grep -v tab.rb | grep -v NamedList.new | grep -v Proc.new > class_method_list.txt
-grep "[^a-zA-Z_][A-Z]\w*\." *.rb | grep -v TECSMsg  | grep -v "\.new[^A-Za-z_]" | grep -v "\.new$" | grep -v "File\." | grep -v Generator. | grep -v tab.rb | grep -v "Makefile\." | grep -v ":[ \t]*#" | grep -v "STDERR\." | grep -v "\<IO\." | grep -v "\.push" | grep -v "\.pop" > class_method_list.txt

@@ -1,8 +1,0 @@
-#ifndef TECSINFO_H
-#define TECSINFO_H
-
-#define SET_RAW_DESCRIPTOR( targetDesc, targetSignatureName, rawDescriptorInfoDesc ) \
-    rawDescriptorInfoDesc )                                             \
-    
-
-#endif /* TECSINFO_H */

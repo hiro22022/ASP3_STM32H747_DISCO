@@ -121,6 +121,7 @@
 /*** HSEM ***/
 #include "stm32h7xx_hal.h"
 #include "stm32h7xx_hal_hsem.h"
+#include "tIPISenderUsingHSEM_cif.h"
 /*** HSEM ***/
 
 
@@ -400,7 +401,6 @@ main_task(intptr_t exinf)
 	int_t	tskno = 1;
 	ER_UINT	ercd;
 	PRI		tskpri;
-	int_t	prcno = 0;		/* 0=Cortex-M7, 1=Cortex-M4 */
 #ifndef TASK_LOOP
 	SYSTIM	stime1, stime2;
 #endif /* TASK_LOOP */
@@ -410,8 +410,8 @@ main_task(intptr_t exinf)
 	syslog(LOG_NOTICE, "Sample program starts (exinf = %d).", (int_t) exinf);
 
 	/* HSEM bit 0 (CM4 の SysLog ハンドラ) の割込みを許可 */
-	tHSEMBody_eHSEM_clearInterrupt(0);
-	tHSEMBody_eHSEM_enableInterrup(0);
+	tHSEMBody_eHSEM_clearInterrupt(HSEM_InterCoreInt_CM4_to_CM7);
+	tHSEMBody_eHSEM_enableInterrup(HSEM_InterCoreInt_CM4_to_CM7);
 
 	/*
 	 *  シリアルポートの初期化
@@ -487,9 +487,6 @@ main_task(intptr_t exinf)
 	 */
 	do {
 		SVC_PERROR(serial_rea_dat(TASK_PORTID, &c, 1));
-		if( c != '8' ){
-			
-		}
 		switch (c) {
 		case 'e':
 		case 's':
@@ -512,12 +509,6 @@ main_task(intptr_t exinf)
 		case '3':
 			tskno = 3;
 			tskid = TASK3;
-			break;
-		case '8':
-			prcno = 0;		/* Cortex-M7 */
-			break;
-		case '9':
-			prcno = 1;		/* Cortex-M4 */
 			break;
 		case 'a':
 			syslog(LOG_INFO, "#act_tsk(%d)", tskno);
@@ -685,7 +676,10 @@ main_task(intptr_t exinf)
 				syslog( LOG_NOTICE, "FREE_COUNT= %d (finally)", COM_FREE_COUNT );
 			}
 			break;
-
+		case 'h':
+			/* Cortex M4 にIPI を発生させる */
+			IPISender7to4_eIPISend_sendIPI( IPI_7to4_experimental_NO );
+			break;
 		default:
 			syslog(LOG_INFO, "Unknown command: '%c'.", c);
 			break;

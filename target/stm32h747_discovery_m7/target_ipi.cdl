@@ -43,7 +43,10 @@
 
 import( "tIPI.cdl" );
 
-const uint32_t IPI_SysLog_4to7_NO  = 0;
+/* 4to7 */
+const uint32_t IPI_SysLog_4to7_NO        = 0;
+/* 7to4 */
+const uint32_t IPI_7to4_experimental_NO  = 0;
 
 /* Cortex M7 コアに割込みを送る */
 [generate(CIfGenPlugin,"")]

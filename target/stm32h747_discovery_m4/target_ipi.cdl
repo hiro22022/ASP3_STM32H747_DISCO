@@ -43,7 +43,10 @@
  
  import( "tIPI.cdl" );
 
- const uint32_t IPI_SysLog_4to7_NO  = 0;
+/* 4to7 */
+const uint32_t IPI_SysLog_4to7_NO        = 0;
+/* 7to4 */
+const uint32_t IPI_7to4_experimental_NO  = 0;
 
 /* Cortex M7 コアに割込みを送る */
 [generate(CIfGenPlugin,"")]
@@ -62,4 +65,16 @@ cell tIPIReceiverUsingHSEM IPIReceiver7to4 {
     cHSEMGiantLock = HSEMBody.eHSEM[HSEM_GiantLock];
 
     ipi_bit_flag = C_EXP( "&COM_IPI_7to4" );        /* com_var.h の変数へのポインタ */
+};
+
+/*-------------------------------*/
+/*
+ * CortexM7 => CortexM4 の実験的コア間割込み 
+ */
+celltype tIPI_7to4_experimental {
+    entry sIPIMain  eIPIMain;
+};
+
+cell tIPI_7to4_experimental IPI_7to4_experimental {
+    eIPIMain <= IPIReceiver7to4.cIPIMain[IPI_7to4_experimental_NO];
 };

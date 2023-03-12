@@ -424,6 +424,10 @@ main_task(intptr_t exinf)
 
 	SVC_PERROR(syslog_msk_log(LOG_UPTO(LOG_INFO), LOG_UPTO(LOG_EMERG)));
 	syslog(LOG_NOTICE, "Sample program starts (exinf = %d).", (int_t) exinf);
+	
+	/* HSEM bit 1 の割込みを許可 */
+	tHSEMBody_eHSEM_clearInterrupt(HSEM_InterCoreInt_CM7_to_CM4);
+	tHSEMBody_eHSEM_enableInterrup(HSEM_InterCoreInt_CM7_to_CM4);
 
 	/*
 	 *  シリアルポートの初期化
